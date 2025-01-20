@@ -1,6 +1,6 @@
-import { Exo_2, Oswald, Roboto } from 'next/font/google'
+import { Exo_2, Pixelify_Sans, Roboto } from 'next/font/google'
 
-export const titleFont = Oswald({
+export const titleFont = Pixelify_Sans({
   subsets: ['latin'],
   weight: ['700', '600', '500'],
   variable: '--titleFont'

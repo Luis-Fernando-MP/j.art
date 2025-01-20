@@ -33,7 +33,8 @@ body {
   font-family: $font1;
   color: rgb($fn1);
 
-  background-color: rgb($bg1);
+  background-color: rgb($bgp);
+  background-image: $gr1;
 
   textarea {
     @extend %scroll-hidden;

@@ -18,6 +18,7 @@
     "next": "15.1.4",
     "nextjs-toploader": "^3.7.15",
     "react": "19.0.0",
+    "react-color4bg": "^0.1.4",
     "react-dom": "19.0.0",
     "react-hot-toast": "2.5.1",
     "usehooks-ts": "^3.1.0",

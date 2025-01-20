@@ -1,16 +1,18 @@
 :root {
-  --bg-primary: 245, 245, 250;
-  --bg-secondary: 230, 235, 250;
-  --bg-tertiary: 210, 220, 240;
+  --bg-primary: 19, 20, 23;
+  --bg-secondary: 61, 63, 68;
+  --bg-tertiary: 39, 42, 48;
+  --bg-pure: 0, 0, 0;
 
   // Fuentes
-  --fnt-primary: 20, 20, 40;
-  --fnt-secondary: 60, 90, 130;
-  --fnt-tertiary: 100, 140, 100;
+  --fnt-primary: 255, 255, 255;
+  --fnt-secondary: 174, 174, 174;
+  --fnt-tertiary: 255, 146, 172;
 
   // Principales
-  --tn-primary: 255, 100, 150;
-  --tn-secondary: 0, 0, 0;
+  --tn-primary: 147, 9, 247;
+  --tn-secondary: 125, 172, 255;
+  --tn-tertiary: 255, 12, 226;
 
   // --
 
@@ -33,6 +35,7 @@ $fP: var(--p-font-size);
 $bg1: var(--bg-primary);
 $bg2: var(--bg-secondary);
 $bg3: var(--bg-tertiary);
+$bgp: var(--bg-pure);
 $fn1: var(--fnt-primary);
 $fn2: var(--fnt-secondary);
 $fn3: var(--fnt-tertiary);
@@ -49,7 +52,7 @@ $extra-large-screen: 1200px;
 $big-screen: 1350px;
 
 // Other
-$radius: 15px;
+$radius: 10px;
 $padding: 10px;
 $icon: 20px;
 $family-size: 14px;
@@ -69,8 +72,18 @@ $focus: #4285f4;
 // bezier
 $bezier: cubic-bezier(0.68, -0.55, 0.27, 1.55);
 
-// gradients
-$gr1: linear-gradient(140deg, rgb(255 100 50) 12.8%, rgb(255 0 101) 43.52%, rgb(123 46 255) 84.34%);
+// gradient
+$gr1: radial-gradient(at 10% 83%, rgb($bgp) 0%, rgba($bg1, 0.4) 100%),
+  radial-gradient(at 57% 17%, rgb($bgp) 0%, rgba($bgp, 0) 100%),
+  radial-gradient(at 19% 10%, rgb($bg2, 0.4) 0%, rgba($bgp, 0) 100%),
+  radial-gradient(at 34% 3%, rgba($bg2) 0%, rgba($bg2) 100%);
+$gr2: linear-gradient(
+  // -------
+  rgb($bg3, 0.7) 10%,
+  rgb($bg1) 50%,
+  rgb($bg1, 0.5) 70%,
+  rgba($bg1, 0) 90%
+);
 
 @mixin toDark {
   body.dark & {
