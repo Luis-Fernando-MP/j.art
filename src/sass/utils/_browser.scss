@@ -6,12 +6,14 @@ $browser-support-map: (
   chrome: '(-webkit-appearance: none) and (all: initial)'
 );
 
-@mixin browser($browser) {
-  $support-rule: map-get($browser-support-map, $browser);
+@mixin browsers($browsers) {
+  @each $browser in $browsers {
+    $support-rule: map-get($browser-support-map, $browser);
 
-  @if $support-rule {
-    @supports #{$support-rule} {
-      @content;
+    @if $support-rule {
+      @supports #{$support-rule} {
+        @content;
+      }
     }
   }
 }
