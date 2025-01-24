@@ -11,6 +11,7 @@
   }
 
   &-children {
-    position: relative;
+    position: absolute;
+    transform-origin: 0 0;
   }
 }

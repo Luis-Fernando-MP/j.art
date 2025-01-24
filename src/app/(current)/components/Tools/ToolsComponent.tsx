@@ -14,8 +14,11 @@ import {
 import type { JSX } from 'react'
 
 import {
+  centerCanvasContent,
   changeBrushSize,
+  drawCenteredRect,
   flipHorizontal,
+  flipVertical,
   getContext,
   rotateCanvas
 } from '../../helpers/canvas.utils'
@@ -77,7 +80,14 @@ const ToolsComponent = (): JSX.Element => {
             >
               <FlipHorizontalIcon />
             </button>
-            <button className={acl(verticalFlip)} onClick={() => setVerticalFlip(!verticalFlip)}>
+            <button
+              className={acl(verticalFlip)}
+              onClick={() => {
+                const { ctx } = getContext()
+                flipVertical(ctx)
+                setVerticalFlip(!verticalFlip)
+              }}
+            >
               <FlipVerticalIcon />
             </button>
           </div>
@@ -94,7 +104,12 @@ const ToolsComponent = (): JSX.Element => {
             >
               <Rotate3DIcon />
             </button>
-            <button>
+            <button
+              onClick={() => {
+                const { ctx } = getContext()
+                centerCanvasContent(ctx)
+              }}
+            >
               <AlignCenterVerticalIcon />
             </button>
           </div>

@@ -10,7 +10,6 @@
 
   &-background {
     pointer-events: none;
-    content: '';
 
     position: absolute;
     top: 0;
@@ -39,6 +38,12 @@
       0 0,
       $pixelSize $pixelSize;
     background-size: $pixelSize $pixelSize;
+
+    &.loader {
+      pointer-events: all;
+      cursor: progress;
+      position: relative;
+    }
   }
 
   &-draw {

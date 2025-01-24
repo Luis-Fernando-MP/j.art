@@ -1,17 +1,16 @@
 'use client'
 
+import Board from '@/shared/components/Board'
 import { JSX, useRef, useState } from 'react'
 
 import { getContext } from '../../helpers/canvas.utils'
 import CanvasStore from '../../store/canvas.store'
 
-type TPositions = { x: number; y: number }
 type CanvasProps = {
-  offset: TPositions
   scale: number
 }
 
-const CanvasComponent = ({ offset, scale }: CanvasProps): JSX.Element => {
+const CanvasComponent = ({ scale }: CanvasProps): JSX.Element => {
   const $canvasRef = useRef<HTMLCanvasElement>(null)
 
   const [isDrawing, setIsDrawing] = useState(false)
@@ -77,8 +76,8 @@ const CanvasComponent = ({ offset, scale }: CanvasProps): JSX.Element => {
         className='canvas-draw'
         id='canvas'
         ref={$canvasRef}
-        width={900}
-        height={900}
+        width={930}
+        height={930}
         onMouseDown={handleCanvasMouseDown}
         onMouseMove={handleCanvasMouseMove}
         onMouseUp={handleCanvasMouseUp}
@@ -93,4 +92,14 @@ const CanvasComponent = ({ offset, scale }: CanvasProps): JSX.Element => {
   )
 }
 
-export default CanvasComponent
+const CanvasDraw = (): JSX.Element => {
+  return (
+    <Board>
+      {(_, scale) => {
+        return <CanvasComponent scale={scale} />
+      }}
+    </Board>
+  )
+}
+
+export default CanvasDraw

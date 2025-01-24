@@ -4,7 +4,12 @@ import type { JSX } from 'react'
 
 import './style.scss'
 
-const ToolsComponent = dynamic(() => import('./ToolsComponent'), { ssr: false })
+const ToolsComponent = dynamic(() => import('./ToolsComponent'), {
+  ssr: false,
+  loading() {
+    return <p>loading</p>
+  }
+})
 
 interface ITools {
   className?: string

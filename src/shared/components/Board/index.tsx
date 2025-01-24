@@ -84,21 +84,15 @@ const Board = ({ children }: BoardProps): JSX.Element => {
       onMouseUp={handleContainerMouseUp}
       onContextMenu={e => e.preventDefault()}
       style={{
-        overflow: 'hidden',
-        cursor: isMoving ? 'grabbing' : 'default',
-        position: 'relative',
-        width: '100%',
-        height: '100%'
+        cursor: isMoving ? 'grabbing' : 'default'
       }}
     >
       <div
         className='board-children'
         style={{
-          position: 'absolute',
           top: offset.y,
           left: offset.x,
-          transform: `scale(${scale})`,
-          transformOrigin: '0 0'
+          transform: `scale(${scale})`
         }}
       >
         {children(offset, scale)}
