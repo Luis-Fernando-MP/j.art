@@ -1,0 +1,16 @@
+@use '@sass/config/global';
+@use '@sass/config/vars' as v;
+@use '@sass/utils/defs' as d;
+
+.board {
+  &-zone {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+  }
+
+  &-children {
+    position: relative;
+  }
+}

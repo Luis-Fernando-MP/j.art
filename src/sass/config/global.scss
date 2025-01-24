@@ -2,6 +2,7 @@
 @use '@sass/config/vars' as *;
 @use '@sass/utils/media' as m;
 @use '@sass/utils/text' as t;
+@use '@sass/utils/scrollbar' as *;
 @use '@sass/utils/tooltip' as tol;
 @use '@sass/utils/boxLoader' as loader;
 
@@ -21,6 +22,8 @@ html {
 }
 
 body {
+  @extend %scroll-hidden;
+
   position: relative;
 
   overflow-x: hidden;
@@ -172,7 +175,7 @@ ul {
   display: block;
   width: 20px;
   height: 20px;
-  stroke: rgb($fn3);
+  stroke: rgb($fn2);
 }
 
 .tn1 {

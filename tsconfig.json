@@ -21,6 +21,7 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
+      "@home/*": ["./src/app/(current)/*"],
       "@sass/*": ["./src/sass/*"]
     }
   },

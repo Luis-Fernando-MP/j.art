@@ -2,22 +2,15 @@
 @use '@sass/config/vars' as v;
 @use '@sass/utils/defs' as d;
 @use '@sass/utils/scrollbar' as *;
-
-// @supports (-moz-appearance: none) {
-//   .app-gradient {
-//     // display: none;
-//     -webkit-filter: blur(500px) opacity(1);
-//     -moz-filter: blur(500px) opacity(1);
-//     filter: blur(500px) opacity(1);
-//   }
-// }
+@use '@sass/utils/browser' as br;
 
 .app {
   position: relative;
 
+  overflow: hidden;
   display: grid;
-  grid-template-areas: 'tools canvas';
-  grid-template-columns: 370px 1fr;
+  grid-template-areas: 'tools canvas layers';
+  grid-template-columns: 270px 930px 1fr;
   gap: v.$padding;
 
   width: 100%;
@@ -28,37 +21,23 @@
     z-index: -1;
     top: 50%;
     left: 50%;
-    transform: translate(-30%, -30%);
+    transform: translate(-20%, -40%);
 
-    width: 600px;
-    height: 600px;
+    width: 900px;
+    height: 900px;
     border-radius: 50%;
 
-    opacity: 1;
-    background: red;
+    opacity: 0.3;
+    background-image: v.$gr3;
+    filter: blur(500px);
 
-    // background-image: webkit-linear-gradient(
-    //   45deg,
-    //   #252848 30%,
-    //   rgb(255 74 233 / 17%) 40%,
-    //   rgb(0 170 255 / 15%) 60%,
-    //   rgb(255 74 233 / 80%) 90%
-    // );
-    // filter: blur(500px);ḉ
-
-    // -webkit-filter: blur(500px) opacity(1);
-    // -moz-filter: blur(500px) opacity(1);
-    // filter: blur(500px) opacity(1);
-    // -webkit-filter: blur(500px);
-    // -moz-filter: blur(500px);
-    // -ms-filter: blur(500px);
-    // -o-filter: blur(500px);
-    filter: blur(1000px);
+    @include br.browsers(firefox) {
+      display: none;
+    }
   }
 
   &-tools__wrapper,
   &-canvas__wrapper {
-    display: none;
     width: 100%;
     height: 100%;
   }
@@ -68,17 +47,41 @@
 
     overflow-y: scroll;
     grid-area: tools;
-    padding: v.$padding * 2 50px v.$padding * 2 50px;
+    padding: v.$padding * 2.5;
+  }
+
+  &-layers {
+    grid-area: layers;
+    background-image: v.$gr2;
   }
 
   &-canvas {
     grid-area: canvas;
+    justify-content: center;
     padding: v.$padding * 2 0;
 
+    @include d.flex($ali: center);
+
     &__wrapper {
-      border-top-left-radius: v.$radius;
-      background-image: v.$gr2;
-      backdrop-filter: blur(1px);
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+      background-color: rgb(v.$bg2, 0.2);
+
+      &::before {
+        content: '';
+
+        position: relative;
+        top: 0;
+        left: 0;
+
+        width: 100%;
+        height: 100%;
+        border-radius: v.$radius;
+
+        opacity: 0;
+        background-image: v.$gr2;
+      }
     }
   }
 }

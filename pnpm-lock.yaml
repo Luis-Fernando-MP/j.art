@@ -32,6 +32,9 @@ importers:
       react:
         specifier: 19.0.0
         version: 19.0.0
+      react-canvas-draw:
+        specifier: 1.2.1
+        version: 1.2.1(react@19.0.0)
       react-color4bg:
         specifier: ^0.1.4
         version: 0.1.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -63,6 +66,9 @@ importers:
       '@types/react':
         specifier: 19.0.7
         version: 19.0.7
+      '@types/react-canvas-draw':
+        specifier: 1.2.4
+        version: 1.2.4
       '@types/react-dom':
         specifier: 19.0.3
         version: 19.0.3(@types/react@19.0.7)
@@ -583,6 +589,9 @@ packages:
     resolution: {integrity: sha512-mFMBfMOz8QxhYVbuINtswBp9VL2b4Y0QqYHwqLz3YbgtfAcat2Dl6Y1o4e22S/OVE6Ebl9m7wWiMT2lSbAs1wA==}
     deprecated: This is a stub types definition. prettier provides its own type definitions, so you do not need this installed.
 
+  '@types/react-canvas-draw@1.2.4':
+    resolution: {integrity: sha512-Zs8e5y5y/E89S054n3o6wuZaTxAIEhS2ggfz+/scxHnMY0HiDX+iCEmFawtmBNgnlwNyk/x5n90vg8vU2OCOJw==}
+
   '@types/react-dom@19.0.3':
     resolution: {integrity: sha512-0Knk+HJiMP/qOZgMyNFamlIjw9OFCsyC2ZbigmEEyXXixgre6IQpm/4V+r3qH4GC1JPvRJKInw+on2rV6YZLeA==}
     peerDependencies:
@@ -797,6 +806,9 @@ packages:
 
   caniuse-lite@1.0.30001690:
     resolution: {integrity: sha512-5ExiE3qQN6oF8Clf8ifIDcMRCRE/dMGcETG/XGMD8/XiXm6HXQgQTh1yZYLXXpSOsEUlJm1Xr7kGULZTuGtP/w==}
+
+  catenary-curve@1.0.1:
+    resolution: {integrity: sha512-vSHQtYFjItV4wxUH5OkicA3Kmln6thBBWlJLiw2f4apfvkKw4BVe8bTbG6lnbJe60CIr8PyHzjSX27blSJ07Ww==}
 
   chalk@4.1.2:
     resolution: {integrity: sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==}
@@ -1532,6 +1544,9 @@ packages:
     resolution: {integrity: sha512-MbjN408fEndfiQXbFQ1vnd+1NoLDsnQW41410oQBXiyXDMYH5z505juWa4KUE1LqxRC7DgOgZDbKLxHIwm27hA==}
     engines: {node: '>=0.10'}
 
+  lazy-brush@1.0.1:
+    resolution: {integrity: sha512-xT/iSClTVi7vLoF8dCWTBhCuOWqsLXCMPa6ucVmVAk6hyNCM5JeS1NLhXqIrJktUg+caEYKlqSOUU4u3cpXzKg==}
+
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
@@ -1921,6 +1936,11 @@ packages:
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
 
+  react-canvas-draw@1.2.1:
+    resolution: {integrity: sha512-mCHE+Q91a26gUhyraHONedmbCI7dF/4BKdOxba7s4538QNfFWv/NfzLXWZrmjAQ4tO1vTvO+axX5YGIFjGc6uw==}
+    peerDependencies:
+      react: 16.x || 17.x
+
   react-color4bg@0.1.4:
     resolution: {integrity: sha512-ojqxBGRoDPtz1M/2yexPROhdoesOAqElYSM5B/A4I3ox0hOrnrRJApTSBAWtWSJ5L/XPfL+ivURIjiP80dZYUw==}
     engines: {pnpm: 10.0.0}
@@ -1969,6 +1989,9 @@ packages:
   require-from-string@2.0.2:
     resolution: {integrity: sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==}
     engines: {node: '>=0.10.0'}
+
+  resize-observer-polyfill@1.5.1:
+    resolution: {integrity: sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg==}
 
   resolve-from@4.0.0:
     resolution: {integrity: sha512-pb/MYmXstAkysRFx8piNI1tGFNQIFA3vkE3Gq4EuA1dF6gHp/+vgZqsCGJapvy8N3Q+4o7FwvquPJcnZ7RYy4g==}
@@ -2780,6 +2803,10 @@ snapshots:
     dependencies:
       prettier: 3.4.2
 
+  '@types/react-canvas-draw@1.2.4':
+    dependencies:
+      '@types/react': 19.0.7
+
   '@types/react-dom@19.0.3(@types/react@19.0.7)':
     dependencies:
       '@types/react': 19.0.7
@@ -3043,6 +3070,8 @@ snapshots:
   camelcase-css@2.0.1: {}
 
   caniuse-lite@1.0.30001690: {}
+
+  catenary-curve@1.0.1: {}
 
   chalk@4.1.2:
     dependencies:
@@ -3928,6 +3957,8 @@ snapshots:
     dependencies:
       language-subtag-registry: 0.3.23
 
+  lazy-brush@1.0.1: {}
+
   levn@0.4.1:
     dependencies:
       prelude-ls: 1.2.1
@@ -4238,6 +4269,14 @@ snapshots:
 
   queue-microtask@1.2.3: {}
 
+  react-canvas-draw@1.2.1(react@19.0.0):
+    dependencies:
+      catenary-curve: 1.0.1
+      lazy-brush: 1.0.1
+      prop-types: 15.8.1
+      react: 19.0.0
+      resize-observer-polyfill: 1.5.1
+
   react-color4bg@0.1.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
       react: 19.0.0
@@ -4288,6 +4327,8 @@ snapshots:
       set-function-name: 2.0.2
 
   require-from-string@2.0.2: {}
+
+  resize-observer-polyfill@1.5.1: {}
 
   resolve-from@4.0.0: {}
 
