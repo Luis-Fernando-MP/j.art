@@ -12,11 +12,6 @@ export const getContext = (id: string = 'canvas') => {
   return { canvas, ctx }
 }
 
-export const clearCanvas = (ctx: CanvasRenderingContext2D) => {
-  const { width, height } = ctx.canvas
-  ctx.clearRect(0, 0, width, height)
-}
-
 export function changeBrushSize(size: number) {
   const $canvasGrid = document.getElementById('canvas-grid')
   if (!($canvasGrid instanceof HTMLElement)) return null

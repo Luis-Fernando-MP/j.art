@@ -1,121 +1,118 @@
-import { useEffect, useRef, useState } from 'react'
+'use client'
 
-import CanvasStore from '../store/canvas.store'
+import { useMemo, useRef, useState } from 'react'
 
-const useCanvas = () => {
+import { IShapeBresenham, alignCord } from '../helpers/bresenham'
+import { getContext } from '../helpers/canvas.utils'
+import {
+  HandleDeletePixel,
+  getCanvasCoordinates,
+  handleClearCanvas,
+  handleDrawPixel,
+  handlePaintBucket,
+  handlePipetteColor
+} from '../helpers/toolsCanvas'
+import CanvasStore, { TPositions } from '../store/canvas.store'
+import ToolsStore from '../store/tools.store'
+import { ShapeTools, handleBresenhamTools, shapeTools } from '../store/tools.types'
+
+type TUseCanvas = { scale: number }
+
+const useCanvas = ({ scale }: TUseCanvas) => {
   const $canvasRef = useRef<HTMLCanvasElement>(null)
+  const $perfectShape = useRef(false)
+
   const [isDrawing, setIsDrawing] = useState(false)
-  const [canvasSize, setCanvasSize] = useState({ w: 500, h: 500 })
-  const { pixelColor, pixelOpacity, pixelSize } = CanvasStore()
-  const PIXEL_SIZE = pixelSize
+  const startPos = useRef<TPositions | null>(null)
+  const canvasSnapshot = useRef<ImageData | null>(null)
 
-  console.log(pixelSize)
+  const { pixelColor, pixelOpacity, pixelSize, setPixelColor } = CanvasStore()
+  const { selectedTool } = ToolsStore()
 
-  useEffect(() => {
-    const updateCanvasSize = () => {
-      const parent = document.getElementById('canvasContainer')
-      if (!parent) return
-      const { canvas, ctx } = getContext()
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-      setCanvasSize({
-        w: parent.clientWidth,
-        h: parent.clientHeight
-      })
-      setTimeout(() => {
-        const { ctx } = getContext()
-        ctx.putImageData(imageData, 0, 0)
-      }, 0)
-    }
-
-    updateCanvasSize()
-    window.addEventListener('resize', updateCanvasSize)
-    return () => {
-      window.removeEventListener('resize', updateCanvasSize)
-    }
-  }, [])
-
-  useEffect(() => {
-    // change grid
-    const $gridElement = document.getElementById('canvas-grid')
-    if (!($gridElement instanceof HTMLElement)) return
-    $gridElement.style.setProperty('--s-grid', `${pixelSize}px`)
-  }, [pixelSize, canvasSize])
-
-  const [tool, setTool] = useState({
-    type: 'brush',
-    color: 'rgb(255, 255, 255)',
-    opacity: 1,
-    mirror: { horizontal: false, vertical: false }
-  })
-
-  const getContext = () => {
-    const canvas = $canvasRef.current
-    const ctx = canvas?.getContext('2d')
-    if (!canvas || !ctx) throw new Error('canvas is undefined')
-    return { canvas, ctx }
+  const activatePerfectShape = (isActive: boolean = true) => {
+    $perfectShape.current = isActive
+    const $span = document.getElementById('perfect-shape')
+    if (!($span instanceof HTMLSpanElement)) return
+    $span.classList.toggle('active', isActive)
   }
 
-  const getCanvasCoordinates = (e: React.MouseEvent) => {
-    const { canvas } = getContext()
-    const rect = canvas.getBoundingClientRect()
-    return {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
-    }
-  }
+  const handleUtilTools = useMemo(
+    () => ({
+      Brush: (ctx: CanvasRenderingContext2D, x: number, y: number) =>
+        handleDrawPixel(ctx, x, y, pixelColor, pixelSize, pixelOpacity),
+      Bucket: (ctx: CanvasRenderingContext2D, x: number, y: number) =>
+        handlePaintBucket(ctx, x, y, [255, 0, 0, 255]),
+      Eraser: (ctx: CanvasRenderingContext2D, x: number, y: number) =>
+        HandleDeletePixel(ctx, x, y, pixelSize),
+      Pipette: (ctx: CanvasRenderingContext2D, x: number, y: number) => {
+        const color = handlePipetteColor(ctx, x, y)
+        setPixelColor(color.rgba)
+        console.log(color)
+      }
+    }),
+    [pixelColor, pixelSize, pixelOpacity]
+  )
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    const positions = getCanvasCoordinates(e)
-    if (!positions) return
+  const handleCanvasMouseDown = (e: MouseEvent) => {
+    if (e.ctrlKey) return
+    e.preventDefault()
     setIsDrawing(true)
-    handleDrawing(positions.x, positions.y)
+    const { x, y } = getCanvasCoordinates(e, scale)
+    startPos.current = { x, y }
+    handleDrawing(x, y)
+
+    if (!(selectedTool in shapeTools) || canvasSnapshot.current) return
+    const { ctx } = getContext()
+    canvasSnapshot.current = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height)
   }
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    const positions = getCanvasCoordinates(e)
+  const handleCanvasMouseMove = (e: MouseEvent) => {
     if (!isDrawing) return
-    handleDrawing(positions.x, positions.y)
+    activatePerfectShape(e.shiftKey)
+    const { x, y } = getCanvasCoordinates(e, scale)
+    handleDrawing(x, y)
   }
 
-  const handleMouseUp = () => {
-    if (!isDrawing) return
+  const handleCanvasMouseUp = () => {
     setIsDrawing(false)
-  }
-
-  const drawPixel = (
-    ctx: CanvasRenderingContext2D,
-    x: number,
-    y: number,
-    color: string,
-    size: number,
-    opacity = 1
-  ) => {
-    ctx.globalAlpha = opacity
-    ctx.fillStyle = color
-    ctx.fillRect(x, y, size, size)
-    ctx.globalAlpha = 1
+    startPos.current = null
+    canvasSnapshot.current = null
+    activatePerfectShape(false)
   }
 
   const handleDrawing = (x: number, y: number) => {
-    const canvas = $canvasRef.current
-    const ctx = canvas?.getContext('2d')
-    if (!canvas || !ctx) return
+    const { ctx } = getContext()
+    const endX = alignCord(x, pixelSize)
+    const endY = alignCord(y, pixelSize)
 
-    const alignedX = Math.floor(x / PIXEL_SIZE) * PIXEL_SIZE
-    const alignedY = Math.floor(y / PIXEL_SIZE) * PIXEL_SIZE
-
-    const actions: any = {
-      brush: () => drawPixel(ctx, alignedX, alignedY, tool.color, pixelSize)
+    if (selectedTool in handleUtilTools) {
+      const handleTool = handleUtilTools[selectedTool as keyof typeof handleUtilTools]
+      return handleTool(ctx, endX, endY)
     }
-
-    actions[tool.type]?.()
+    if (selectedTool in shapeTools && startPos.current) {
+      const { x: stX, y: stY } = startPos.current
+      const startX = alignCord(stX, pixelSize)
+      const startY = alignCord(stY, pixelSize)
+      const shapeProps: IShapeBresenham = {
+        ctx,
+        startX,
+        startY,
+        endX,
+        endY,
+        pixelColor,
+        pixelSize,
+        snapshot: canvasSnapshot.current,
+        perfectShape: $perfectShape.current
+      }
+      return handleBresenhamTools[selectedTool as ShapeTools](shapeProps)
+    }
   }
 
   return {
     $canvasRef,
-    canvasSize,
-    handleMouseDown,
-    handleMouseMove
+    handleCanvasMouseDown,
+    handleCanvasMouseMove,
+    handleCanvasMouseUp
   }
 }
 

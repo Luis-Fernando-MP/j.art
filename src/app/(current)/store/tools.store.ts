@@ -1,35 +1,6 @@
 import { StateCreator, create } from 'zustand'
 
-export enum Tools {
-  Brush = 'Pincel',
-  PerfectPixel = 'Pixel Perfect',
-  Eraser = 'Borrador',
-  Bucket = 'Rellenar',
-  Pipette = 'Cuentagotas',
-
-  // utilidades
-  Shade = 'Sombrear',
-  Transparency = 'Transparencia',
-  Lighten = 'Aclarar',
-  Noise = 'Ruido',
-  Pattern = 'Patrón',
-  Outline = 'Contorno',
-  Gradient = 'Gradiente',
-
-  // formas
-  Square = 'Cuadrado',
-  Circle = 'Círculo',
-  Pentagon = 'Pentágono',
-  Hexagon = 'Hexágono',
-  Triangle = 'Triángulo',
-  RightTriangle = 'Triángulo-horizontal',
-  Line = 'Línea',
-  X = 'Aspa',
-  Torus = 'Dona',
-  Heart = 'Corazón',
-  Star = 'Estrella',
-  House = 'Casa'
-}
+import { Tools } from './tools.types'
 
 interface IToolsStore {
   fileName: string
@@ -44,7 +15,7 @@ interface IToolsStore {
   setVerticalFlip: (verticalFlip: boolean) => void
   setHorizontalMirror: (horizontalMirror: boolean) => void
   setVerticalMirror: (verticalMirror: boolean) => void
-  setSelectedTool: (selectedTool: Tools) => void
+  setSelectedTool: (selectedTool: string) => void
 }
 
 const state: StateCreator<IToolsStore> = set => ({
@@ -53,14 +24,14 @@ const state: StateCreator<IToolsStore> = set => ({
   verticalFlip: false,
   horizontalMirror: false,
   verticalMirror: false,
-  selectedTool: Tools.Brush,
+  selectedTool: 'Brush',
 
   setFileName: fileName => set({ fileName }),
   setHorizontalFlip: horizontalFlip => set({ horizontalFlip }),
   setVerticalFlip: verticalFlip => set({ verticalFlip }),
   setHorizontalMirror: horizontalMirror => set({ horizontalMirror }),
   setVerticalMirror: verticalMirror => set({ verticalMirror }),
-  setSelectedTool: selectedTool => set({ selectedTool })
+  setSelectedTool: selectedTool => set({ selectedTool: selectedTool as Tools })
 })
 
 const ToolsStore = create(state)

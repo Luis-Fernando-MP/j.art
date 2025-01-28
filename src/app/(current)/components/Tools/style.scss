@@ -10,6 +10,10 @@
     border-radius: v.$radius;
     background-color: rgb(v.$tn1);
 
+    h1 {
+      font-size: v.$fH2;
+    }
+
     @include d.flex($dir: row, $ali: center);
   }
 
