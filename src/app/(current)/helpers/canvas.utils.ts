@@ -12,6 +12,11 @@ export const getContext = (id: string = 'canvas') => {
   return { canvas, ctx }
 }
 
+export const clearCanvas = (ctx: CanvasRenderingContext2D) => {
+  const { width, height } = ctx.canvas
+  ctx.clearRect(0, 0, width, height)
+}
+
 export function changeBrushSize(size: number) {
   const $canvasGrid = document.getElementById('canvas-grid')
   if (!($canvasGrid instanceof HTMLElement)) return null
@@ -71,16 +76,17 @@ export function flipVertical(ctx: CanvasRenderingContext2D) {
 
   tempCtx.clearRect(0, 0, width, height)
 }
-
-export function centerCanvasContent(ctx: CanvasRenderingContext2D) {
+export function centerCanvasContent(ctx: CanvasRenderingContext2D, pixelSize: number = 30) {
   const { width, height } = ctx.canvas
   const imageData = ctx.getImageData(0, 0, width, height)
-  let minX = width,
-    minY = height,
-    maxX = 0,
-    maxY = 0
+
+  let minX = width
+  let minY = height
+  let maxX = 0
+  let maxY = 0
   let hasContent = false
 
+  // Buscar los límites del contenido en el canvas
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       const index = (y * width + x) * 4
@@ -96,11 +102,24 @@ export function centerCanvasContent(ctx: CanvasRenderingContext2D) {
   if (!hasContent) return
   const drawingWidth = maxX - minX + 1
   const drawingHeight = maxY - minY + 1
-  const offsetX = Math.floor((width - drawingWidth) / 2) - minX
-  const offsetY = Math.floor((height - drawingHeight) / 2) - minY
-  tempCanvas.width = width
-  tempCanvas.height = height
-  tempCtx.putImageData(imageData, 0, 0)
+  const offsetX = Math.round((width - drawingWidth) / 2 / pixelSize) * pixelSize
+  const offsetY = Math.round((height - drawingHeight) / 2 / pixelSize) * pixelSize
+
+  tempCanvas.width = drawingWidth
+  tempCanvas.height = drawingHeight
+  const croppedImageData = ctx.getImageData(minX, minY, drawingWidth, drawingHeight)
+  tempCtx.putImageData(croppedImageData, 0, 0)
   ctx.clearRect(0, 0, width, height)
-  ctx.drawImage(tempCanvas, offsetX, offsetY)
+  ctx.drawImage(
+    tempCanvas,
+    0,
+    0,
+    drawingWidth,
+    drawingHeight,
+    offsetX,
+    offsetY,
+    drawingWidth,
+    drawingHeight
+  )
+  tempCtx.clearRect(0, 0, width, height)
 }

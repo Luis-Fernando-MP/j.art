@@ -41,11 +41,20 @@
 
       background-color: rgb(v.$bg2);
 
+      @include d.flex($dir: row, $ali: center, $gap: v.$padding * 0.5);
+
+      &.col {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      &.dark {
+        background-color: rgb(v.$bg2, 0.4);
+      }
+
       &.center {
         justify-content: center;
       }
-
-      @include d.flex($dir: row, $ali: center, $gap: v.$padding * 0.5);
 
       p {
         padding: 5px v.$padding;
@@ -57,12 +66,47 @@
     &__options {
       @include d.flex($dir: row, $ali: center);
 
+      flex-wrap: wrap;
+      justify-content: space-between;
+
       button {
         padding: 5px 0;
       }
 
       button.active svg {
         stroke: rgb(v.$tn2);
+      }
+    }
+
+    &__actions button {
+      position: relative;
+
+      &::after {
+        content: '';
+
+        position: absolute;
+        top: 7px;
+        left: 7px;
+
+        display: none;
+
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+
+        background-color: #fff;
+        filter: blur(1px);
+        box-shadow: 0 5px 10px 5px rgb(v.$tn1, 0.8);
+      }
+
+      &.active {
+        &::after {
+          display: block;
+        }
+
+        svg {
+          stroke: rgb(v.$fn2);
+        }
       }
     }
 
@@ -76,6 +120,28 @@
 
       &:hover {
         scale: 1.1;
+      }
+    }
+  }
+
+  &-options {
+    &__perfect {
+      width: 100%;
+      padding: v.$padding * 0.5 0;
+      border: 2px dashed rgba(v.$fn2, 0.5);
+      border-radius: v.$radius * 0.5;
+
+      font-size: 0.8rem;
+      color: rgba(v.$fn2, 0.5);
+      text-align: center;
+
+      &.active {
+        border-color: rgba(v.$tn2, 0.5);
+        color: rgba(v.$tn2, 0.5);
+      }
+
+      &:hover {
+        scale: 1.02;
       }
     }
   }

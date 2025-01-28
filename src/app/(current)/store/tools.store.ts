@@ -2,22 +2,33 @@ import { StateCreator, create } from 'zustand'
 
 export enum Tools {
   Brush = 'Pincel',
+  PerfectPixel = 'Pixel Perfect',
   Eraser = 'Borrador',
   Bucket = 'Rellenar',
-  Eyedropper = 'Cuentagotas',
-  Transparency = 'Transparencia',
-  Circle = 'Círculo',
-  Square = 'Cuadrado',
-  Triangle = 'Triángulo',
-  Line = 'Línea',
+  Pipette = 'Cuentagotas',
+
+  // utilidades
   Shade = 'Sombrear',
+  Transparency = 'Transparencia',
   Lighten = 'Aclarar',
-  Pixelate = 'Pixelar',
   Noise = 'Ruido',
-  Gradient = 'Gradiente',
   Pattern = 'Patrón',
   Outline = 'Contorno',
-  PerfectPixel = 'Pixel Perfect'
+  Gradient = 'Gradiente',
+
+  // formas
+  Square = 'Cuadrado',
+  Circle = 'Círculo',
+  Pentagon = 'Pentágono',
+  Hexagon = 'Hexágono',
+  Triangle = 'Triángulo',
+  RightTriangle = 'Triángulo-horizontal',
+  Line = 'Línea',
+  X = 'Aspa',
+  Torus = 'Dona',
+  Heart = 'Corazón',
+  Star = 'Estrella',
+  House = 'Casa'
 }
 
 interface IToolsStore {
