@@ -1,15 +1,28 @@
 'use client'
 
+import toast from 'react-hot-toast'
+
 const tempCanvas = document.createElement('canvas')
 const tempCtx = tempCanvas.getContext('2d')!
-tempCtx.imageSmoothingEnabled = false
 
 export const getContext = (id: string = 'canvas') => {
-  const canvas = document.getElementById(id)
-  if (!(canvas instanceof HTMLCanvasElement)) throw new Error('canvas element is undefined')
-  const ctx = canvas.getContext('2d')
-  if (!ctx) throw new Error('context is undefined')
+  const canvas = document.getElementById(id) as HTMLCanvasElement
+  const ctx = canvas?.getContext('2d')
+  if (!(canvas instanceof HTMLCanvasElement) || !ctx) {
+    location.reload()
+    toast.error('canvas element is undefined')
+    throw new Error('canvas element is undefined')
+  }
   return { canvas, ctx }
+}
+
+function prepareTempCanvas(ctx: CanvasRenderingContext2D) {
+  const { width, height } = ctx.canvas
+  tempCanvas.width = width
+  tempCanvas.height = height
+  tempCtx.drawImage(ctx.canvas, 0, 0)
+  ctx.imageSmoothingEnabled = false
+  ctx.clearRect(0, 0, width, height)
 }
 
 export function changeBrushSize(size: number) {
@@ -19,78 +32,64 @@ export function changeBrushSize(size: number) {
 }
 
 export function rotateCanvas(ctx: CanvasRenderingContext2D, deg: number) {
+  prepareTempCanvas(ctx)
   const { width, height } = ctx.canvas
-
-  tempCanvas.width = width
-  tempCanvas.height = height
-  tempCtx.drawImage(ctx.canvas, 0, 0)
-
   const rad = (deg * Math.PI) / 180
-
-  ctx.imageSmoothingEnabled = false
-  ctx.clearRect(0, 0, width, height)
   ctx.save()
   ctx.translate(width / 2, height / 2)
   ctx.rotate(rad)
   ctx.translate(-width / 2, -height / 2)
   ctx.drawImage(tempCanvas, 0, 0, width, height)
   ctx.restore()
-  tempCtx.clearRect(0, 0, width, height)
 }
 
 export function flipHorizontal(ctx: CanvasRenderingContext2D) {
-  const { width, height } = ctx.canvas
-  tempCanvas.width = width
-  tempCanvas.height = height
-  tempCtx.drawImage(ctx.canvas, 0, 0)
-
-  ctx.imageSmoothingEnabled = false
-  ctx.clearRect(0, 0, width, height)
+  prepareTempCanvas(ctx)
   ctx.save()
-  ctx.translate(width, 0)
+  ctx.translate(ctx.canvas.width, 0)
   ctx.scale(-1, 1)
-  ctx.drawImage(tempCanvas, 0, 0, width, height)
+  ctx.drawImage(tempCanvas, 0, 0, ctx.canvas.width, ctx.canvas.height)
   ctx.restore()
-
-  tempCtx.clearRect(0, 0, width, height)
+  tempCtx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
 }
 
 export function flipVertical(ctx: CanvasRenderingContext2D) {
-  const { width, height } = ctx.canvas
-  tempCanvas.width = width
-  tempCanvas.height = height
-  tempCtx.drawImage(ctx.canvas, 0, 0)
-
-  ctx.imageSmoothingEnabled = false
-  ctx.clearRect(0, 0, width, height)
+  prepareTempCanvas(ctx)
   ctx.save()
-  ctx.translate(0, height)
+  ctx.translate(0, ctx.canvas.height)
   ctx.scale(1, -1)
-  ctx.drawImage(tempCanvas, 0, 0, width, height)
+  ctx.drawImage(tempCanvas, 0, 0, ctx.canvas.width, ctx.canvas.height)
   ctx.restore()
-
-  tempCtx.clearRect(0, 0, width, height)
+  tempCtx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
 }
+
 export function centerCanvasContent(ctx: CanvasRenderingContext2D, pixelSize: number = 30) {
   const { width, height } = ctx.canvas
   const imageData = ctx.getImageData(0, 0, width, height)
+  ctx.imageSmoothingEnabled = false
 
-  let minX = width
-  let minY = height
-  let maxX = 0
-  let maxY = 0
+  let minX = width,
+    minY = height,
+    maxX = 0,
+    maxY = 0
   let hasContent = false
 
-  // Buscar los límites del contenido en el canvas
-  for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
-      const index = (y * width + x) * 4
-      if (imageData.data[index + 3] !== 0) {
+  for (let i = 3; i < imageData.data.length; i += 4) {
+    if (imageData.data[i] !== 0) {
+      // Canal alfa > 0 significa que hay contenido
+      const pixelIndex = i / 4 // Índice del píxel en 1D
+      const x = pixelIndex % width
+      const y = Math.floor(pixelIndex / width)
+      if (!hasContent) {
+        // Si encontramos el primer píxel
+        minX = maxX = x
+        minY = maxY = y
+        hasContent = true
+      } else {
         minX = Math.min(minX, x)
         minY = Math.min(minY, y)
         maxX = Math.max(maxX, x)
         maxY = Math.max(maxY, y)
-        hasContent = true
       }
     }
   }
@@ -104,6 +103,7 @@ export function centerCanvasContent(ctx: CanvasRenderingContext2D, pixelSize: nu
   tempCanvas.height = drawingHeight
   const croppedImageData = ctx.getImageData(minX, minY, drawingWidth, drawingHeight)
   tempCtx.putImageData(croppedImageData, 0, 0)
+
   ctx.clearRect(0, 0, width, height)
   ctx.drawImage(
     tempCanvas,
@@ -116,5 +116,4 @@ export function centerCanvasContent(ctx: CanvasRenderingContext2D, pixelSize: nu
     drawingWidth,
     drawingHeight
   )
-  tempCtx.clearRect(0, 0, width, height)
 }

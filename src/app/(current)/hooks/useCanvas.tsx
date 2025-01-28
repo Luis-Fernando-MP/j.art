@@ -1,9 +1,8 @@
 'use client'
 
-import { useMemo, useRef, useState } from 'react'
+import { MouseEvent, useMemo, useRef, useState } from 'react'
 
 import { IShapeBresenham, alignCord } from '../helpers/bresenham'
-import { getContext } from '../helpers/canvas.utils'
 import {
   HandleDeletePixel,
   getCanvasCoordinates,
@@ -12,6 +11,7 @@ import {
   handlePaintBucket,
   handlePipetteColor
 } from '../helpers/toolsCanvas'
+import { getContext } from '../helpers/transformCanvas'
 import CanvasStore, { TPositions } from '../store/canvas.store'
 import ToolsStore from '../store/tools.store'
 import { ShapeTools, handleBresenhamTools, shapeTools } from '../store/tools.types'

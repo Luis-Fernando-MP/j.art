@@ -41,8 +41,8 @@ export const drawingTools = {
   Eraser: EraserIcon,
   PerfectPixel: PenToolIcon,
   Bucket: PaintBucketIcon,
-  Pipette: PipetteIcon,
-  Trash: Trash2Icon
+  Pipette: PipetteIcon
+  // Trash: Trash2Icon
 }
 
 export const utilityTools = {

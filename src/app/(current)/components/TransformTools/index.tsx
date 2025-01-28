@@ -14,7 +14,7 @@ import {
   flipVertical,
   getContext,
   rotateCanvas
-} from '../../helpers/canvas.utils'
+} from '../../helpers/transformCanvas'
 import CanvasStore from '../../store/canvas.store'
 import ToolsStore from '../../store/tools.store'
 

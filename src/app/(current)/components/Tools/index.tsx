@@ -1,16 +1,8 @@
-import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import type { JSX } from 'react'
 
 import ToolsComponent from './ToolsComponent'
 import './style.scss'
-
-// const ToolsComponent = dynamic(() => import('./ToolsComponent'), {
-//   ssr: false,
-//   loading() {
-//     return <p>loading</p>
-//   }
-// })
 
 interface ITools {
   className?: string

@@ -1,4 +1,6 @@
-import { getContext } from './canvas.utils'
+import { MouseEvent } from 'react'
+
+import { getContext } from './transformCanvas'
 
 export const getCanvasCoordinates = (e: MouseEvent, scale: number) => {
   const { canvas } = getContext()
