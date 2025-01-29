@@ -1,3 +1,5 @@
+'use client'
+
 export interface IShapeBresenham {
   ctx: CanvasRenderingContext2D
   startX: number
@@ -26,19 +28,9 @@ interface IDrawPoint {
   snapshot?: ImageData | null
 }
 
-export const alignCord = (coord: number, pixelSize: number) =>
-  Math.floor(coord / pixelSize) * pixelSize
+export const alignCord = (coord: number, pixelSize: number) => Math.floor(coord / pixelSize) * pixelSize
 
-export function drawCircleBresenham({
-  ctx,
-  startX,
-  startY,
-  endX,
-  endY,
-  pixelSize,
-  pixelColor,
-  snapshot
-}: IShapeBresenham) {
+export function drawCircleBresenham({ ctx, startX, startY, endX, endY, pixelSize, pixelColor, snapshot }: IShapeBresenham) {
   const radius = Math.max(Math.abs(endX - startX), Math.abs(endY - startY)) / (pixelSize * 2)
   const centerX = startX + radius
   const centerY = startY + radius
@@ -203,16 +195,7 @@ export function drawXBresenham({
   drawPoints({ ctx, pixelColor, pixelSize, points: e })
 }
 
-export function drawPentagonBresenham({
-  ctx,
-  startX,
-  startY,
-  endX,
-  endY,
-  pixelSize,
-  pixelColor,
-  snapshot
-}: IShapeBresenham) {
+export function drawPentagonBresenham({ ctx, startX, startY, endX, endY, pixelSize, pixelColor, snapshot }: IShapeBresenham) {
   ctx.clearRect(startX, startY, endX - startX, endY - startY)
   if (snapshot) ctx.putImageData(snapshot, 0, 0)
   const sideLength = Math.min(Math.abs(endX - startX), Math.abs(endY - startY))
@@ -330,16 +313,7 @@ export function drawLineBresenham({
   drawPoints({ ctx, pixelColor, pixelSize, points })
 }
 
-export function drawHexagonBresenham({
-  ctx,
-  startX,
-  startY,
-  endX,
-  endY,
-  pixelSize,
-  pixelColor,
-  snapshot
-}: IShapeBresenham) {
+export function drawHexagonBresenham({ ctx, startX, startY, endX, endY, pixelSize, pixelColor, snapshot }: IShapeBresenham) {
   ctx.clearRect(startX, startY, endX - startX, endY - startY)
   if (snapshot) ctx.putImageData(snapshot, 0, 0)
   const sideLength = Math.min(Math.abs(endX - startX), Math.abs(endY - startY))
@@ -431,16 +405,7 @@ export function drawRightTriangleBresenham({
   drawPoints({ ctx, pixelColor, pixelSize, points: line3 })
 }
 
-export function drawStarBresenham({
-  ctx,
-  startX,
-  startY,
-  endX,
-  endY,
-  pixelSize,
-  pixelColor,
-  snapshot
-}: IShapeBresenham) {
+export function drawStarBresenham({ ctx, startX, startY, endX, endY, pixelSize, pixelColor, snapshot }: IShapeBresenham) {
   ctx.clearRect(startX, startY, endX - startX, endY - startY)
   if (snapshot) ctx.putImageData(snapshot, 0, 0)
 
@@ -497,10 +462,7 @@ export function drawHeartBresenham({
   for (let angle = 0; angle < 360; angle++) {
     const rad = (angle * Math.PI) / 180
     const x = centerX + scaleX * (16 * Math.sin(rad) ** 3)
-    const y =
-      centerY -
-      scaleY *
-        (13 * Math.cos(rad) - 5 * Math.cos(2 * rad) - 2 * Math.cos(3 * rad) - Math.cos(4 * rad))
+    const y = centerY - scaleY * (13 * Math.cos(rad) - 5 * Math.cos(2 * rad) - 2 * Math.cos(3 * rad) - Math.cos(4 * rad))
     points.push([alignCord(x, pixelSize), alignCord(y, pixelSize)]) // Almacena como [x, y]
   }
 
@@ -523,9 +485,7 @@ export function drawTorusBresenham({
 
   const centerX = (startX + endX) / 2
   const centerY = (startY + endY) / 2
-  const outerRadius = perfectShape
-    ? Math.min(Math.abs(endX - startX), Math.abs(endY - startY)) / 4
-    : Math.abs(endX - startX) / 4
+  const outerRadius = perfectShape ? Math.min(Math.abs(endX - startX), Math.abs(endY - startY)) / 4 : Math.abs(endX - startX) / 4
   const innerRadius = outerRadius / 2
 
   const points = []
@@ -548,16 +508,7 @@ export function drawTorusBresenham({
   drawPoints({ ctx, pixelColor, pixelSize, points })
 }
 
-export function drawHouseBresenham({
-  ctx,
-  startX,
-  startY,
-  endX,
-  endY,
-  pixelSize,
-  pixelColor,
-  snapshot
-}: IShapeBresenham) {
+export function drawHouseBresenham({ ctx, startX, startY, endX, endY, pixelSize, pixelColor, snapshot }: IShapeBresenham) {
   ctx.clearRect(startX, startY, endX - startX, endY - startY)
   if (snapshot) ctx.putImageData(snapshot, 0, 0)
 

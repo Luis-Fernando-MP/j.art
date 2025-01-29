@@ -20,19 +20,8 @@
     border-radius: v.$radius;
 
     opacity: 0.5;
-    background: conic-gradient(
-        rgb(v.$bg2) 25%,
-        rgb(v.$bg3) 25% 50%,
-        rgb(v.$bg2) 50% 75%,
-        rgb(v.$bg3) 75%
-      ),
-      conic-gradient(
-        from 45deg,
-        rgb(v.$bg2) 25%,
-        rgb(v.$bg3) 25% 50%,
-        rgb(v.$bg2) 50% 75%,
-        rgb(v.$bg3) 75%
-      );
+    background: conic-gradient(rgb(v.$bg2) 25%, rgb(v.$bg3) 25% 50%, rgb(v.$bg2) 50% 75%, rgb(v.$bg3) 75%),
+      conic-gradient(from 45deg, rgb(v.$bg2) 25%, rgb(v.$bg3) 25% 50%, rgb(v.$bg2) 50% 75%, rgb(v.$bg3) 75%);
     background-color: rgb(v.$bg1);
     background-position:
       0 0,

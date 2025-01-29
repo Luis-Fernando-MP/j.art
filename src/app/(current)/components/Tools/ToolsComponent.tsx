@@ -4,20 +4,13 @@ import { acl } from '@/shared/acl'
 import { drawingTools, shapeTools } from '@home-store/tools.types'
 import ToolsStore from '@home/store/tools.store'
 import { FlipHorizontal2Icon, FlipVertical2Icon } from 'lucide-react'
-import dynamic from 'next/dynamic'
 import type { JSX } from 'react'
 
 import ColorsTool from '../ColorsTool'
-
-const TransformTools = dynamic(() => import('./TransformTools'), {
-  ssr: false,
-  loading() {
-    return <p>loading</p>
-  }
-})
+import TransformTools from './TransformTools'
 
 const ToolsComponent = (): JSX.Element => {
-  const { horizontalMirror, verticalMirror, selectedTool, setSelectedTool } = ToolsStore()
+  const { xMirror, yMirror, selectedTool, setSelectedTool, setXMirror, setYMirror } = ToolsStore()
 
   return (
     <>
@@ -66,10 +59,10 @@ const ToolsComponent = (): JSX.Element => {
         <div className='tools-group dark'>
           <p className='tools-group__title'>Mirror</p>
           <div className='tools-group__options'>
-            <button className={`${acl(horizontalMirror)} tools-options__normal`}>
+            <button className={`${acl(xMirror)} tools-options__normal`} onClick={() => setXMirror(!xMirror)}>
               <FlipHorizontal2Icon />
             </button>
-            <button className={`${acl(verticalMirror)} tools-options__normal`}>
+            <button className={`${acl(yMirror)} tools-options__normal`} onClick={() => setYMirror(!yMirror)}>
               <FlipVertical2Icon />
             </button>
           </div>

@@ -9,12 +9,7 @@ import {
   getContext,
   rotateCanvas
 } from '@scripts/transformCanvas'
-import {
-  AlignCenterVerticalIcon,
-  FlipHorizontalIcon,
-  FlipVerticalIcon,
-  Rotate3DIcon
-} from 'lucide-react'
+import { AlignCenterVerticalIcon, FlipHorizontalIcon, FlipVerticalIcon, Rotate3DIcon } from 'lucide-react'
 import type { JSX } from 'react'
 
 const TransformTools = (): JSX.Element => {

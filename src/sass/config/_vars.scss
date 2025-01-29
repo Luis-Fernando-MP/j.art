@@ -55,8 +55,7 @@ $radius: 10px;
 $padding: 10px;
 $icon: 20px;
 $family-size: 14px;
-$fontBase: 'Segoe UI Mono', 'Roboto Mono', 'Ubuntu Monospace', 'Source Code Pro', 'Fira Mono',
-  'Segoe UI Emoji';
+$fontBase: 'Segoe UI Mono', 'Roboto Mono', 'Ubuntu Monospace', 'Source Code Pro', 'Fira Mono', 'Segoe UI Emoji';
 $fontTitle: var(--titleFont);
 $font1: var(--paragraphFont);
 $font2: var(--paragraphFont);
@@ -69,8 +68,7 @@ $bezier: cubic-bezier(0.68, -0.55, 0.27, 1.55);
 // gradient
 $gr1: radial-gradient(at 10% 83%, rgb($bgp) 0%, rgba($bg1, 0.4) 100%),
   radial-gradient(at 57% 17%, rgb($bgp) 0%, rgba($bgp, 0) 100%),
-  radial-gradient(at 19% 10%, rgb($bg2, 0.4) 0%, rgba($bgp, 0) 100%),
-  radial-gradient(at 34% 3%, rgba($bg2) 0%, rgba($bg2) 100%);
+  radial-gradient(at 19% 10%, rgb($bg2, 0.4) 0%, rgba($bgp, 0) 100%), radial-gradient(at 34% 3%, rgba($bg2) 0%, rgba($bg2) 100%);
 $gr2: linear-gradient(
   // -----
   rgb($bg3),

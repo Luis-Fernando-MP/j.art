@@ -10,8 +10,7 @@ type CanvasProps = {
 }
 
 const CanvasComponent = ({ scale }: CanvasProps): JSX.Element => {
-  const { $canvasRef, handleCanvasMouseDown, handleCanvasMouseMove, handleCanvasMouseUp } =
-    useCanvas({ scale })
+  const { $canvasRef, handleCanvasMouseDown, handleCanvasMouseMove, handleCanvasMouseUp } = useCanvas({ scale })
 
   return (
     <>

@@ -11,9 +11,7 @@ export const metadata: Metadata = {
   creator: 'Luis MP',
   publisher: 'JULES',
   icons: {
-    icon: [
-      { url: '/logo.svg', sizes: 'any, 16x16, 32x32, 48x48, 64x64, 128x128, 256x256, 512x512' }
-    ]
+    icon: [{ url: '/logo.svg', sizes: 'any, 16x16, 32x32, 48x48, 64x64, 128x128, 256x256, 512x512' }]
   },
   openGraph: {
     title: 'Key Flare - Mejora tu velocidad de escritura',

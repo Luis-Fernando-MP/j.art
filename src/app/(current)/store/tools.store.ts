@@ -6,15 +6,15 @@ interface IToolsStore {
   fileName: string
   horizontalFlip: boolean
   verticalFlip: boolean
-  horizontalMirror: boolean
-  verticalMirror: boolean
+  xMirror: boolean
+  yMirror: boolean
   selectedTool: Tools
 
   setFileName: (fileName: string) => void
   setHorizontalFlip: (horizontalFlip: boolean) => void
   setVerticalFlip: (verticalFlip: boolean) => void
-  setHorizontalMirror: (horizontalMirror: boolean) => void
-  setVerticalMirror: (verticalMirror: boolean) => void
+  setXMirror: (xMirror: boolean) => void
+  setYMirror: (yMirror: boolean) => void
   setSelectedTool: (selectedTool: string) => void
 }
 
@@ -22,15 +22,15 @@ const state: StateCreator<IToolsStore> = set => ({
   fileName: '',
   horizontalFlip: false,
   verticalFlip: false,
-  horizontalMirror: false,
-  verticalMirror: false,
+  xMirror: false,
+  yMirror: false,
   selectedTool: 'Brush',
 
   setFileName: fileName => set({ fileName }),
   setHorizontalFlip: horizontalFlip => set({ horizontalFlip }),
   setVerticalFlip: verticalFlip => set({ verticalFlip }),
-  setHorizontalMirror: horizontalMirror => set({ horizontalMirror }),
-  setVerticalMirror: verticalMirror => set({ verticalMirror }),
+  setXMirror: xMirror => set({ xMirror }),
+  setYMirror: yMirror => set({ yMirror }),
   setSelectedTool: selectedTool => set({ selectedTool: selectedTool as Tools })
 })
 

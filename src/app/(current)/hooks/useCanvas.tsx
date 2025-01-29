@@ -26,7 +26,7 @@ const useCanvas = ({ scale }: TUseCanvas) => {
   const canvasSnapshot = useRef<ImageData | null>(null)
 
   const { pixelColor, pixelOpacity, pixelSize, setPixelColor } = CanvasStore()
-  const { selectedTool } = ToolsStore()
+  const { selectedTool, xMirror, yMirror } = ToolsStore()
 
   const activatePerfectShape = (isActive: boolean = true) => {
     $perfectShape.current = isActive
@@ -38,11 +38,18 @@ const useCanvas = ({ scale }: TUseCanvas) => {
   const handleUtilTools = useMemo(
     () => ({
       Brush: (ctx: CanvasRenderingContext2D, x: number, y: number) =>
-        handleDrawPixel(ctx, x, y, pixelColor, pixelSize, pixelOpacity),
-      Bucket: (ctx: CanvasRenderingContext2D, x: number, y: number) =>
-        handlePaintBucket(ctx, x, y, pixelColor),
-      Eraser: (ctx: CanvasRenderingContext2D, x: number, y: number) =>
-        HandleDeletePixel(ctx, x, y, pixelSize),
+        handleDrawPixel({
+          ctx,
+          x,
+          y,
+          pixelColor,
+          pixelSize,
+          pixelOpacity,
+          xMirror,
+          yMirror
+        }),
+      Bucket: (ctx: CanvasRenderingContext2D, x: number, y: number) => handlePaintBucket(ctx, x, y, pixelColor),
+      Eraser: (ctx: CanvasRenderingContext2D, x: number, y: number) => HandleDeletePixel(ctx, x, y, pixelSize),
       Pipette: (ctx: CanvasRenderingContext2D, x: number, y: number) => {
         const color = handlePipetteColor(ctx, x, y)
         setPixelColor(color.rgba)
@@ -83,13 +90,7 @@ const useCanvas = ({ scale }: TUseCanvas) => {
     const { ctx } = getContext()
     const endX = alignCord(x, pixelSize)
     const endY = alignCord(y, pixelSize)
-    console.log(
-      selectedTool,
-      'v1',
-      selectedTool in handleUtilTools,
-      'v2',
-      selectedTool in shapeTools
-    )
+    console.log(selectedTool, 'v1', selectedTool in handleUtilTools, 'v2', selectedTool in shapeTools)
 
     console.log('startPos', startPos.current)
 

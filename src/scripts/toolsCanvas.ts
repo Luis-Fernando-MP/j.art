@@ -1,3 +1,5 @@
+'use client'
+
 import { MouseEvent } from 'react'
 
 import { getContext } from './transformCanvas'
@@ -8,28 +10,26 @@ export const getCanvasCoordinates = (e: MouseEvent, scale: number) => {
   return { x: (e.clientX - rect.left) / scale, y: (e.clientY - rect.top) / scale }
 }
 
-export function handleDrawPixel(
-  ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  color: string,
-  size: number,
-  opacity: number
-) {
+type THandleDrawPixel = {
+  ctx: CanvasRenderingContext2D
+  x: number
+  y: number
+  pixelColor: string
+  pixelSize: number
+  pixelOpacity: number
+  xMirror: boolean
+  yMirror: boolean
+}
+export function handleDrawPixel({ pixelColor, ctx, pixelOpacity, pixelSize, x, xMirror, y, yMirror }: THandleDrawPixel) {
   ctx.beginPath()
   ctx.imageSmoothingEnabled = false
-  ctx.globalAlpha = opacity
-  ctx.fillStyle = color
-  ctx.fillRect(x, y, size, size)
+  ctx.globalAlpha = pixelOpacity
+  ctx.fillStyle = pixelColor
+  ctx.fillRect(x, y, pixelSize, pixelSize)
   ctx.closePath()
 }
 
-export function getPixelColor(
-  imageData: ImageData,
-  alignedX: number,
-  alignedY: number,
-  width: number
-) {
+export function getPixelColor(imageData: ImageData, alignedX: number, alignedY: number, width: number) {
   const index = (alignedY * width + alignedX) * 4
   const pixelData = imageData.data
   return [
@@ -40,12 +40,7 @@ export function getPixelColor(
   ]
 }
 
-export function HandleDeletePixel(
-  ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  size: number
-) {
+export function HandleDeletePixel(ctx: CanvasRenderingContext2D, x: number, y: number, size: number) {
   ctx.clearRect(x, y, size, size)
 }
 
@@ -57,12 +52,7 @@ export function handlePipetteColor(ctx: CanvasRenderingContext2D, x: number, y: 
   return { rgba: color, iterable: [r, g, b, a], imageData }
 }
 
-export function handlePaintBucket(
-  ctx: CanvasRenderingContext2D,
-  startX: number,
-  startY: number,
-  fillColor: string
-) {
+export function handlePaintBucket(ctx: CanvasRenderingContext2D, startX: number, startY: number, fillColor: string) {
   const { width, height } = ctx.canvas
   const { iterable, imageData } = handlePipetteColor(ctx, startX, startY)
   const pixelData = imageData.data

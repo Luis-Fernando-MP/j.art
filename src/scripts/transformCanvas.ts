@@ -105,15 +105,5 @@ export function centerCanvasContent(ctx: CanvasRenderingContext2D, pixelSize: nu
   tempCtx.putImageData(croppedImageData, 0, 0)
 
   ctx.clearRect(0, 0, width, height)
-  ctx.drawImage(
-    tempCanvas,
-    0,
-    0,
-    drawingWidth,
-    drawingHeight,
-    offsetX,
-    offsetY,
-    drawingWidth,
-    drawingHeight
-  )
+  ctx.drawImage(tempCanvas, 0, 0, drawingWidth, drawingHeight, offsetX, offsetY, drawingWidth, drawingHeight)
 }
