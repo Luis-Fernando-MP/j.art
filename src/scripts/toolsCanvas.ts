@@ -61,13 +61,20 @@ export function handlePaintBucket(
   ctx: CanvasRenderingContext2D,
   startX: number,
   startY: number,
-  fillColor: number[]
+  fillColor: string
 ) {
   const { width, height } = ctx.canvas
   const { iterable, imageData } = handlePipetteColor(ctx, startX, startY)
   const pixelData = imageData.data
+  const toIterableColor = (color: string) => {
+    const newString = color.replace('rgba(', '').replace(')', '')
+    return newString.split(',').map(Number)
+  }
+  const bgColor = toIterableColor(fillColor)
+  console.log(fillColor, bgColor, iterable)
+
   // Si el color inicial es igual al color de relleno
-  if (iterable.every((v, i) => v === fillColor[i])) return
+  if (iterable.every((v, i) => v === bgColor[i])) return
 
   const getIndex = (x: number, y: number) => (y * width + x) * 4
   const isInsideCanvas = (x: number, y: number) => x >= 0 && x < width && y >= 0 && y < height
@@ -85,10 +92,11 @@ export function handlePaintBucket(
     const current = getIndex(currentX, currentY)
     if (!isSameColor(current)) continue
     // Pintar el píxel actual
-    pixelData[current] = fillColor[0]
-    pixelData[current + 1] = fillColor[1]
-    pixelData[current + 2] = fillColor[2]
-    pixelData[current + 3] = fillColor[3]
+    pixelData[current] = bgColor[0]
+    pixelData[current + 1] = bgColor[1]
+    pixelData[current + 2] = bgColor[2]
+    pixelData[current + 3] = bgColor[3]
+
     // Añadir píxeles vecinos a la pila
     stack.push([currentX - 1, currentY]) // Izquierda
     stack.push([currentX + 1, currentY]) // Derecha

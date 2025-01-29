@@ -1,0 +1,34 @@
+@use '@sass/config/vars' as v;
+@use '@sass/utils/defs' as d;
+
+.tools-group.hColors {
+  background-image: linear-gradient(rgb(v.$bg3), rgb(v.$bg1));
+}
+
+.hColors {
+  &-more {
+    @include d.flex($dir: row, $gap: v.$padding * 0.5);
+
+    padding: 5px v.$padding;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    background-color: rgb(v.$bg2);
+
+    svg {
+      width: 15px;
+      height: 15px;
+    }
+  }
+
+  &-color {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgb(v.$bg2);
+    border-radius: 5px;
+
+    &.active {
+      border-color: rgb(v.$tn1);
+      box-shadow: 0 5px 10px 5px rgb(v.$tn1, 0.8);
+    }
+  }
+}

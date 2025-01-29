@@ -12,7 +12,7 @@ interface BoardProps {
 
 const Board = ({ children }: BoardProps): JSX.Element => {
   const MIN_SCALE = 0.5
-  const MAX_SCALE = 15
+  const MAX_SCALE = 10
   const INITIAL_SCALE = 1
 
   const $containerRef = useRef<HTMLDivElement>(null)

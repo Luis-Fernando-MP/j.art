@@ -1,3 +1,4 @@
+import * as bre from '@scripts/bresenham'
 import {
   BrushIcon,
   CircleIcon,
@@ -13,13 +14,10 @@ import {
   SquareIcon,
   StarIcon,
   TorusIcon,
-  Trash2Icon,
   TriangleIcon,
   TriangleRightIcon,
   XIcon
 } from 'lucide-react'
-
-import * as bre from '../helpers/bresenham'
 
 export const shapeTools = {
   Square: SquareIcon,

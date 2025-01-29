@@ -20,8 +20,8 @@ const CanvasComponent = ({ scale }: CanvasProps): JSX.Element => {
         className='canvas-draw'
         id='canvas'
         ref={$canvasRef}
-        width={900}
-        height={900}
+        width={1020}
+        height={1020}
         onMouseDown={handleCanvasMouseDown}
         onMouseMove={handleCanvasMouseMove}
         onMouseUp={handleCanvasMouseUp}

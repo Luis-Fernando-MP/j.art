@@ -15,7 +15,7 @@ const Tools = ({ className = '' }: ITools): JSX.Element => {
         <Image src='/logo.svg' alt='j-art' width={30} height={30} />
         <h1>J-ART</h1>
       </div>
-      <section className='tools-list'>
+      <section className='tools-wrapper'>
         <ToolsComponent />
       </section>
     </div>

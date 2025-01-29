@@ -1,4 +1,14 @@
 import { acl } from '@/shared/acl'
+import CanvasStore from '@home-store/canvas.store'
+import ToolsStore from '@home-store/tools.store'
+import {
+  centerCanvasContent,
+  changeBrushSize,
+  flipHorizontal,
+  flipVertical,
+  getContext,
+  rotateCanvas
+} from '@scripts/transformCanvas'
 import {
   AlignCenterVerticalIcon,
   FlipHorizontalIcon,
@@ -7,52 +17,41 @@ import {
 } from 'lucide-react'
 import type { JSX } from 'react'
 
-import {
-  centerCanvasContent,
-  changeBrushSize,
-  flipHorizontal,
-  flipVertical,
-  getContext,
-  rotateCanvas
-} from '../../helpers/transformCanvas'
-import CanvasStore from '../../store/canvas.store'
-import ToolsStore from '../../store/tools.store'
-
 const TransformTools = (): JSX.Element => {
   const { horizontalFlip, verticalFlip, setHorizontalFlip, setVerticalFlip } = ToolsStore()
   const { pixelSize, setPixelSize } = CanvasStore()
 
   return (
     <section className='tools-section'>
-      <h3>Transformaciones</h3>
+      <h3 className='tools-title'>Transformaciones</h3>
 
-      <div className='tools-section__wrapper center'>
-        {[0.5, 1, 2, 3, 4, 3, 2, 1, 0.5].map(size => {
+      <div className='tools-brush'>
+        {[8, 4, 2, 1, 0.5].map((size, i) => {
           const key = `${size}-${Math.random()}-brush`
           const boxSize = 15 * size
           return (
             <button
               key={key}
-              className={`tools-section__size ${acl(boxSize === pixelSize)}`}
+              className={`tools-brush__option ${acl(boxSize === pixelSize)}`}
               onClick={() => {
                 changeBrushSize(boxSize)
                 setPixelSize(boxSize)
               }}
               style={{
-                width: `${boxSize * 0.5}px`,
-                height: `${boxSize * 0.5}px`,
-                borderRadius: `${size}px`
+                width: `${boxSize * 0.3 * (i + 1)}px`,
+                height: `${boxSize * 0.2 * (i + 1.5)}px`,
+                borderRadius: `${size * (i + 0.5)}px`
               }}
             />
           )
         })}
       </div>
 
-      <div className='tools-section__wrapper'>
-        <p>Flips</p>
-        <div className='tools-section__options'>
+      <div className='tools-group'>
+        <p className='tools-group__title'>Flips</p>
+        <div className='tools-group__options'>
           <button
-            className={acl(horizontalFlip)}
+            className={`tools-options__normal ${acl(horizontalFlip)}`}
             onClick={() => {
               const { ctx } = getContext()
               flipHorizontal(ctx)
@@ -62,7 +61,7 @@ const TransformTools = (): JSX.Element => {
             <FlipHorizontalIcon />
           </button>
           <button
-            className={acl(verticalFlip)}
+            className={`${acl(verticalFlip)} tools-options__normal`}
             onClick={() => {
               const { ctx } = getContext()
               flipVertical(ctx)
@@ -74,9 +73,9 @@ const TransformTools = (): JSX.Element => {
         </div>
       </div>
 
-      <div className='tools-section__wrapper'>
-        <p>Rotación</p>
-        <div className='tools-section__options'>
+      <div className='tools-group'>
+        <p className='tools-group__title'>Rotación</p>
+        <div className='tools-group__options'>
           <button
             onClick={() => {
               const { ctx } = getContext()
@@ -88,8 +87,6 @@ const TransformTools = (): JSX.Element => {
           <button
             onClick={() => {
               const { ctx } = getContext()
-              console.log('---', pixelSize)
-
               centerCanvasContent(ctx, pixelSize)
             }}
           >

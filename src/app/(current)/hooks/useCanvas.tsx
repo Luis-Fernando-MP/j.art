@@ -1,17 +1,16 @@
 'use client'
 
-import { MouseEvent, useMemo, useRef, useState } from 'react'
-
-import { IShapeBresenham, alignCord } from '../helpers/bresenham'
+import { IShapeBresenham, alignCord } from '@scripts/bresenham'
 import {
   HandleDeletePixel,
   getCanvasCoordinates,
-  handleClearCanvas,
   handleDrawPixel,
   handlePaintBucket,
   handlePipetteColor
-} from '../helpers/toolsCanvas'
-import { getContext } from '../helpers/transformCanvas'
+} from '@scripts/toolsCanvas'
+import { getContext } from '@scripts/transformCanvas'
+import { MouseEvent, useMemo, useRef, useState } from 'react'
+
 import CanvasStore, { TPositions } from '../store/canvas.store'
 import ToolsStore from '../store/tools.store'
 import { ShapeTools, handleBresenhamTools, shapeTools } from '../store/tools.types'
@@ -41,7 +40,7 @@ const useCanvas = ({ scale }: TUseCanvas) => {
       Brush: (ctx: CanvasRenderingContext2D, x: number, y: number) =>
         handleDrawPixel(ctx, x, y, pixelColor, pixelSize, pixelOpacity),
       Bucket: (ctx: CanvasRenderingContext2D, x: number, y: number) =>
-        handlePaintBucket(ctx, x, y, [255, 0, 0, 255]),
+        handlePaintBucket(ctx, x, y, pixelColor),
       Eraser: (ctx: CanvasRenderingContext2D, x: number, y: number) =>
         HandleDeletePixel(ctx, x, y, pixelSize),
       Pipette: (ctx: CanvasRenderingContext2D, x: number, y: number) => {
@@ -84,12 +83,22 @@ const useCanvas = ({ scale }: TUseCanvas) => {
     const { ctx } = getContext()
     const endX = alignCord(x, pixelSize)
     const endY = alignCord(y, pixelSize)
+    console.log(
+      selectedTool,
+      'v1',
+      selectedTool in handleUtilTools,
+      'v2',
+      selectedTool in shapeTools
+    )
+
+    console.log('startPos', startPos.current)
 
     if (selectedTool in handleUtilTools) {
       const handleTool = handleUtilTools[selectedTool as keyof typeof handleUtilTools]
       return handleTool(ctx, endX, endY)
     }
-    if (selectedTool in shapeTools && startPos.current) {
+
+    if (selectedTool in shapeTools && canvasSnapshot.current && startPos.current) {
       const { x: stX, y: stY } = startPos.current
       const startX = alignCord(stX, pixelSize)
       const startY = alignCord(stY, pixelSize)
