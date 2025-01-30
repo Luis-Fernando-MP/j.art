@@ -1,20 +1,20 @@
-import { Exo_2, Pixelify_Sans, Roboto } from 'next/font/google'
+import { Pixelify_Sans, Silkscreen, VT323 } from 'next/font/google'
 
 export const titleFont = Pixelify_Sans({
   subsets: ['latin'],
-  weight: ['700', '600', '500'],
+  weight: ['700', '600', '500', '400'],
   variable: '--titleFont'
 })
 
-export const paragraphFont = Roboto({
+export const paragraphFont = VT323({
   subsets: ['latin'],
-  weight: ['900', '700', '500', '400', '300'],
+  weight: ['400'],
   variable: '--paragraphFont'
 })
 
-export const exclamationFont = Exo_2({
+export const exclamationFont = Silkscreen({
   subsets: ['latin'],
-  weight: ['200', '300', '400', '500', '700'],
+  weight: ['400', '700'],
   variable: '--exclamationFont'
 })
 

@@ -49,14 +49,15 @@ const useCanvas = ({ scale }: TUseCanvas) => {
           yMirror
         }),
       Bucket: (ctx: CanvasRenderingContext2D, x: number, y: number) => handlePaintBucket(ctx, x, y, pixelColor),
-      Eraser: (ctx: CanvasRenderingContext2D, x: number, y: number) => HandleDeletePixel(ctx, x, y, pixelSize),
+      Eraser: (ctx: CanvasRenderingContext2D, x: number, y: number) =>
+        HandleDeletePixel({ ctx, x, y, pixelSize, xMirror, yMirror }),
       Pipette: (ctx: CanvasRenderingContext2D, x: number, y: number) => {
         const color = handlePipetteColor(ctx, x, y)
         setPixelColor(color.rgba)
         console.log(color)
       }
     }),
-    [pixelColor, pixelSize, pixelOpacity]
+    [pixelColor, pixelSize, pixelOpacity, xMirror, yMirror]
   )
 
   const handleCanvasMouseDown = (e: MouseEvent) => {
@@ -90,10 +91,6 @@ const useCanvas = ({ scale }: TUseCanvas) => {
     const { ctx } = getContext()
     const endX = alignCord(x, pixelSize)
     const endY = alignCord(y, pixelSize)
-    console.log(selectedTool, 'v1', selectedTool in handleUtilTools, 'v2', selectedTool in shapeTools)
-
-    console.log('startPos', startPos.current)
-
     if (selectedTool in handleUtilTools) {
       const handleTool = handleUtilTools[selectedTool as keyof typeof handleUtilTools]
       return handleTool(ctx, endX, endY)

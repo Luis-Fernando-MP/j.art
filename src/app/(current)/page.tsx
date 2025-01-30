@@ -2,20 +2,20 @@
 
 import type { JSX } from 'react'
 
-import Canvas from './components/Canvas'
-import Tools from './components/Tools'
+import LeftTools from './components/LeftTools'
 import './style.scss'
 
 const Page = (): JSX.Element => {
   return (
-    <main className='app'>
-      <div className='app-gradient' id='gradient' />
-      <Tools className='app-tools' />
-      <section className='app-canvas' id='canvasContainer'>
-        <Canvas className='app-canvas__wrapper' />
-      </section>
-      <section className='app-layers'></section>
-    </main>
+    <div className='app'>
+      <header className='app-header'>
+        <h5>Juls dev ❤️</h5>
+      </header>
+      <LeftTools className='app-leftTools' />
+      <main className='app-draw'>draw</main>
+      <section className='app-colors'>color</section>
+      <section className='app-rightTools'>right</section>
+    </div>
   )
 }
 

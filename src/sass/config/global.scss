@@ -1,5 +1,6 @@
 /* stylelint-disable no-descending-specificity */
 @use '@sass/config/vars' as *;
+@use '@sass/config/typography' as *;
 @use '@sass/utils/media' as m;
 @use '@sass/utils/text' as t;
 @use '@sass/utils/scrollbar' as *;
@@ -14,11 +15,23 @@
   padding: 0;
   border: none;
 
+  list-style: none;
+
   outline: none;
+
+  &:focus {
+    outline: none;
+  }
 }
 
 html {
   font-size: $family-size;
+}
+
+@include m.mediumScreen {
+  html {
+    font-size: 12px;
+  }
 }
 
 body {
@@ -36,200 +49,69 @@ body {
   font-family: $font1;
   color: rgb($fn1);
 
-  background-color: rgb($bgp);
-  background-image: $gr1;
+  background-color: rgb($bg1);
 
-  textarea {
-    @extend %scroll-hidden;
-
-    resize: none;
-  }
-
-  button {
-    cursor: pointer;
-
-    width: fit-content;
-    height: fit-content;
-    margin: 0;
-
-    background-color: $bg2;
-
-    @include hoverS;
-  }
-
-  input,
-  textarea,
-  button,
-  select,
-  p {
-    font-size: $fP;
-  }
-
-  p,
-  a,
-  small,
-  input,
-  textarea,
-  button,
-  select {
-    color: rgb($fn2);
-    text-wrap: pretty;
-  }
-
-  a {
+  .icon,
+  .lucide {
     display: block;
-    text-decoration: none;
+    width: $icon;
+    height: $icon;
+    stroke: rgb($fn2);
   }
 
-  h5 {
-    font-weight: 500;
+  ::selection {
     color: rgb($fn1);
-    text-wrap: balance;
+    background-color: rgb($tn1);
   }
 
-  p {
-    font-weight: normal;
+  .loading {
+    pointer-events: none;
+    user-select: none;
+
+    @include loader.boxLoader;
   }
 
-  p,
-  a,
+  .error {
+    pointer-events: none;
+    user-select: none;
+    position: relative;
+    outline: 2px solid $error;
+
+    &::after {
+      content: '';
+
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      left: 0;
+
+      width: 100%;
+      height: 100%;
+
+      background-color: rgb($error, 0.2);
+
+      animation: flicker 1s infinite alternate;
+    }
+  }
+
+  @each $tag, $props in $typography {
+    #{$tag} {
+      font-family: map-get($props, family);
+      font-size: map-get($props, size);
+      font-weight: map-get($props, weight);
+      color: map-get($props, color);
+    }
+  }
+
+  small,
+  span,
   input,
   textarea,
   button,
   select {
-    font-family: $font2;
-
-    &:focus {
-      outline: none;
-    }
-  }
-
-  input[type='number'] {
-    appearance: textfield;
-
-    &::-webkit-inner-spin-button,
-    &::-webkit-outer-spin-button {
-      margin: 0;
-      appearance: none;
-    }
-  }
-
-  h4,
-  h5 {
-    font-family: $font1;
-  }
-
-  h4 {
-    font-weight: 600;
-  }
-}
-
-$listOfFontsSize: (
-  '.xl': $fXl,
-  'h1': $fH1,
-  'h2': $fH2,
-  'h3': $fH3,
-  'h4': $fH4,
-  'h5': $fH5,
-  'p': $fP
-);
-
-@each $tag, $value in $listOfFontsSize {
-  #{$tag} {
-    font-size: $value;
-  }
-}
-
-h1,
-h2,
-h3 {
-  font-family: $fontTitle;
-}
-
-h1,
-h2,
-h3,
-h4 {
-  color: rgb($fn1);
-  text-wrap: balance;
-}
-
-h1 {
-  font-weight: 900;
-}
-
-h2 {
-  font-weight: 800;
-}
-
-h3 {
-  font-weight: 700;
-}
-
-ul {
-  list-style: none;
-}
-
-.icon,
-.lucide {
-  display: block;
-  width: 20px;
-  height: 20px;
-  stroke: rgb($fn2);
-}
-
-.tn1 {
-  color: rgb($tn1);
-}
-
-@include m.mediumScreen {
-  html {
-    font-size: 12px;
-  }
-}
-
-::selection {
-  color: rgb($bg1);
-  background-color: rgb($tn1);
-}
-
-.delay {
-  animation-delay: 700ms;
-}
-
-.btn-tooltip {
-  position: relative;
-  padding: $padding * 0.7;
-
-  @include tol.tooltip;
-}
-
-.loading {
-  pointer-events: none;
-  user-select: none;
-
-  @include loader.boxLoader;
-}
-
-.error {
-  pointer-events: none;
-  user-select: none;
-  position: relative;
-  outline: 2px solid $error;
-
-  &::after {
-    content: '';
-
-    position: absolute;
-    z-index: 1;
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 100%;
-
-    background-color: rgb($error, 0.2);
-
-    animation: flicker 1s infinite alternate;
+    font-family: map-get(map-get($typography, 'p'), family);
+    font-size: map-get(map-get($typography, 'p'), size);
+    font-weight: map-get(map-get($typography, 'p'), weight);
+    color: map-get(map-get($typography, 'p'), color);
   }
 }

@@ -1,5 +1,6 @@
 'use client'
 
+import Juls from '@/shared/assets/Juls'
 import Board from '@/shared/components/Board'
 import { JSX } from 'react'
 
@@ -19,8 +20,8 @@ const CanvasComponent = ({ scale }: CanvasProps): JSX.Element => {
         className='canvas-draw'
         id='canvas'
         ref={$canvasRef}
-        width={1020}
-        height={1020}
+        width={1200}
+        height={1200}
         onMouseDown={handleCanvasMouseDown}
         onMouseMove={handleCanvasMouseMove}
         onMouseUp={handleCanvasMouseUp}

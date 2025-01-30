@@ -10,23 +10,53 @@ export const getCanvasCoordinates = (e: MouseEvent, scale: number) => {
   return { x: (e.clientX - rect.left) / scale, y: (e.clientY - rect.top) / scale }
 }
 
-type THandleDrawPixel = {
+type THandleTool = {
   ctx: CanvasRenderingContext2D
   x: number
   y: number
-  pixelColor: string
   pixelSize: number
-  pixelOpacity: number
+}
+
+type TMirrorTool = {
   xMirror: boolean
   yMirror: boolean
 }
+
+type THandleDrawPixel = THandleTool &
+  TMirrorTool & {
+    pixelColor: string
+    pixelOpacity: number
+  }
+
 export function handleDrawPixel({ pixelColor, ctx, pixelOpacity, pixelSize, x, xMirror, y, yMirror }: THandleDrawPixel) {
+  const { width, height } = ctx.canvas
+  const mirroredX = width - x - pixelSize
+  const mirroredY = height - y - pixelSize
+
   ctx.beginPath()
   ctx.imageSmoothingEnabled = false
   ctx.globalAlpha = pixelOpacity
   ctx.fillStyle = pixelColor
   ctx.fillRect(x, y, pixelSize, pixelSize)
+
+  console.log(xMirror, yMirror)
+
+  if (xMirror) ctx.fillRect(mirroredX, y, pixelSize, pixelSize)
+  if (yMirror) ctx.fillRect(x, mirroredY, pixelSize, pixelSize)
+  if (xMirror && yMirror) ctx.fillRect(mirroredX, mirroredY, pixelSize, pixelSize)
+
   ctx.closePath()
+}
+
+export function HandleDeletePixel({ ctx, pixelSize, x, y, xMirror, yMirror }: THandleTool & TMirrorTool) {
+  const { width, height } = ctx.canvas
+  const mirroredX = width - x - pixelSize
+  const mirroredY = height - y - pixelSize
+
+  ctx.clearRect(x, y, pixelSize, pixelSize)
+  if (xMirror) ctx.clearRect(mirroredX, y, pixelSize, pixelSize)
+  if (yMirror) ctx.clearRect(x, mirroredY, pixelSize, pixelSize)
+  if (xMirror && yMirror) ctx.clearRect(mirroredX, mirroredY, pixelSize, pixelSize)
 }
 
 export function getPixelColor(imageData: ImageData, alignedX: number, alignedY: number, width: number) {
@@ -38,10 +68,6 @@ export function getPixelColor(imageData: ImageData, alignedX: number, alignedY: 
     pixelData[index + 2], // Blue
     pixelData[index + 3] // Alpha
   ]
-}
-
-export function HandleDeletePixel(ctx: CanvasRenderingContext2D, x: number, y: number, size: number) {
-  ctx.clearRect(x, y, size, size)
 }
 
 export function handlePipetteColor(ctx: CanvasRenderingContext2D, x: number, y: number) {
@@ -61,8 +87,6 @@ export function handlePaintBucket(ctx: CanvasRenderingContext2D, startX: number,
     return newString.split(',').map(Number)
   }
   const bgColor = toIterableColor(fillColor)
-  console.log(fillColor, bgColor, iterable)
-
   // Si el color inicial es igual al color de relleno
   if (iterable.every((v, i) => v === bgColor[i])) return
 

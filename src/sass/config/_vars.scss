@@ -1,8 +1,7 @@
 :root {
   --bg-primary: 19, 20, 23;
-  --bg-secondary: 61, 63, 68;
-  --bg-tertiary: 39, 42, 48;
-  --bg-pure: 0, 0, 0;
+  --bg-secondary: 35, 35, 37;
+  --bg-tertiary: 55, 55, 61;
 
   // Fuentes
   --fnt-primary: 255, 255, 255;
@@ -10,9 +9,9 @@
   --fnt-tertiary: 255, 146, 172;
 
   // Principales
-  --tn-primary: 147, 9, 247;
-  --tn-secondary: 66, 133, 244;
-  --tn-tertiary: 255, 12, 226;
+  --tn-primary: 157, 44, 255;
+  --tn-secondary: 154, 190, 254;
+  --tn-tertiary: 36, 97, 229;
 
   // --
   --xl-font-size: 4rem;
@@ -53,9 +52,9 @@ $big-screen: 1350px;
 // Other
 $radius: 10px;
 $padding: 10px;
-$icon: 20px;
-$family-size: 14px;
-$fontBase: 'Segoe UI Mono', 'Roboto Mono', 'Ubuntu Monospace', 'Source Code Pro', 'Fira Mono', 'Segoe UI Emoji';
+$icon: 17px;
+$family-size: 16px;
+$fontBase: 'Segoe UI Mono', 'Roboto Mono';
 $fontTitle: var(--titleFont);
 $font1: var(--paragraphFont);
 $font2: var(--paragraphFont);
@@ -64,38 +63,3 @@ $focus: rgb(66 133 244);
 
 // bezier
 $bezier: cubic-bezier(0.68, -0.55, 0.27, 1.55);
-
-// gradient
-$gr1: radial-gradient(at 10% 83%, rgb($bgp) 0%, rgba($bg1, 0.4) 100%),
-  radial-gradient(at 57% 17%, rgb($bgp) 0%, rgba($bgp, 0) 100%),
-  radial-gradient(at 19% 10%, rgb($bg2, 0.4) 0%, rgba($bgp, 0) 100%), radial-gradient(at 34% 3%, rgba($bg2) 0%, rgba($bg2) 100%);
-$gr2: linear-gradient(
-  // -----
-  rgb($bg3),
-  rgb($bg3, 0.9) 15%,
-  rgb($bg1, 0.9),
-  rgb($bg1, 0.4),
-  rgb($bg1, 0)
-);
-$gr3: linear-gradient(
-  45deg,
-  //
-  rgb($tn2) 20%,
-  rgb($tn3) 80%
-);
-
-@mixin toDark {
-  body.dark & {
-    @content;
-  }
-}
-
-@mixin hoverS($scale: 1.1, $s: 0.2s) {
-  scale: 1;
-  transition: all $s ease-in;
-
-  &:hover {
-    scale: $scale;
-    @content;
-  }
-}

@@ -1,0 +1,71 @@
+/* stylelint-disable property-no-vendor-prefix */
+@use '@sass/config/vars' as v;
+@use '@sass/utils/defs' as d;
+
+.leftTools {
+  @include d.flex($ali: center);
+
+  &-logo {
+    position: relative;
+
+    @include d.flex($ali: center);
+
+    justify-content: center;
+    width: 100%;
+    min-height: 100px;
+
+    div {
+      position: relative;
+      transform-style: preserve-3d;
+      transform: rotateZ(-90deg);
+
+      width: max-content;
+      padding: 3px v.$padding;
+      border-radius: 5px;
+
+      @include d.flex($ali: center, $dir: row);
+
+      background-color: rgb(v.$tn1);
+    }
+
+    h1 {
+      font-size: v.$fH5;
+    }
+  }
+
+  &-drawingTools {
+    @include d.flex($ali: center);
+  }
+
+  &-drawingTool {
+    position: relative;
+    padding: v.$padding * 0.5;
+
+    &::after {
+      content: '';
+
+      position: absolute;
+      top: 5px;
+      left: 13px;
+
+      display: none;
+
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+
+      background-color: #fff;
+      box-shadow: 0 0 15px 8px rgb(v.$tn1);
+    }
+
+    &.active {
+      &::after {
+        display: block;
+      }
+
+      svg {
+        stroke: rgb(v.$fn1);
+      }
+    }
+  }
+}

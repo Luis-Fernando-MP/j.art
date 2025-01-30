@@ -1,0 +1,46 @@
+@use '@sass/config/vars' as *;
+
+$typography: (
+  'h1': (
+    size: $fH1,
+    weight: 900,
+    color: rgb($fn1),
+    family: $fontTitle
+  ),
+  'h2': (
+    size: $fH2,
+    weight: 800,
+    color: rgb($fn1),
+    family: $fontTitle
+  ),
+  'h3': (
+    size: $fH3,
+    weight: 700,
+    color: rgb($fn1),
+    family: $fontTitle
+  ),
+  'h4': (
+    size: $fH4,
+    weight: 600,
+    color: rgb($fn1),
+    family: $font1
+  ),
+  'h5': (
+    size: $fH5,
+    weight: 500,
+    color: rgb($fn1),
+    family: $font1
+  ),
+  'p': (
+    size: $fP,
+    weight: normal,
+    color: rgb($fn2),
+    family: $font2
+  ),
+  'a': (
+    size: $fP,
+    weight: normal,
+    color: rgb($fn2),
+    family: $font2
+  )
+);

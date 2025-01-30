@@ -16,11 +16,34 @@ const Board = ({ children }: BoardProps): JSX.Element => {
   const INITIAL_SCALE = 1
 
   const $containerRef = useRef<HTMLDivElement>(null)
+  const $childrenRef = useRef<HTMLDivElement>(null)
 
   const [isMoving, setIsMoving] = useState(false)
   const [lastMousePosition, setLastMousePosition] = useState<TPositions | null>(null)
   const [scale, setScale] = useState(INITIAL_SCALE)
   const [offset, setOffset] = useState<TPositions>({ x: 0, y: 0 })
+
+  const centerAndFit = () => {
+    if (!$containerRef.current || !$childrenRef.current) return
+    const containerRect = $containerRef.current.getBoundingClientRect()
+    const childrenRect = $childrenRef.current.getBoundingClientRect()
+    const containerAspect = containerRect.width / containerRect.height
+    const childrenAspect = childrenRect.width / childrenRect.height
+
+    let newScale: number
+    if (containerAspect > childrenAspect) {
+      newScale = containerRect.height / childrenRect.height
+    } else {
+      newScale = containerRect.width / childrenRect.width
+    }
+    newScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, newScale))
+
+    const newOffsetX = (containerRect.width - childrenRect.width * newScale) / 2
+    const newOffsetY = (containerRect.height - childrenRect.height * newScale) / 2
+
+    setScale(newScale)
+    setOffset({ x: newOffsetX, y: newOffsetY })
+  }
 
   const handleContainerMouseDown = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -73,6 +96,10 @@ const Board = ({ children }: BoardProps): JSX.Element => {
     }
   }, [scale, offset])
 
+  useEffect(() => {
+    centerAndFit()
+  }, [])
+
   return (
     <div
       role='button'
@@ -89,6 +116,7 @@ const Board = ({ children }: BoardProps): JSX.Element => {
     >
       <div
         className='board-children'
+        ref={$childrenRef}
         style={{
           top: offset.y,
           left: offset.x,

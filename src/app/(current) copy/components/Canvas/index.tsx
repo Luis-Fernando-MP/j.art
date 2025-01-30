@@ -1,3 +1,4 @@
+import Juls from '@/shared/assets/Juls'
 import dynamic from 'next/dynamic'
 import { type JSX } from 'react'
 

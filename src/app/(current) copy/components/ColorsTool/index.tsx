@@ -36,7 +36,7 @@ const ColorsTool = (): JSX.Element => {
       </button>
       <div className='tools-group__options'>
         {defaultColors.map(color => {
-          const key = `${color}-color-${Math.random()}`
+          const key = `${color}-color-${Math.random()}--`
           return (
             <button
               key={key}

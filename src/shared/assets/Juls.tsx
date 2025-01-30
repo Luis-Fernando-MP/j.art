@@ -1,6 +1,6 @@
 import type { JSX } from 'react'
 
-const Jules = (): JSX.Element => {
+const Juls = (): JSX.Element => {
   return (
     <svg width='151' height='150' viewBox='0 0 151 150' fill='none' xmlns='http://www.w3.org/2000/svg'>
       <path
@@ -148,4 +148,4 @@ const Jules = (): JSX.Element => {
   )
 }
 
-export default Jules
+export default Juls

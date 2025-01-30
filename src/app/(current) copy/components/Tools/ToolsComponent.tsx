@@ -1,9 +1,11 @@
 'use client'
 
+import { handleClearCanvas } from '@/scripts/toolsCanvas'
+import { getContext } from '@/scripts/transformCanvas'
 import { acl } from '@/shared/acl'
 import { drawingTools, shapeTools } from '@home-store/tools.types'
 import ToolsStore from '@home/store/tools.store'
-import { FlipHorizontal2Icon, FlipVertical2Icon } from 'lucide-react'
+import { FlipHorizontal2Icon, FlipVertical2Icon, Trash2Icon } from 'lucide-react'
 import type { JSX } from 'react'
 
 import ColorsTool from '../ColorsTool'
@@ -32,6 +34,16 @@ const ToolsComponent = (): JSX.Element => {
                 </button>
               )
             })}
+
+            <button
+              className='tools-options__tool'
+              onClick={() => {
+                const { ctx } = getContext()
+                handleClearCanvas(ctx)
+              }}
+            >
+              <Trash2Icon />
+            </button>
           </div>
         </div>
 
