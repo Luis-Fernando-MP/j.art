@@ -1,21 +1,15 @@
-import { Pixelify_Sans, Silkscreen, VT323 } from 'next/font/google'
+import { Pixelify_Sans, VT323 } from 'next/font/google'
 
-export const titleFont = Pixelify_Sans({
-  subsets: ['latin'],
-  weight: ['700', '600', '500', '400'],
-  variable: '--titleFont'
-})
-
-export const paragraphFont = VT323({
+export const font1 = VT323({
   subsets: ['latin'],
   weight: ['400'],
-  variable: '--paragraphFont'
+  variable: '--font1'
 })
 
-export const exclamationFont = Silkscreen({
+export const font2 = Pixelify_Sans({
   subsets: ['latin'],
-  weight: ['400', '700'],
-  variable: '--exclamationFont'
+  weight: ['700', '600', '500', '400'],
+  variable: '--font2'
 })
 
-export const bodyFonts = `${titleFont.variable} ${paragraphFont.variable} ${exclamationFont.variable}`
+export const bodyFonts = `${font1.variable} ${font2.variable}`
