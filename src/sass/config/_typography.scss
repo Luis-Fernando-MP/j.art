@@ -3,44 +3,44 @@
 $typography: (
   'h1': (
     size: $fH1,
-    weight: 900,
+    weight: 700,
     color: rgb($fn1),
-    family: $fontTitle
+    family: $font2
   ),
   'h2': (
     size: $fH2,
-    weight: 800,
+    weight: 600,
     color: rgb($fn1),
-    family: $fontTitle
+    family: $font2
   ),
   'h3': (
     size: $fH3,
-    weight: 700,
-    color: rgb($fn1),
-    family: $fontTitle
+    weight: 500,
+    color: rgb($fn2),
+    family: $font2
   ),
   'h4': (
     size: $fH4,
-    weight: 600,
-    color: rgb($fn1),
-    family: $font1
+    weight: 400,
+    color: rgb($fn2),
+    family: $font2
   ),
   'h5': (
     size: $fH5,
-    weight: 500,
-    color: rgb($fn1),
+    weight: 400,
+    color: rgb($fn2),
     family: $font1
   ),
   'p': (
     size: $fP,
-    weight: normal,
+    weight: 400,
     color: rgb($fn2),
-    family: $font2
+    family: $font1
   ),
   'a': (
     size: $fP,
-    weight: normal,
+    weight: 400,
     color: rgb($fn2),
-    family: $font2
+    family: $font1
   )
 );

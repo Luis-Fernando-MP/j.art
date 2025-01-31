@@ -1,6 +1,7 @@
 /* stylelint-disable property-no-vendor-prefix */
 @use '@sass/config/vars' as v;
 @use '@sass/utils/defs' as d;
+@use '@sass/utils/pointActive' as po;
 
 .leftTools {
   @include d.flex($ali: center);
@@ -41,28 +42,7 @@
     position: relative;
     padding: v.$padding * 0.5;
 
-    &::after {
-      content: '';
-
-      position: absolute;
-      top: 5px;
-      left: 13px;
-
-      display: none;
-
-      width: 4px;
-      height: 4px;
-      border-radius: 50%;
-
-      background-color: #fff;
-      box-shadow: 0 0 15px 8px rgb(v.$tn1);
-    }
-
-    &.active {
-      &::after {
-        display: block;
-      }
-
+    @include po.pointActive {
       svg {
         stroke: rgb(v.$fn1);
       }

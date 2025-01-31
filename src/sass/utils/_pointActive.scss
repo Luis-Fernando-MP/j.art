@@ -1,0 +1,31 @@
+@use '@sass/config/vars' as v;
+
+@mixin pointActive {
+  position: relative;
+
+  &::before {
+    content: '';
+
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    display: none;
+
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+
+    background-color: #fff;
+    box-shadow: 0 0 15px 8px rgb(v.$tn1);
+  }
+
+  &.active {
+    @content;
+
+    &::before {
+      display: block;
+    }
+  }
+}

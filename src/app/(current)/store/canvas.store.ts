@@ -15,7 +15,7 @@ interface ICanvasStore {
 const state: StateCreator<ICanvasStore> = set => ({
   pixelSize: 30,
   pixelOpacity: 1,
-  pixelColor: 'rgba(255, 255, 255, 255)',
+  pixelColor: 'rgb(255,255,255,255)',
   setPixelSize: pixelSize => set({ pixelSize }),
   setPixelColor: pixelColor => set({ pixelColor }),
   setPixelOpacity: pixelOpacity => set({ pixelOpacity })

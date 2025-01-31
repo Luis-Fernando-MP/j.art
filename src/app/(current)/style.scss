@@ -12,7 +12,7 @@
     'leftTools draw colors rightTools'
     'leftTools draw colors rightTools'
     'leftTools draw colors rightTools';
-  grid-template-columns: 50px 1fr 50px 350px;
+  grid-template-columns: 50px 1fr 50px 300px;
   grid-template-rows: 25px repeat(3, 1fr);
 
   width: 100%;
@@ -22,6 +22,11 @@
     grid-area: header;
     justify-content: center;
     background-color: rgb(v.$tn1);
+
+    h3 {
+      font-size: 1rem;
+      color: rgb(v.$fn1);
+    }
 
     @include d.flex($ali: center);
   }

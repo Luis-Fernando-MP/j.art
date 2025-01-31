@@ -15,12 +15,12 @@
 
   // --
   --xl-font-size: 4rem;
-  --h1-font-size: 2rem;
-  --h2-font-size: 1.4rem;
-  --h3-font-size: 1.3rem;
+  --h1-font-size: 1.35rem;
+  --h2-font-size: 1.3rem;
+  --h3-font-size: 1.25rem;
   --h4-font-size: 1.2rem;
-  --h5-font-size: 1.1rem;
-  --p-font-size: 1rem;
+  --h5-font-size: 1.3rem;
+  --p-font-size: 1.2rem;
 }
 
 $fXl: var(--xl-font-size);
@@ -55,9 +55,9 @@ $padding: 10px;
 $icon: 17px;
 $family-size: 16px;
 $fontBase: 'Segoe UI Mono', 'Roboto Mono';
-$fontTitle: var(--titleFont);
-$font1: var(--paragraphFont);
-$font2: var(--paragraphFont);
+$font1: var(--font1);
+$font1: var(--font1);
+$font2: var(--font2);
 $error: rgb(228 30 56);
 $focus: rgb(66 133 244);
 

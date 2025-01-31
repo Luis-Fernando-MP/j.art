@@ -1,0 +1,20 @@
+/* stylelint-disable property-no-vendor-prefix */
+@use '@sass/config/vars' as v;
+@use '@sass/utils/defs' as d;
+
+.rightTools {
+  padding: v.$padding;
+
+  @include d.flex($gap: v.$padding * 2);
+
+  &-navigation {
+    width: 100%;
+
+    &__temporal {
+      width: 100%;
+      height: 200px;
+      border-radius: v.$radius;
+      background-color: rgb(v.$bg1);
+    }
+  }
+}

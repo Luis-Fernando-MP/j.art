@@ -1,6 +1,6 @@
 'use client'
 
-import { JSX, useEffect, useRef, useState } from 'react'
+import { JSX, forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
 
 import './style.scss'
 
@@ -8,13 +8,22 @@ type TPositions = { x: number; y: number }
 
 interface BoardProps {
   children: (offset: TPositions, scale: number) => JSX.Element
+  className?: string
+  isCenter?: boolean
 }
 
-const Board = ({ children }: BoardProps): JSX.Element => {
-  const MIN_SCALE = 0.5
-  const MAX_SCALE = 10
-  const INITIAL_SCALE = 1
+export interface BoardRef {
+  nextChild: () => void
+  prevChild: () => void
+  moveToChild: (index: number) => void
+  handleScale: (scale: number) => void
+}
 
+export const MIN_SCALE = 0.7
+export const MAX_SCALE = 10
+const INITIAL_SCALE = 1
+
+const Board = forwardRef(({ children, className = '', isCenter = true }: BoardProps, ref): JSX.Element => {
   const $containerRef = useRef<HTMLDivElement>(null)
   const $childrenRef = useRef<HTMLDivElement>(null)
 
@@ -22,27 +31,60 @@ const Board = ({ children }: BoardProps): JSX.Element => {
   const [lastMousePosition, setLastMousePosition] = useState<TPositions | null>(null)
   const [scale, setScale] = useState(INITIAL_SCALE)
   const [offset, setOffset] = useState<TPositions>({ x: 0, y: 0 })
+  const [childIndex, setChildIndex] = useState(0)
+
+  const handleScale = (scale: number): void => {
+    setScale(scale)
+  }
+
+  const noExistRefs = !$containerRef.current || !$childrenRef.current
+
+  const getDynamicScale = (parent: DOMRect, children: DOMRect) => {
+    const paAspect = parent.width / parent.height
+    const chiAspect = children.width / children.height
+    let scale: number
+    if (paAspect > chiAspect) scale = parent.height / children.height
+    else scale = parent.width / children.width
+    const maxScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, scale))
+    const minScale = Math.min(MIN_SCALE, Math.min(MAX_SCALE, scale))
+    return { scale, maxScale, minScale }
+  }
 
   const centerAndFit = () => {
     if (!$containerRef.current || !$childrenRef.current) return
-    const containerRect = $containerRef.current.getBoundingClientRect()
-    const childrenRect = $childrenRef.current.getBoundingClientRect()
-    const containerAspect = containerRect.width / containerRect.height
-    const childrenAspect = childrenRect.width / childrenRect.height
-
-    let newScale: number
-    if (containerAspect > childrenAspect) {
-      newScale = containerRect.height / childrenRect.height
-    } else {
-      newScale = containerRect.width / childrenRect.width
-    }
-    newScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, newScale))
-
-    const newOffsetX = (containerRect.width - childrenRect.width * newScale) / 2
-    const newOffsetY = (containerRect.height - childrenRect.height * newScale) / 2
-
-    setScale(newScale)
+    const paRect = $containerRef.current.getBoundingClientRect()
+    const chiRect = $childrenRef.current.getBoundingClientRect()
+    const { scale } = getDynamicScale(paRect, chiRect)
+    const newOffsetX = (paRect.width - chiRect.width * scale) / 2
+    const newOffsetY = (paRect.height - chiRect.height * scale) / 2
+    setScale(scale)
     setOffset({ x: newOffsetX, y: newOffsetY })
+  }
+
+  const centerWithSpacing = () => {
+    if (!$containerRef.current || !$childrenRef.current) return
+    const paRect = $containerRef.current.getBoundingClientRect()
+    const childrenRect = $childrenRef.current.getBoundingClientRect()
+    const { maxScale } = getDynamicScale(paRect, childrenRect)
+    setScale(maxScale)
+    moveToChild(0, maxScale)
+  }
+
+  const moveToChild = (index: number, extraScale: number = 1) => {
+    if (!$childrenRef.current || !$containerRef.current) return
+    const children = Array.from($childrenRef.current.children) as HTMLElement[]
+    if (index < 0 || index >= children.length) return
+
+    const paRect = $containerRef.current.getBoundingClientRect()
+    const chiRect = children[index].getBoundingClientRect()
+    const childrenRect = $childrenRef.current.getBoundingClientRect()
+
+    const distance = chiRect.left - childrenRect.left
+    const centerXSpace = paRect.width / 2 - (chiRect.width * extraScale) / 2
+    const newOffsetY = (paRect.height - childrenRect.height * extraScale) / 2
+
+    setOffset({ x: -distance + centerXSpace, y: newOffsetY })
+    setChildIndex(index)
   }
 
   const handleContainerMouseDown = (e: React.MouseEvent) => {
@@ -89,16 +131,25 @@ const Board = ({ children }: BoardProps): JSX.Element => {
 
   useEffect(() => {
     const canvas = $containerRef.current
-    if (!canvas) return
-    canvas.addEventListener('wheel', handleWheel, { passive: false })
+    if (canvas) {
+      canvas.addEventListener('wheel', handleWheel, { passive: false })
+    }
     return () => {
-      canvas.removeEventListener('wheel', handleWheel)
+      canvas?.removeEventListener('wheel', handleWheel)
     }
   }, [scale, offset])
 
   useEffect(() => {
-    centerAndFit()
+    if (isCenter) return centerAndFit()
+    centerWithSpacing()
   }, [])
+
+  useImperativeHandle<unknown, BoardRef>(ref, () => ({
+    nextChild: () => moveToChild(childIndex + 1),
+    prevChild: () => moveToChild(childIndex - 1),
+    moveToChild,
+    handleScale
+  }))
 
   return (
     <div
@@ -111,11 +162,12 @@ const Board = ({ children }: BoardProps): JSX.Element => {
       onMouseUp={handleContainerMouseUp}
       onContextMenu={e => e.preventDefault()}
       style={{
+        opacity: noExistRefs ? 0 : 1,
         cursor: isMoving ? 'grabbing' : 'default'
       }}
     >
       <div
-        className='board-children'
+        className={`${className} board-children`}
         ref={$childrenRef}
         style={{
           top: offset.y,
@@ -127,6 +179,6 @@ const Board = ({ children }: BoardProps): JSX.Element => {
       </div>
     </div>
   )
-}
+})
 
 export default Board

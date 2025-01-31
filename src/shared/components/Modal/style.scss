@@ -1,0 +1,93 @@
+@use '@sass/config/vars' as v;
+@use '@sass/utils/defs' as d;
+@use '@sass/utils/scrollbar' as *;
+
+.modal {
+  cursor: pointer;
+
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  left: 0;
+
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+
+  opacity: 1;
+  background-color: rgba(v.$bg1, 0.5);
+  backdrop-filter: blur(10px);
+
+  transition: opacity 0.2s ease-in-out;
+  animation: open-clip 0.2s ease-in-out forwards;
+
+  &.closing {
+    opacity: 0;
+  }
+
+  &-closeButton {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    height: 70px;
+    padding: 10px;
+    border-radius: v.$radius;
+
+    background-color: rgb(v.$tn1);
+
+    transition: all 0.2s ease-in-out;
+
+    svg {
+      stroke: rgb(v.$fn1);
+      stroke-width: 4;
+    }
+  }
+
+  &.closing &-closeButton {
+    bottom: -20px;
+    opacity: 0;
+  }
+
+  &-container {
+    @extend %scroll-hidden;
+
+    position: relative;
+    top: 0;
+
+    overflow-y: auto;
+    justify-content: center;
+
+    min-width: fit-content;
+    max-width: 85%;
+    min-height: fit-content;
+    max-height: 85%;
+
+    transition: all 0.2s ease-in-out;
+
+    @include d.flex($ali: center);
+  }
+
+  &.closing &-container {
+    top: 200px;
+    opacity: 0;
+  }
+
+  @keyframes open-clip {
+    0% {
+      top: 50px;
+      opacity: 0;
+    }
+
+    100% {
+      top: 0;
+      opacity: 1;
+    }
+  }
+}

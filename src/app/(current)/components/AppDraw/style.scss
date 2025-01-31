@@ -1,0 +1,107 @@
+/* stylelint-disable property-no-vendor-prefix */
+@use '@sass/config/vars' as v;
+@use '@sass/utils/defs' as d;
+
+$pixelSize: 15px;
+
+.appDraw {
+  position: relative;
+
+  &-board {
+    @include d.flex($dir: row);
+
+    &__background {
+      pointer-events: none;
+
+      position: absolute;
+      top: 0;
+      left: 0;
+
+      width: 100%;
+      height: 100%;
+
+      opacity: 0.5;
+      background: conic-gradient(rgb(v.$bg2) 25%, rgb(v.$bg3) 25% 50%, rgb(v.$bg2) 50% 75%, rgb(v.$bg3) 75%),
+        conic-gradient(from 45deg, rgb(v.$bg2) 25%, rgb(v.$bg3) 25% 50%, rgb(v.$bg2) 50% 75%, rgb(v.$bg3) 75%);
+      background-color: rgb(v.$bg1);
+      background-position:
+        0 0,
+        $pixelSize $pixelSize;
+      background-size: $pixelSize $pixelSize;
+    }
+
+    &__wrapper {
+      position: relative;
+      overflow: hidden;
+      border-radius: v.$radius;
+      background-color: rgb(v.$bg2);
+    }
+
+    &__canvas {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &-canvas {
+    &__addFrame {
+      $minW: 100px;
+      $minH: 100px;
+
+      min-width: $minW;
+      min-height: $minH;
+    }
+
+    &:nth-child(2) {
+      width: 600px !important;
+    }
+
+    &__addFrame {
+      display: grid;
+      place-content: center;
+      background-color: rgb(v.$bg3, 0.2);
+
+      svg {
+        width: 80px;
+        height: 80px;
+
+        filter: drop-shadow(2px 2px 0 rgb(v.$tn1)) drop-shadow(-2px -2px 0 rgb(v.$fn2));
+
+        stroke: rgb(v.$bg3);
+        stroke-width: 3px;
+      }
+    }
+  }
+
+  &-frames {
+    position: absolute;
+    bottom: v.$padding * 2;
+    left: 50%;
+    transform: translateX(-50%);
+
+    @include d.flex($dir: row, $ali: center, $gap: v.$padding * 2);
+
+    &__action {
+      display: grid;
+      place-content: center;
+
+      width: 80px;
+      height: 80px;
+      border: 2px solid rgb(v.$bg3);
+      border-radius: v.$radius;
+
+      background-color: rgb(v.$bg2);
+
+      canvas {
+        pointer-events: none;
+      }
+
+      &.active {
+        transform: rotateZ(10deg);
+        border-color: rgb(v.$tn1);
+      }
+    }
+  }
+}
