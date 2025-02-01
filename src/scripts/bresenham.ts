@@ -28,7 +28,9 @@ interface IDrawPoint {
   snapshot?: ImageData | null
 }
 
-export const alignCord = (coord: number, pixelSize: number) => Math.floor(coord / pixelSize) * pixelSize
+export const alignCord = (coord: number, pixelSize: number) => {
+  return Math.floor(coord / pixelSize) * pixelSize
+}
 
 export function drawCircleBresenham({ ctx, startX, startY, endX, endY, pixelSize, pixelColor, snapshot }: IShapeBresenham) {
   const radius = Math.max(Math.abs(endX - startX), Math.abs(endY - startY)) / (pixelSize * 2)

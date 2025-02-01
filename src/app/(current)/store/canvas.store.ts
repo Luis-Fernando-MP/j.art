@@ -1,24 +1,36 @@
 import { StateCreator, create } from 'zustand'
 
+type TDimensionPosition = {
+  width: number
+  height: number
+}
+
 export type TPositions = { x: number; y: number }
 
 interface ICanvasStore {
-  pixelSize: number
-  pixelColor: string
-  pixelOpacity: number
+  selectedCanvas: string
+  listOfCanvas: string[]
+  dimensions: TDimensionPosition
 
-  setPixelSize: (pixelSize: number) => void
-  setPixelColor: (pixelColor: string) => void
-  setPixelOpacity: (pixelOpacity: number) => void
+  setSelectedCanvas: (selectedCanvas: string) => void
+  setListOfCanvas: (listOfCanvas: string[]) => void
+  setDimensions: (dimensions: TDimensionPosition) => void
 }
 
+const DEFAULT_ID_CANVAS = 'default-canvas'
+const DEFAULT_WIDTH_CANVAS = 900
+const DEFAULT_HEIGHT_CANVAS = 900
+
 const state: StateCreator<ICanvasStore> = set => ({
-  pixelSize: 30,
-  pixelOpacity: 1,
-  pixelColor: 'rgb(255,255,255,255)',
-  setPixelSize: pixelSize => set({ pixelSize }),
-  setPixelColor: pixelColor => set({ pixelColor }),
-  setPixelOpacity: pixelOpacity => set({ pixelOpacity })
+  selectedCanvas: DEFAULT_ID_CANVAS,
+  listOfCanvas: [DEFAULT_ID_CANVAS],
+  dimensions: {
+    height: DEFAULT_HEIGHT_CANVAS,
+    width: DEFAULT_WIDTH_CANVAS
+  },
+  setDimensions: dimensions => set({ dimensions }),
+  setListOfCanvas: listOfCanvas => set({ listOfCanvas }),
+  setSelectedCanvas: selectedCanvas => set({ selectedCanvas })
 })
 
 const CanvasStore = create(state)

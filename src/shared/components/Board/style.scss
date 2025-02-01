@@ -17,5 +17,11 @@
   &-children {
     position: absolute;
     transform-origin: 0 0;
+
+    &.animate {
+      transition:
+        top 0.2s ease,
+        left 0.2s ease;
+    }
   }
 }

@@ -4,10 +4,15 @@ import { MouseEvent } from 'react'
 
 import { getContext } from './transformCanvas'
 
-export const getCanvasCoordinates = (e: MouseEvent, scale: number) => {
-  const { canvas } = getContext()
-  const rect = canvas.getBoundingClientRect()
-  return { x: (e.clientX - rect.left) / scale, y: (e.clientY - rect.top) / scale }
+export const getCanvasCoordinates = (e: MouseEvent, canvasId: string = 'canvas') => {
+  const { canvas, ctx } = getContext(canvasId)
+  const canvasRect = canvas.getBoundingClientRect()
+  const scaleX = canvas.width / canvasRect.width
+  const scaleY = canvas.height / canvasRect.height
+
+  const x = (e.clientX - canvasRect.left) * scaleX
+  const y = (e.clientY - canvasRect.top) * scaleY
+  return { x, y, ctx }
 }
 
 type THandleTool = {
@@ -30,20 +35,22 @@ type THandleDrawPixel = THandleTool &
 
 export function handleDrawPixel({ pixelColor, ctx, pixelOpacity, pixelSize, x, xMirror, y, yMirror }: THandleDrawPixel) {
   const { width, height } = ctx.canvas
-  const mirroredX = width - x - pixelSize
-  const mirroredY = height - y - pixelSize
+  // const mirroredX = width - x - pixelSize
+  // const mirroredY = height - y - pixelSize
+
+  console.log('IN', { x, y })
+
+  console.log(pixelSize)
 
   ctx.beginPath()
   ctx.imageSmoothingEnabled = false
   ctx.globalAlpha = pixelOpacity
   ctx.fillStyle = pixelColor
-  ctx.fillRect(x, y, pixelSize, pixelSize)
+  ctx.fillRect(x, y, 10, 10)
 
-  console.log(xMirror, yMirror)
-
-  if (xMirror) ctx.fillRect(mirroredX, y, pixelSize, pixelSize)
-  if (yMirror) ctx.fillRect(x, mirroredY, pixelSize, pixelSize)
-  if (xMirror && yMirror) ctx.fillRect(mirroredX, mirroredY, pixelSize, pixelSize)
+  // if (xMirror) ctx.fillRect(mirroredX, y, pixelSize, pixelSize)
+  // if (yMirror) ctx.fillRect(x, mirroredY, pixelSize, pixelSize)
+  // if (xMirror && yMirror) ctx.fillRect(mirroredX, mirroredY, pixelSize, pixelSize)
 
   ctx.closePath()
 }

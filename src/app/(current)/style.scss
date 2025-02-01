@@ -44,6 +44,7 @@
   }
 
   &-draw {
+    overflow: hidden;
     grid-area: draw;
   }
 
