@@ -35,22 +35,18 @@ type THandleDrawPixel = THandleTool &
 
 export function handleDrawPixel({ pixelColor, ctx, pixelOpacity, pixelSize, x, xMirror, y, yMirror }: THandleDrawPixel) {
   const { width, height } = ctx.canvas
-  // const mirroredX = width - x - pixelSize
-  // const mirroredY = height - y - pixelSize
-
-  console.log('IN', { x, y })
-
-  console.log(pixelSize)
+  const mirroredX = width - x - pixelSize
+  const mirroredY = height - y - pixelSize
 
   ctx.beginPath()
   ctx.imageSmoothingEnabled = false
   ctx.globalAlpha = pixelOpacity
   ctx.fillStyle = pixelColor
-  ctx.fillRect(x, y, 10, 10)
+  ctx.fillRect(x, y, pixelSize, pixelSize)
 
-  // if (xMirror) ctx.fillRect(mirroredX, y, pixelSize, pixelSize)
-  // if (yMirror) ctx.fillRect(x, mirroredY, pixelSize, pixelSize)
-  // if (xMirror && yMirror) ctx.fillRect(mirroredX, mirroredY, pixelSize, pixelSize)
+  if (xMirror) ctx.fillRect(mirroredX, y, pixelSize, pixelSize)
+  if (yMirror) ctx.fillRect(x, mirroredY, pixelSize, pixelSize)
+  if (xMirror && yMirror) ctx.fillRect(mirroredX, mirroredY, pixelSize, pixelSize)
 
   ctx.closePath()
 }

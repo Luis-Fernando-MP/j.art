@@ -1,6 +1,7 @@
 'use client'
 
 import { acl } from '@/shared/acl'
+import boardStore, { MAX_SCALE, MIN_SCALE } from '@/shared/components/Board/board.store'
 import { BoardRef } from '@/shared/components/Board/useBoard'
 import { newKey } from '@/shared/key'
 import { PlusIcon } from 'lucide-react'
@@ -21,7 +22,7 @@ const BoardCanvas = dynamic(() => import('../BoardCanvas'), {
 const AppDraw = ({ className = '' }: IAppDraw): JSX.Element => {
   const { listOfCanvas, selectedCanvas, setSelectedCanvas, setListOfCanvas } = CanvasStore()
 
-  const $boardRef = useRef<BoardRef | null>(null)
+  const { scale, setScale, moveToChild } = boardStore()
 
   const handleNewCanvas = (): void => {
     const newId = newKey()
@@ -33,17 +34,16 @@ const AppDraw = ({ className = '' }: IAppDraw): JSX.Element => {
       <BoardCanvas className='appDraw-board' />
 
       <section className='appDraw-frames'>
-        {/* <input
+        <input
           type='range'
-          min={0.7}
-          step={0.5}
-          max={10}
-          value={boardScale}
+          min={MIN_SCALE}
+          step={0.05}
+          max={MAX_SCALE}
+          value={scale}
           onChange={e => {
-            setBoardScale(Number(e.target.value))
-            $boardRef.current?.handleScale(Number(e.target.value))
+            setScale(Number(e.target.value))
           }}
-        /> */}
+        />
 
         {listOfCanvas.map((canvasId, i) => {
           const key = `${canvasId}-action-frame`
@@ -54,8 +54,7 @@ const AppDraw = ({ className = '' }: IAppDraw): JSX.Element => {
               key={key}
               onClick={() => {
                 setSelectedCanvas(canvasId)
-                if (!$boardRef.current) return
-                $boardRef.current.moveToChild(i)
+                if (moveToChild) moveToChild(i)
               }}
             >
               <canvas className='appDraw-frames__canvas' />

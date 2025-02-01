@@ -1,7 +1,6 @@
 import Board from '@/shared/components/Board'
-import { BoardRef } from '@/shared/components/Board/useBoard'
 import { PlusIcon } from 'lucide-react'
-import { type JSX, useRef } from 'react'
+import { type JSX } from 'react'
 
 import CanvasStore from '../../store/canvas.store'
 import Canvas from '../Canvas'
@@ -13,10 +12,8 @@ interface IBoardCanvas {
 const BoardCanvas = ({ className = '' }: IBoardCanvas): JSX.Element => {
   const { dimensions, listOfCanvas } = CanvasStore()
 
-  const $boardRef = useRef<BoardRef | null>(null)
-
   return (
-    <Board ref={$boardRef} className={`${className}`} isCenter={false}>
+    <Board className={`${className}`} isCenter={false}>
       {() => {
         return (
           <>

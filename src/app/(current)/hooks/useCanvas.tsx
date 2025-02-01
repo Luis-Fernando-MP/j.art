@@ -63,22 +63,16 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
     [pixelColor, pixelSize, pixelOpacity, xMirror, yMirror, scale]
   )
 
-  // e.preventDefault()
-  // setIsDrawing(true)
-  // const { x, y, ctx } = getCanvasCoordinates(e,  canvasId)
-  // startPos.current = { x, y }
-
   const handleCanvasMouseDown = (e: MouseEvent) => {
     if (e.ctrlKey) return
     e.preventDefault()
     const { x, y } = getCanvasCoordinates(e, canvasId)
-
+    startPos.current = { x, y }
     handleDrawing(x, y)
     setIsDrawing(true)
-
-    // if (!(selectedTool in shapeTools) || canvasSnapshot.current) return
-    // const { ctx } = getContext(canvasId)
-    // canvasSnapshot.current = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height)
+    if (!(selectedTool in shapeTools) || canvasSnapshot.current) return
+    const { ctx } = getContext(canvasId)
+    canvasSnapshot.current = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height)
   }
 
   const handleCanvasMouseMove = (e: MouseEvent) => {
@@ -100,32 +94,32 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
     const endX = alignCord(x, pixelSize)
     const endY = alignCord(y, pixelSize)
 
-    // const { width, height } = ctx.canvas
-    // const mirroredX = width - x - pixelSize
-    // const mirroredY = height - y - pixelSize
+    const { width, height } = ctx.canvas
+    const mirroredX = width - x - pixelSize
+    const mirroredY = height - y - pixelSize
 
     if (selectedTool in handleUtilTools) {
       const handleTool = handleUtilTools[selectedTool as keyof typeof handleUtilTools]
       return handleTool(ctx, endX, endY)
     }
 
-    // if (selectedTool in shapeTools && canvasSnapshot.current && startPos.current) {
-    //   const { x: stX, y: stY } = startPos.current
-    //   const startX = alignCord(stX, pixelSize)
-    //   const startY = alignCord(stY, pixelSize)
-    //   const shapeProps: IShapeBresenham = {
-    //     ctx,
-    //     startX,
-    //     startY,
-    //     endX,
-    //     endY,
-    //     pixelColor,
-    //     pixelSize,
-    //     snapshot: canvasSnapshot.current,
-    //     perfectShape: $perfectShape.current
-    //   }
-    //   return handleBresenhamTools[selectedTool as ShapeTools](shapeProps)
-    // }
+    if (selectedTool in shapeTools && canvasSnapshot.current && startPos.current) {
+      const { x: stX, y: stY } = startPos.current
+      const startX = alignCord(stX, pixelSize)
+      const startY = alignCord(stY, pixelSize)
+      const shapeProps: IShapeBresenham = {
+        ctx,
+        startX,
+        startY,
+        endX,
+        endY,
+        pixelColor,
+        pixelSize,
+        snapshot: canvasSnapshot.current,
+        perfectShape: $perfectShape.current
+      }
+      return handleBresenhamTools[selectedTool as ShapeTools](shapeProps)
+    }
   }
 
   return {

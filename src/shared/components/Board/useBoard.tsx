@@ -15,7 +15,7 @@ export interface BoardRef {
 }
 
 const useBoard = ({ isCenter }: IUseBoardHook) => {
-  const { offset, scale, setOffset, setScale } = boardStore()
+  const { offset, scale, setOffset, setScale, setPrevChild, setNextChild, setMoveToChild } = boardStore()
   const $containerRef = useRef<HTMLDivElement>(null)
   const $childrenRef = useRef<HTMLDivElement>(null)
 
@@ -122,6 +122,14 @@ const useBoard = ({ isCenter }: IUseBoardHook) => {
     })
   }
 
+  const nextChild = () => {
+    moveToChild(childIndex + 1)
+  }
+
+  const prevChild = () => {
+    moveToChild(childIndex - 1)
+  }
+
   useEffect(() => {
     const canvas = $containerRef.current
     if (canvas) {
@@ -137,12 +145,11 @@ const useBoard = ({ isCenter }: IUseBoardHook) => {
     centerWithSpacing()
   }, [])
 
-  const nextChild = () => {
-    moveToChild(childIndex + 1)
-  }
-  const prevChild = () => {
-    moveToChild(childIndex - 1)
-  }
+  useEffect(() => {
+    setPrevChild(prevChild)
+    setNextChild(nextChild)
+    setMoveToChild(moveToChild)
+  }, [setPrevChild, setNextChild, setMoveToChild])
 
   return {
     $containerRef,
@@ -151,9 +158,6 @@ const useBoard = ({ isCenter }: IUseBoardHook) => {
     isMoving,
     offset,
     scale,
-    nextChild,
-    prevChild,
-    moveToChild,
     handleScale,
     handleBoardDown,
     handleBoardMove,

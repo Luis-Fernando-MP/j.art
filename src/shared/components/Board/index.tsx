@@ -1,9 +1,9 @@
 'use client'
 
-import { JSX, forwardRef, useImperativeHandle } from 'react'
+import { JSX } from 'react'
 
 import './style.scss'
-import useBoard, { BoardRef } from './useBoard'
+import useBoard from './useBoard'
 
 type TPositions = { x: number; y: number }
 
@@ -13,29 +13,9 @@ interface BoardProps {
   isCenter?: boolean
 }
 
-const Board = forwardRef(({ children, className = '', isCenter = true }: BoardProps, ref): JSX.Element => {
-  const {
-    $containerRef,
-    $childrenRef,
-    noExistRefs,
-    isMoving,
-    offset,
-    scale,
-    nextChild,
-    prevChild,
-    moveToChild,
-    handleScale,
-    handleBoardDown,
-    handleBoardMove,
-    handleBoardUp
-  } = useBoard({ isCenter })
-
-  useImperativeHandle<unknown, BoardRef>(ref, () => ({
-    nextChild,
-    prevChild,
-    moveToChild,
-    handleScale
-  }))
+const Board = ({ children, className = '', isCenter = true }: BoardProps): JSX.Element => {
+  const { $containerRef, $childrenRef, noExistRefs, isMoving, offset, scale, handleBoardDown, handleBoardMove, handleBoardUp } =
+    useBoard({ isCenter })
 
   return (
     <div
@@ -48,7 +28,7 @@ const Board = forwardRef(({ children, className = '', isCenter = true }: BoardPr
       onMouseUp={handleBoardUp}
       onContextMenu={e => e.preventDefault()}
       style={{
-        // opacity: noExistRefs ? 0 : 1,
+        opacity: noExistRefs ? 0 : 1,
         cursor: isMoving ? 'grabbing' : 'default'
       }}
     >
@@ -65,6 +45,6 @@ const Board = forwardRef(({ children, className = '', isCenter = true }: BoardPr
       </div>
     </div>
   )
-})
+}
 
 export default Board

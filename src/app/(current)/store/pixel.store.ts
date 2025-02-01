@@ -11,7 +11,7 @@ interface IPixelStore {
 }
 
 const state: StateCreator<IPixelStore> = set => ({
-  pixelSize: 10,
+  pixelSize: 5,
   pixelOpacity: 1,
   pixelColor: 'rgb(255, 255, 255, 255)',
   setPixelSize: pixelSize => set({ pixelSize }),
