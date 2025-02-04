@@ -1,21 +1,29 @@
 import * as bre from '@scripts/bresenham'
 import {
   BrushIcon,
+  CircleDashedIcon,
   CircleIcon,
+  Component,
   EraserIcon,
   HeartIcon,
   HexagonIcon,
   HouseIcon,
+  MousePointer2Icon,
+  MoveIcon,
   PaintBucketIcon,
+  PenOffIcon,
   PenToolIcon,
   PentagonIcon,
   PipetteIcon,
   SlashIcon,
+  SquareDashed,
   SquareIcon,
   StarIcon,
   TorusIcon,
+  Trash2Icon,
   TriangleIcon,
   TriangleRightIcon,
+  WandIcon,
   XIcon
 } from 'lucide-react'
 
@@ -34,13 +42,29 @@ export const shapeTools = {
   House: HouseIcon
 }
 
-export const drawingTools = {
+export const drawTools = {
+  Cursor: MousePointer2Icon,
   Brush: BrushIcon,
-  Eraser: EraserIcon,
   PerfectPixel: PenToolIcon,
+  InvertBrush: PenOffIcon,
+  Dithering: Component
+}
+
+export const selectTools = {
+  Move: MoveIcon,
+  SelectSquare: SquareDashed,
+  SelectCircle: CircleDashedIcon,
+  SelectWand: WandIcon
+}
+
+export const colorTools = {
   Bucket: PaintBucketIcon,
   Pipette: PipetteIcon
-  // Trash: Trash2Icon
+}
+
+export const deleteTools = {
+  Eraser: EraserIcon,
+  Trash: Trash2Icon
 }
 
 export const utilityTools = {
@@ -51,6 +75,13 @@ export const utilityTools = {
   Pattern: 'Patrón',
   Outline: 'Contorno',
   Gradient: 'Gradiente'
+}
+
+export const drawingTools = {
+  ...drawTools,
+  ...selectTools,
+  ...colorTools,
+  ...deleteTools
 }
 
 export type ShapeTools = keyof typeof shapeTools

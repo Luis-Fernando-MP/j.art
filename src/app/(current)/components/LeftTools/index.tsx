@@ -1,14 +1,14 @@
 'use client'
 
 import { acl } from '@/shared/acl'
-import VerticalText from '@/shared/components/VerticalText'
+import Logo from '@/shared/assets/Logo'
 import { Trash2Icon } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import type { JSX } from 'react'
 
 import ToolsStore from '../../store/tools.store'
-import { drawingTools } from '../../store/tools.types'
+import { colorTools, deleteTools, drawTools, drawingTools, selectTools } from '../../store/tools.types'
 import './style.scss'
 
 interface ILeftTools {
@@ -28,26 +28,46 @@ const LeftTools = ({ className = '' }: ILeftTools): JSX.Element => {
   return (
     <section className={`${className} leftTools`}>
       <div className='leftTools-logo'>
-        <div>
-          <Image src='/logo.svg' alt='j-art' width={20} height={20} />
-          <h1>J-ART</h1>
-        </div>
+        <Logo />
+        <h1>J-ART</h1>
       </div>
-      <VerticalText>Herramientas</VerticalText>
-      <div className='leftTools-drawingTools'>
-        {Object.entries(drawingTools).map(tool => {
+      <div className='leftTools-section'>
+        {Object.entries(drawTools).map(tool => {
           const [key, Icon] = tool
           return (
-            <button
-              key={key}
-              onClick={() => setSelectedTool(key)}
-              className={`leftTools-drawingTool ${acl(selectedTool === key)}`}
-            >
+            <button key={key} onClick={() => setSelectedTool(key)} className={`leftTools-tool ${acl(selectedTool === key)}`}>
               <Icon />
             </button>
           )
         })}
-        <TrashTool />
+      </div>
+      <div className='leftTools-section'>
+        {Object.entries(selectTools).map(tool => {
+          const [key, Icon] = tool
+          return (
+            <button key={key} onClick={() => setSelectedTool(key)} className={`leftTools-tool ${acl(selectedTool === key)}`}>
+              <Icon />
+            </button>
+          )
+        })}
+      </div>
+      <div className='leftTools-section'>
+        {Object.entries(colorTools).map(tool => {
+          const [key, Icon] = tool
+          return (
+            <button key={key} onClick={() => setSelectedTool(key)} className={`leftTools-tool ${acl(selectedTool === key)}`}>
+              <Icon />
+            </button>
+          )
+        })}
+      </div>
+      <div className='leftTools-section'>
+        <button onClick={() => setSelectedTool('Eraser')} className={`leftTools-tool ${acl(selectedTool === 'Eraser')}`}>
+          <deleteTools.Eraser />
+        </button>
+        <button onClick={() => {}}>
+          <deleteTools.Trash />
+        </button>
       </div>
     </section>
   )

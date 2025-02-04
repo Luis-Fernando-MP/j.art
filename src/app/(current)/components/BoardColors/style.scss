@@ -4,15 +4,25 @@
 @use '@sass/utils/pointActive' as po;
 
 .colorsTools {
-  @include d.flex($gap: v.$padding * 2, $ali: center);
+  position: absolute;
+  z-index: 1;
+  top: v.$padding;
+  left: 50%;
+  transform: translateX(-50%);
 
   justify-content: center;
 
-  &-basics,
-  &-actions {
-    width: 100%;
+  @include d.flex($dir: row, $gap: v.$padding * 1.5, $ali: center);
 
-    @include d.flex($ali: center);
+  &-section {
+    width: 100%;
+    padding: v.$padding;
+    border-radius: v.$radius;
+
+    background-color: rgb(v.$bg1, 0.5);
+    backdrop-filter: blur(20px);
+
+    @include d.flex($dir: row, $ali: center);
   }
 
   &-color {

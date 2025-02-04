@@ -1,24 +1,25 @@
-'use client'
-
 import { acl } from '@/shared/acl'
-import VerticalText from '@/shared/components/VerticalText'
-import { BabyIcon, FlameIcon, LeafyGreenIcon } from 'lucide-react'
+import { BabyIcon, FlameIcon, LeafyGreenIcon, PaletteIcon } from 'lucide-react'
 import type { JSX } from 'react'
 
 import PixelStore from '../../store/pixel.store'
-import { basicColors } from '../BoardColors/colors.'
+import { basicColors } from './colors.'
 import './style.scss'
 
-interface IColorsTools {
+interface IBoardColors {
   className?: string
 }
 
-const ColorsTools = ({ className = '' }: IColorsTools): JSX.Element => {
+const BoardColors = ({ className = '' }: IBoardColors): JSX.Element => {
   const { pixelColor, setPixelColor } = PixelStore()
   return (
     <section className={`${className} colorsTools`}>
-      <VerticalText>Colores</VerticalText>
-      <div className='colorsTools-basics'>
+      <div className='colorsTools-section'>
+        <button className='colorsTools-action'>
+          <PaletteIcon />
+        </button>
+      </div>
+      <div className='colorsTools-section'>
         {basicColors.map(color => {
           const key = `${color.join()}-basic-color`
           const [r, g, b, a] = color
@@ -33,7 +34,7 @@ const ColorsTools = ({ className = '' }: IColorsTools): JSX.Element => {
           )
         })}
       </div>
-      <div className='colorsTools-actions'>
+      <div className='colorsTools-section'>
         <button className='colorsTools-action'>
           <BabyIcon />
         </button>
@@ -49,4 +50,4 @@ const ColorsTools = ({ className = '' }: IColorsTools): JSX.Element => {
   )
 }
 
-export default ColorsTools
+export default BoardColors

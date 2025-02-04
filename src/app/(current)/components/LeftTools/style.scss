@@ -4,43 +4,47 @@
 @use '@sass/utils/pointActive' as po;
 
 .leftTools {
-  @include d.flex($ali: center, $gap: v.$padding * 3);
+  @include d.flex($ali: center, $gap: v.$padding * 2);
+
+  overflow: hidden;
+  height: 100%;
 
   &-logo {
-    position: relative;
-
-    justify-content: center;
+    transform: rotateZ(180deg);
 
     width: 100%;
-    min-height: 100px;
-    margin-top: v.$padding * 2;
+    height: fit-content;
+    min-height: 110px;
+    padding: v.$padding 3px;
+    border-radius: 5px;
 
-    @include d.flex($ali: center);
+    writing-mode: vertical-rl;
 
-    div {
-      position: relative;
-      transform-style: preserve-3d;
-      transform: rotateZ(-90deg);
+    background-color: rgb(v.$tn1);
 
-      width: max-content;
-      padding: 3px v.$padding;
-      border-radius: 5px;
-
-      background-color: rgb(v.$tn1);
-
-      @include d.flex($ali: center, $dir: row);
-    }
+    @include d.flex($ali: center, $dir: row);
 
     h1 {
       font-size: v.$fH5;
+      color: rgb(v.$bg1);
+    }
+
+    svg {
+      transform: rotateZ(90deg);
+      width: 20px;
+      height: 20px;
     }
   }
 
-  &-drawingTools {
+  &-section {
     @include d.flex($ali: center);
+
+    padding: v.$padding 5px;
+    border-radius: v.$radius;
+    background-color: rgb(v.$bg2);
   }
 
-  &-drawingTool {
+  &-tool {
     position: relative;
     padding: v.$padding * 0.5;
 
