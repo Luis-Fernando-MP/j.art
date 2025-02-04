@@ -12,7 +12,7 @@ import {
 import { getContext } from '@scripts/transformCanvas'
 import { MouseEvent, useMemo, useRef, useState } from 'react'
 
-import { TPositions } from '../store/canvas.store'
+import CanvasStore, { TPositions } from '../store/canvas.store'
 import PixelStore from '../store/pixel.store'
 import ToolsStore from '../store/tools.store'
 import { ShapeTools, handleBresenhamTools, shapeTools } from '../store/tools.types'
@@ -20,6 +20,7 @@ import { ShapeTools, handleBresenhamTools, shapeTools } from '../store/tools.typ
 type TUseCanvas = { canvasId: string }
 
 const useCanvas = ({ canvasId }: TUseCanvas) => {
+  const { dimensions } = CanvasStore()
   const { scale } = boardStore()
   const $canvasRef = useRef<HTMLCanvasElement>(null)
   const $perfectShape = useRef(false)
@@ -64,6 +65,8 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
   )
 
   const handleCanvasMouseDown = (e: MouseEvent) => {
+    console.log('prev-drag', e.target)
+
     if (e.ctrlKey) return
     e.preventDefault()
     const { x, y } = getCanvasCoordinates(e, canvasId)
@@ -87,6 +90,18 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
     startPos.current = null
     canvasSnapshot.current = null
     activatePerfectShape(false)
+
+    const { canvas: orCanvas } = getContext(canvasId)
+    const { canvas: fraCanvas, ctx: fraCtx } = getContext(`${canvasId}-frame-action`)
+    fraCtx.clearRect(0, 0, fraCanvas.width, fraCanvas.height)
+
+    const scaleX = fraCanvas.width / orCanvas.width
+    const scaleY = fraCanvas.height / orCanvas.height
+
+    const scale = Math.max(scaleX, scaleY)
+    const scaledWidth = orCanvas.width * scale
+    const scaledHeight = orCanvas.height * scale
+    fraCtx.drawImage(orCanvas, 0, 0, orCanvas.width, orCanvas.height, 0, 0, scaledWidth, scaledHeight)
   }
 
   const handleDrawing = (x: number, y: number) => {

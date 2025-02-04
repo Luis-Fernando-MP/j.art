@@ -18,8 +18,8 @@ interface ICanvasStore {
 }
 
 const DEFAULT_ID_CANVAS = 'default-canvas'
-const DEFAULT_WIDTH_CANVAS = 900
-const DEFAULT_HEIGHT_CANVAS = 900
+const DEFAULT_WIDTH_CANVAS = 500
+const DEFAULT_HEIGHT_CANVAS = 500
 
 const state: StateCreator<ICanvasStore> = set => ({
   selectedCanvas: DEFAULT_ID_CANVAS,

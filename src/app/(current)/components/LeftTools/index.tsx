@@ -23,7 +23,7 @@ const TrashTool = dynamic(() => import('./TrashTool'), {
 })
 
 const LeftTools = ({ className = '' }: ILeftTools): JSX.Element => {
-  const { xMirror, yMirror, selectedTool, setSelectedTool, setXMirror, setYMirror } = ToolsStore()
+  const { selectedTool, setSelectedTool } = ToolsStore()
 
   return (
     <section className={`${className} leftTools`}>

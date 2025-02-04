@@ -51,6 +51,10 @@ body {
 
   background-color: rgb($bg1);
 
+  canvas {
+    image-rendering: pixelated;
+  }
+
   .icon,
   .lucide {
     display: block;

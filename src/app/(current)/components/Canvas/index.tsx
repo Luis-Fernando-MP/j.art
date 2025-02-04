@@ -29,6 +29,8 @@ const Canvas = ({ className = '', canvasId }: ICanvas): JSX.Element => {
         className='appDraw-board__canvas'
         id={canvasId}
         ref={$canvasRef}
+        width={dimensions.width}
+        height={dimensions.height}
         onMouseDown={handleCanvasMouseDown}
         onMouseMove={handleCanvasMouseMove}
         onMouseUp={handleCanvasMouseUp}

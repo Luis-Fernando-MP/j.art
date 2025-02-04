@@ -4,16 +4,18 @@
 @use '@sass/utils/pointActive' as po;
 
 .leftTools {
-  @include d.flex($ali: center);
+  @include d.flex($ali: center, $gap: v.$padding * 3);
 
   &-logo {
     position: relative;
 
-    @include d.flex($ali: center);
-
     justify-content: center;
+
     width: 100%;
     min-height: 100px;
+    margin-top: v.$padding * 2;
+
+    @include d.flex($ali: center);
 
     div {
       position: relative;
@@ -24,9 +26,9 @@
       padding: 3px v.$padding;
       border-radius: 5px;
 
-      @include d.flex($ali: center, $dir: row);
-
       background-color: rgb(v.$tn1);
+
+      @include d.flex($ali: center, $dir: row);
     }
 
     h1 {

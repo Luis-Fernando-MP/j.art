@@ -38,6 +38,8 @@ export function handleDrawPixel({ pixelColor, ctx, pixelOpacity, pixelSize, x, x
   const mirroredX = width - x - pixelSize
   const mirroredY = height - y - pixelSize
 
+  console.log('drag', x, y)
+
   ctx.beginPath()
   ctx.imageSmoothingEnabled = false
   ctx.globalAlpha = pixelOpacity

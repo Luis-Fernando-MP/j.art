@@ -6,7 +6,10 @@
 .colorsTools {
   @include d.flex($gap: v.$padding * 2, $ali: center);
 
-  &-basics {
+  justify-content: center;
+
+  &-basics,
+  &-actions {
     width: 100%;
 
     @include d.flex($ali: center);
@@ -18,6 +21,12 @@
     border: 2px solid transparent;
     border-radius: 3px;
 
+    @include po.pointActive {
+      border-color: rgb(v.$tn1);
+    }
+  }
+
+  &-action {
     @include po.pointActive {
       border-color: rgb(v.$tn1);
     }
