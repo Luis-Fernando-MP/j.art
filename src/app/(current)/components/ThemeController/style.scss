@@ -1,0 +1,59 @@
+@use '@sass/config/vars' as v;
+@use '@sass/utils/defs' as d;
+
+.theme {
+  &-controller {
+    padding: 4px v.$padding * 2;
+    border-radius: 5px;
+
+    font-size: 0.9rem;
+    color: rgb(v.$fn1);
+
+    background-color: rgb(v.$bg1);
+    outline: 3px dashed rgb(v.$bg1);
+  }
+
+  &-popup {
+    flex-wrap: wrap;
+    max-width: 300px;
+
+    @include d.flex($dir: row, $ali: center);
+
+    max-height: 400px;
+  }
+
+  &-action {
+    justify-content: space-between;
+
+    width: 120px;
+    height: 90px;
+    padding: 2px;
+    border-radius: v.$radius;
+
+    @include d.flex($ali: center, $gap: 0);
+
+    p {
+      display: grid;
+      place-content: center;
+
+      width: 100%;
+      height: 100%;
+      border-radius: v.$radius;
+    }
+  }
+
+  &-colors {
+    flex-wrap: wrap;
+    width: 100%;
+    height: fit-content;
+    padding: 5px;
+
+    @include d.flex($ali: center, $dir: row);
+
+    div {
+      width: 20px;
+      height: 20px;
+      border-radius: 5px;
+    }
+  }
+}

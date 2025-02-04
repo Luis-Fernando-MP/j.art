@@ -1,0 +1,32 @@
+@use '@sass/config/vars' as v;
+@use '@sass/utils/defs' as d;
+
+.footer {
+  justify-content: space-between;
+  padding: 0 v.$padding;
+  background-color: rgb(v.$tn1, 0.4);
+
+  @include d.flex($ali: center, $dir: row);
+
+  &-logo {
+    @include d.flex($ali: center, $dir: row);
+
+    &__icon {
+      width: 25px;
+      height: 25px;
+      border: 2.5px solid rgb(v.$fn1);
+      border-radius: 50%;
+    }
+
+    h3 {
+      font-size: 1rem;
+      color: rgb(v.$fn1);
+    }
+  }
+
+  &-positions {
+    user-select: none;
+    font-size: 0.8rem;
+    color: rgb(v.$fn1);
+  }
+}

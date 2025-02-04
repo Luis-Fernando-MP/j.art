@@ -26,6 +26,9 @@ const PopupComponent = ({ children, className = '', isOpen, onClose, title, ...p
         opacity: $popupRef.current ? 1 : 0
       }}
     >
+      <div className={`${className} popup-container`} {...props}>
+        {children}
+      </div>
       <header
         role='button'
         tabIndex={0}
@@ -35,12 +38,9 @@ const PopupComponent = ({ children, className = '', isOpen, onClose, title, ...p
           cursor: isDragging ? 'grabbing' : 'grab'
         }}
       >
-        <p>{title}</p>
         <button className='popup-closeButton' onClick={onClose} />
+        <p>{title}</p>
       </header>
-      <div className={`popup-container ${className}`} {...props}>
-        {children}
-      </div>
     </article>
   )
 

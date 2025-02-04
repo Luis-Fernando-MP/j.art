@@ -1,8 +1,12 @@
 import type { JSX } from 'react'
 
-const Juls = (): JSX.Element => {
+interface IJuls {
+  className?: string
+}
+
+const Juls = ({ className = '' }: IJuls): JSX.Element => {
   return (
-    <svg width='151' height='150' viewBox='0 0 151 150' fill='none' xmlns='http://www.w3.org/2000/svg'>
+    <svg width='151' height='150' viewBox='0 0 151 150' className={className}>
       <path
         d='M119.744 97.4359C132.95 90.1523 137.77 84.0815 133.974 69.359C131.133 69.251 129.875 67.2473 129.231 64.2307C129.347 60.8664 125.962 56.4102 124.359 55.2564C122.358 53.816 120.385 53.5897 117.82 53.5897C117.82 53.5897 108.077 56.4102 99.6154 56.4102C105.224 61.7697 108.453 73.6157 105.128 83.8461L119.744 97.4359Z'
         fill='url(#paint0_linear_37_143)'
