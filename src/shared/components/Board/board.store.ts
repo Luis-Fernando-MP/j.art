@@ -4,9 +4,9 @@ import { StateCreator, create } from 'zustand'
 interface IBoardStore {
   scale: number
   offset: TPositions
-  nextChild?: () => void
-  prevChild?: () => void
-  moveToChild?: (index: number) => void
+  nextChild: () => void
+  prevChild: () => void
+  moveToChild: (index: number) => void
 
   setNextChild: (fn: IBoardStore['nextChild']) => void
   setPrevChild: (fn: IBoardStore['prevChild']) => void
@@ -23,6 +23,9 @@ export const INITIAL_SCALE = 1
 const state: StateCreator<IBoardStore> = set => ({
   scale: INITIAL_SCALE,
   offset: { x: 0, y: 0 },
+  nextChild: () => {},
+  prevChild: () => {},
+  moveToChild: () => {},
 
   setScale: scale => set({ scale }),
   setOffset: offset => set({ offset }),

@@ -18,9 +18,9 @@ const BoardCanvas = dynamic(() => import('../BoardCanvas'), {
 const AppDraw = ({ className = '' }: IAppDraw): JSX.Element => {
   return (
     <main className={`${className} appDraw`}>
-      <BoardColors className='appDraw-colors' />
-      <BoardCanvas className='appDraw-board' />
-      <BoardFrames className='appDraw-frames' />
+      <BoardColors />
+      <BoardCanvas />
+      <BoardFrames />
     </main>
   )
 }

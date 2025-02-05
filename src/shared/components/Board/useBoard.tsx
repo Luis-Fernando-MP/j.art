@@ -149,7 +149,7 @@ const useBoard = ({ isCenter }: IUseBoardHook) => {
     setPrevChild(prevChild)
     setNextChild(nextChild)
     setMoveToChild(moveToChild)
-  }, [setPrevChild, setNextChild, setMoveToChild])
+  }, [setPrevChild, setNextChild, setMoveToChild, $containerRef.current])
 
   return {
     $containerRef,

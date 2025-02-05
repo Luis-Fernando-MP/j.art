@@ -1,71 +1,30 @@
 @use '@sass/config/vars' as v;
 @use '@sass/utils/defs' as d;
 
+$actionWidth: 70px;
+
 .boardFrames {
-  $actionWidth: 70px;
-
-  counter-reset: frame-counter;
-
   position: absolute;
   bottom: v.$padding * 2;
   left: 50%;
   transform: translateX(-50%);
 
-  padding: v.$padding;
+  max-width: 90%;
   border-radius: v.$radius;
 
   background-color: rgb(v.$bg1, 0.3);
   backdrop-filter: blur(20px);
 
-  &-actionCanvas,
   &-action {
     display: grid;
     place-content: center;
 
     width: $actionWidth;
+    min-width: $actionWidth;
     height: $actionWidth;
     border: 2px solid rgb(v.$bg3);
     border-radius: v.$radius;
 
     background-color: rgb(v.$bg2);
   }
-
-  &-actionCanvas {
-    counter-increment: frame-counter;
-    position: relative;
-    overflow: hidden;
-
-    &::before {
-      content: 'C-' counter(frame-counter, decimal-leading-zero);
-
-      position: absolute;
-      bottom: 0;
-      left: 0;
-
-      padding: v.$padding * 0.5;
-      border-top-right-radius: v.$radius;
-
-      font-family: v.$font2;
-      font-size: 1rem;
-      color: rgb(v.$fn2);
-
-      background-color: rgb(v.$bg3);
-    }
-
-    canvas {
-      pointer-events: none;
-    }
-
-    &.active {
-      transform: rotateZ(10deg);
-      border-color: rgb(v.$tn1);
-
-      &::before {
-        color: rgb(v.$bg1);
-        background-color: rgb(v.$tn1);
-      }
-    }
-  }
-
-  @include d.flex($dir: row, $ali: center, $gap: v.$padding * 2);
 }

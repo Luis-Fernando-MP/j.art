@@ -1,0 +1,9 @@
+@use '@sass/config/vars' as v;
+@use '@sass/utils/defs' as d;
+
+.canvasDraw {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+}

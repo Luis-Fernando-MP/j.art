@@ -1,0 +1,76 @@
+@use '@sass/config/vars' as v;
+@use '@sass/utils/defs' as d;
+
+$actionWidth: 70px;
+
+.boardFrame {
+  counter-increment: frame-counter;
+  position: relative;
+
+  &-button {
+    position: relative;
+
+    overflow: hidden;
+    display: grid;
+    place-content: center;
+
+    width: $actionWidth;
+    min-width: $actionWidth;
+    height: $actionWidth;
+    border: 2px solid rgb(v.$bg3);
+    border-radius: v.$radius;
+
+    background-color: rgb(v.$bg2);
+
+    &::before {
+      content: 'C-' counter(frame-counter, decimal-leading-zero);
+
+      position: absolute;
+      bottom: 0;
+      left: 0;
+
+      padding: v.$padding * 0.5;
+      border-top-right-radius: v.$radius;
+
+      font-family: v.$font2;
+      font-size: 1rem;
+      color: rgb(v.$fn2);
+
+      background-color: rgb(v.$bg3);
+    }
+
+    canvas {
+      pointer-events: none;
+    }
+  }
+
+  &-controls {
+    position: absolute;
+    top: 50%;
+    right: -15px;
+    transform: translateY(-50%);
+
+    padding: 5px;
+    border: 2px solid rgb(v.$bg3);
+    border-radius: v.$radius;
+
+    background-color: rgb(v.$bg1);
+
+    @include d.flex;
+  }
+
+  &.active &-controls {
+    transform: rotateZ(10deg) translateY(-40%);
+    border-color: rgb(v.$tn1);
+  }
+
+  &.active &-button {
+    transform: rotateZ(10deg);
+    border-color: rgb(v.$tn1);
+
+    &::before {
+      color: rgb(v.$bg1);
+      background-color: rgb(v.$tn1);
+    }
+  }
+}

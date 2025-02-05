@@ -1,3 +1,3 @@
-export const acl = (active: boolean, className: string = 'active') => {
-  return active ? className : ''
+export const acl = (active: boolean, className: string = 'active', or: string = '') => {
+  return active ? className : or
 }

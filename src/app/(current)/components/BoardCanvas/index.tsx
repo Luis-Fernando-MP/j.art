@@ -1,33 +1,56 @@
 import Board from '@/shared/components/Board'
+import boardStore from '@/shared/components/Board/board.store'
+import StoreHorizontalSlider from '@/shared/components/HorizontalSlider/store'
+import { newKey } from '@/shared/key'
 import { PlusIcon } from 'lucide-react'
-import { type JSX } from 'react'
+import { type JSX, MouseEvent, useCallback } from 'react'
+import toast from 'react-hot-toast'
 
 import CanvasStore from '../../store/canvas.store'
-import Canvas from '../Canvas'
+import LayerStore, { MAX_LAYERS } from '../../store/layer.store'
+import Layers from '../Layers'
+import './style.scss'
 
-interface IBoardCanvas {
-  className?: string
-}
+const BoardCanvas = (): JSX.Element => {
+  const { moveToChild } = boardStore()
+  const { moveToChild: horizontalMvChild } = StoreHorizontalSlider()
+  const { dimensions } = CanvasStore()
+  const { listOfLayers, idParentLayer, setListOfLayers, setIdParentLayer } = LayerStore()
 
-const BoardCanvas = ({ className = '' }: IBoardCanvas): JSX.Element => {
-  const { dimensions, listOfCanvas } = CanvasStore()
+  const handleAddNewParentLayer = useCallback(
+    (e: MouseEvent) => {
+      if (e.ctrlKey) return
+      const id = newKey()
+      const newList = { ...listOfLayers }
+      const index = Object.keys(listOfLayers).length
+      newList[id] = [{ id: `${id}-layer-0`, parentId: id }]
+      if (Object.keys(newList).length > MAX_LAYERS) return toast.error('🔥 hay muchos canvas')
+      setListOfLayers(newList)
+      setIdParentLayer(id)
+      moveToChild(index)
+      horizontalMvChild(index)
+      toast.success('🎨 Estamos listos!!')
+    },
+    [listOfLayers, setListOfLayers, newKey]
+  )
 
   return (
-    <Board className={`${className}`} isCenter={false}>
+    <Board className='canvasBoard' isCenter={false}>
       {() => {
         return (
           <>
-            {listOfCanvas.map(canvasId => {
-              return <Canvas key={canvasId} canvasId={canvasId} className='appDraw-board__wrapper' />
+            {Object.entries(listOfLayers).map((layer, index) => {
+              const [parentId, layers] = layer
+              return (
+                <Layers key={parentId} layers={layers} isDisable={idParentLayer !== parentId} parentId={parentId} index={index} />
+              )
             })}
-
             <button
-              className='appDraw-canvas__addFrame'
+              className='canvasBoard-addFrame'
+              onClick={handleAddNewParentLayer}
               style={{
-                minWidth: dimensions.width,
                 width: dimensions.width,
-                height: dimensions.height,
-                minHeight: dimensions.height
+                height: dimensions.height
               }}
             >
               <PlusIcon />

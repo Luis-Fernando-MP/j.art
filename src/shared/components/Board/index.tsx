@@ -26,6 +26,7 @@ const Board = ({ children, className = '', isCenter = true }: BoardProps): JSX.E
       onMouseDown={handleBoardDown}
       onMouseMove={handleBoardMove}
       onMouseUp={handleBoardUp}
+      onMouseLeave={handleBoardUp}
       onContextMenu={e => e.preventDefault()}
       style={{
         opacity: noExistRefs ? 0 : 1,

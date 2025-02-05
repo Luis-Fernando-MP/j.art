@@ -1,0 +1,18 @@
+@use '@sass/config/vars' as v;
+@use '@sass/utils/defs' as d;
+
+.horizontalSlider {
+  overflow: hidden;
+
+  &-wrapper {
+    position: relative;
+    width: max-content;
+    padding: v.$padding;
+
+    @include d.flex($dir: row, $ali: center, $gap: v.$padding * 3);
+
+    &.animate {
+      transition: left 0.3s ease-in-out;
+    }
+  }
+}
