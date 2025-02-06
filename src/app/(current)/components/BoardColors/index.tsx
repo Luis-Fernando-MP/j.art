@@ -1,8 +1,10 @@
-import { acl } from '@/shared/acl'
+'use client'
+
+import HorizontalSlider from '@/shared/components/HorizontalSlider'
 import { BabyIcon, FlameIcon, LeafyGreenIcon, PaletteIcon } from 'lucide-react'
 import type { JSX } from 'react'
 
-import PixelStore from '../../store/pixel.store'
+import Color from './Color'
 import { basicColors } from './colors.'
 import './style.scss'
 
@@ -11,7 +13,6 @@ interface IBoardColors {
 }
 
 const BoardColors = ({ className = '' }: IBoardColors): JSX.Element => {
-  const { pixelColor, setPixelColor } = PixelStore()
   return (
     <section className={`${className} colorsTools`}>
       <div className='colorsTools-section'>
@@ -19,21 +20,14 @@ const BoardColors = ({ className = '' }: IBoardColors): JSX.Element => {
           <PaletteIcon />
         </button>
       </div>
-      <div className='colorsTools-section'>
+      <HorizontalSlider parentClass='colorsTools-colors'>
         {basicColors.map(color => {
           const key = `${color.join()}-basic-color`
           const [r, g, b, a] = color
           const rgbColor = `rgb(${r},${g},${b},${a})`
-          return (
-            <button
-              key={key}
-              className={`colorsTools-color ${acl(pixelColor === rgbColor)}`}
-              onClick={() => setPixelColor(rgbColor)}
-              style={{ backgroundColor: rgbColor }}
-            />
-          )
+          return <Color key={key} rgbColor={rgbColor} className='colorsTools-color' />
         })}
-      </div>
+      </HorizontalSlider>
       <div className='colorsTools-section'>
         <button className='colorsTools-action'>
           <BabyIcon />

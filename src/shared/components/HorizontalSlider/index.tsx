@@ -1,6 +1,16 @@
 'use client'
 
-import { type HtmlHTMLAttributes, type JSX, MouseEvent, type ReactNode, useCallback, useEffect, useRef, useState } from 'react'
+import {
+  type HtmlHTMLAttributes,
+  type JSX,
+  MouseEvent,
+  type ReactNode,
+  WheelEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState
+} from 'react'
 
 import StoreHorizontalSlider from './store'
 import './style.scss'
@@ -38,6 +48,21 @@ function HorizontalSlider({ children, className, parentClass = '', ...props }: R
       const newOffset = Math.max(minOffset, Math.min(0, offsetX + deltaX))
       setOffsetX(newOffset)
       startX.current = e.clientX
+    },
+    [offsetX]
+  )
+
+  const handleWheel = useCallback(
+    (e: WheelEvent) => {
+      e.preventDefault()
+      if (!$sliderRef.current) return
+      if (!$parentRef.current || !$sliderRef.current) return
+      const delta = e.deltaY
+      const newOffset = offsetX - delta
+      const { width: parentWidth } = $parentRef.current.getBoundingClientRect()
+      const { width: sliderWidth } = $sliderRef.current.getBoundingClientRect()
+      const minOffset = Math.min(0, parentWidth - sliderWidth)
+      setOffsetX(Math.max(minOffset, Math.min(0, newOffset)))
     },
     [offsetX]
   )
@@ -83,12 +108,14 @@ function HorizontalSlider({ children, className, parentClass = '', ...props }: R
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
       onMouseMove={handleMouseMove}
+      onWheel={handleWheel}
     >
       <div
         className={`horizontalSlider-wrapper ${className}`}
         ref={$sliderRef}
         style={{
-          left: `${offsetX}px`
+          left: `${offsetX}px`,
+          opacity: $sliderRef.current ? 1 : 0
         }}
         {...props}
       >

@@ -1,0 +1,25 @@
+@use '@sass/config/vars' as v;
+@use '@sass/utils/defs' as d;
+
+.navTools {
+  padding: v.$padding * 2 0;
+
+  @include d.flex($ali: center);
+
+  &-link {
+    transform: rotateZ(180deg);
+
+    width: fit-content;
+    padding: v.$padding 2px;
+    border-radius: v.$radius;
+
+    writing-mode: vertical-rl;
+
+    background-color: rgb(v.$bg2);
+
+    &.active {
+      color: rgb(v.$bg1);
+      background-color: rgb(v.$tn1);
+    }
+  }
+}

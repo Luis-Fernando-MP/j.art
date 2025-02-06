@@ -1,0 +1,46 @@
+@use '@sass/config/vars' as v;
+@use '@sass/utils/defs' as d;
+
+.zoomController {
+  background-color: rgb(v.$bg1);
+
+  @include d.flex;
+
+  &-options {
+    @include d.flex($dir: row, $ali: center);
+
+    button {
+      @include d.flex($dir: row, $ali: center, $gap: 5px);
+
+      padding: 2px v.$padding;
+      border-radius: v.$radius;
+      background-color: rgb(v.$bg2);
+
+      &.active {
+        color: rgb(v.$bg1);
+        background-color: rgb(v.$tn1);
+
+        svg {
+          stroke: rgb(v.$bg1);
+        }
+      }
+    }
+  }
+
+  &-canvasViewer {
+    display: grid;
+    grid-template-columns: 1fr 30px;
+    grid-template-rows: 1fr;
+    height: 250px;
+
+    .canvasViewer {
+      overflow: hidden;
+      width: 100%;
+      background-color: red;
+
+      canvas {
+        width: 100%;
+      }
+    }
+  }
+}

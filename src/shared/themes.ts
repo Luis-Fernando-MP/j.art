@@ -38,7 +38,7 @@ export const THEMES: Record<string, Theme> = {
     'fnt-primary': '248, 248, 242',
     'fnt-secondary': '189, 147, 249',
     'fnt-tertiary': '139, 233, 253',
-    'tn-primary': '255, 85, 85',
+    'tn-primary': '139, 233, 253',
     'tn-secondary': '220, 70, 70'
   },
   Circuit: {

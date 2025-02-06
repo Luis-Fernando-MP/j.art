@@ -14,19 +14,28 @@
 
   @include d.flex($dir: row, $gap: v.$padding * 1.5, $ali: center);
 
+  &-colors,
   &-section {
-    width: 100%;
-    padding: v.$padding;
     border-radius: v.$radius;
-
-    background-color: rgb(v.$bg1, 0.5);
+    background-color: rgb(v.$bg1, 0.3);
     backdrop-filter: blur(20px);
+  }
+
+  &-colors {
+    min-width: 200px;
+    max-width: 500px;
+  }
+
+  &-section {
+    width: fit-content;
+    padding: v.$padding;
 
     @include d.flex($dir: row, $ali: center);
   }
 
   &-color {
     width: v.$icon;
+    min-width: v.$icon;
     height: v.$icon;
     border: 2px solid transparent;
     border-radius: 3px;

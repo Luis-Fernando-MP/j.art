@@ -12,7 +12,7 @@
     'leftTools draw navTool rightTools'
     'leftTools draw navTool rightTools'
     'footer footer footer footer';
-  grid-template-columns: 50px 1fr 50px 300px;
+  grid-template-columns: 50px 1fr 35px 300px;
   grid-template-rows: repeat(3, 1fr) 38px;
 
   width: 100%;
@@ -22,9 +22,8 @@
     grid-area: footer;
   }
 
-  &-colors,
-  &-rightTools {
-    padding: v.$padding;
+  &-navTools {
+    grid-area: navTool;
   }
 
   &-leftTools {
@@ -38,10 +37,6 @@
   &-draw {
     overflow: hidden;
     grid-area: draw;
-  }
-
-  &-navTools {
-    grid-area: colors;
   }
 
   &-rightTools {

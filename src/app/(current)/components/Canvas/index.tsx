@@ -22,7 +22,6 @@ const Canvas = ({ canvasId }: ICanvas): JSX.Element => {
       onMouseDown={handleCanvasMouseDown}
       onMouseMove={handleCanvasMouseMove}
       onMouseUp={handleCanvasMouseUp}
-      onMouseLeave={handleCanvasMouseUp}
     />
   )
 }

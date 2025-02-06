@@ -1,15 +1,20 @@
 @use '@sass/config/vars' as v;
 @use '@sass/utils/defs' as d;
+@use '@sass/utils/scrollbar' as *;
 
 .horizontalSlider {
-  overflow: hidden;
+  @extend %scroll-hidden;
+
+  overflow-x: scroll;
+  overflow-y: hidden;
 
   &-wrapper {
     position: relative;
     width: max-content;
     padding: v.$padding;
+    transition: opacity 0.3s ease-in-out;
 
-    @include d.flex($dir: row, $ali: center, $gap: v.$padding * 3);
+    @include d.flex($dir: row, $ali: center, $gap: v.$padding);
 
     &.animate {
       transition: left 0.3s ease-in-out;

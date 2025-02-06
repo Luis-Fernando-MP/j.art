@@ -43,7 +43,7 @@ const BoardFrames = (): JSX.Element => {
   const clampHeight = Math.min(60, height)
 
   return (
-    <HorizontalSlider parentClass='boardFrames'>
+    <HorizontalSlider parentClass='boardFrames' className='boardFrames-list'>
       {Object.entries(listOfLayers).map((layer, i) => {
         const [parentKey] = layer
         const isActive = idParentLayer === parentKey
