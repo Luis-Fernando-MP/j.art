@@ -1,3 +1,4 @@
+import LoaderPage from '@/shared/components/LoaderPage'
 import Offline from '@/shared/components/Offline'
 import { bodyFonts } from '@/shared/fonts'
 import '@sass/config/global.scss'
@@ -21,6 +22,7 @@ const RootLayout = async ({ children }: IRootLayout): Promise<JSX.Element> => {
         <NextTopLoader color='rgb(var(--tn-primary))' showSpinner={false} />
         <Providers>{children}</Providers>
         <Offline />
+        <LoaderPage />
         <Toaster
           position='top-center'
           toastOptions={{
