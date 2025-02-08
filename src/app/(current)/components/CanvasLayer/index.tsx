@@ -9,14 +9,19 @@ import './style.scss'
 interface ICanvasLayer {
   layer: Layer
   isActive: boolean
-  handleActiveLayer: (id: string) => void
+  handleActiveLayer: () => void
 }
 
 const CanvasLayer = ({ layer, handleActiveLayer, isActive }: ICanvasLayer): JSX.Element => {
-  const { id, imageUrl, parentId, title } = layer
+  const { imageUrl, title } = layer
+
+  const handleClick = (): void => {
+    if (isActive) return
+    handleActiveLayer()
+  }
 
   return (
-    <section role='button' tabIndex={0} className={`canvasLayer ${acl(isActive)}`} onClick={() => handleActiveLayer(id)}>
+    <section role='button' tabIndex={0} className={`canvasLayer ${acl(isActive)}`} onClick={handleClick}>
       <div className='canvasLayer-viewer'>
         <button className='canvasLayer-see'>
           <EyeIcon />

@@ -1,6 +1,6 @@
 'use client'
 
-import { JSX, memo } from 'react'
+import { JSX } from 'react'
 
 import './style.scss'
 import useBoard from './useBoard'
@@ -48,4 +48,4 @@ const Board = ({ children, className = '', isCenter = true }: BoardProps): JSX.E
   )
 }
 
-export default memo(Board)
+export default Board

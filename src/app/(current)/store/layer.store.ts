@@ -7,28 +7,19 @@ export interface Layer {
   imageUrl: string | null
 }
 
-export interface ActiveLayer {
-  id: string
-  index: number
-}
-
 export interface ParentLayer {
   index: number
   id: string
 }
 
-export interface ListOfLayers {
-  [key: string]: Layer[]
-}
-
 interface ILayerStore {
-  listOfLayers: ListOfLayers
+  listOfLayers: { [key: string]: Layer[] }
   idParentLayer: ParentLayer
-  activeLayer: ActiveLayer
+  activeLayer: string
 
-  setListOfLayers: (listOfLayers: ListOfLayers) => void
+  setListOfLayers: (listOfLayers: ILayerStore['listOfLayers']) => void
   setIdParentLayer: (idParentLayer: ParentLayer) => void
-  setActiveLayer: (activeLayer: ActiveLayer) => void
+  setActiveLayer: (activeLayer: string) => void
 }
 
 const DEFAULT_CANVAS = 'default-canvas'
@@ -40,10 +31,7 @@ const state: StateCreator<ILayerStore> = (set, get) => ({
     index: 0,
     id: DEFAULT_CANVAS
   },
-  activeLayer: {
-    id: DEFAULT_LAYER,
-    index: 0
-  },
+  activeLayer: DEFAULT_LAYER,
   listOfLayers: {
     [DEFAULT_CANVAS]: [
       { id: DEFAULT_LAYER, title: 'capa 01', parentId: DEFAULT_CANVAS, imageUrl: null },
