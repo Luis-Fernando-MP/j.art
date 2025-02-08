@@ -26,7 +26,10 @@ const BoardCanvas = (): JSX.Element => {
       newList[id] = [{ id: `${id}-layer-0`, parentId: id }]
       if (Object.keys(newList).length > MAX_LAYERS) return toast.error('🔥 hay muchos canvas')
       setListOfLayers(newList)
-      setIdParentLayer(id)
+      setIdParentLayer({
+        id,
+        index
+      })
       moveToChild(index)
       horizontalMvChild(index)
       toast.success('🎨 Estamos listos!!')
@@ -42,7 +45,13 @@ const BoardCanvas = (): JSX.Element => {
             {Object.entries(listOfLayers).map((layer, index) => {
               const [parentId, layers] = layer
               return (
-                <Layers key={parentId} layers={layers} isDisable={idParentLayer !== parentId} parentId={parentId} index={index} />
+                <Layers
+                  key={parentId}
+                  layers={layers}
+                  isDisable={idParentLayer.id !== parentId}
+                  parentId={parentId}
+                  index={index}
+                />
               )
             })}
             <button

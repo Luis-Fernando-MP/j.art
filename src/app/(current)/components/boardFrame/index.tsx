@@ -31,7 +31,7 @@ const BoardFrame = ({ isActive, index, parentKey, dimensions }: IBoardFrame): JS
     moveToChild(index)
     horizontalMvChild(index)
     if (isActive) return
-    setIdParentLayer(parentKey)
+    setIdParentLayer({ id: parentKey, index })
   }
 
   const handleRemoveLayer = (e: MouseEvent): void => {

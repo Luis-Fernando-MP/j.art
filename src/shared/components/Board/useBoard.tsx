@@ -15,7 +15,7 @@ export interface BoardRef {
 }
 
 const useBoard = ({ isCenter }: IUseBoardHook) => {
-  const { offset, scale, setOffset, setScale, setPrevChild, setNextChild, setMoveToChild } = boardStore()
+  const { offset, scale, setOffset, setScale, setPrevChild, setNextChild, setMoveToChild, enableScroll } = boardStore()
   const $containerRef = useRef<HTMLDivElement>(null)
   const $childrenRef = useRef<HTMLDivElement>(null)
 
@@ -132,13 +132,13 @@ const useBoard = ({ isCenter }: IUseBoardHook) => {
 
   useEffect(() => {
     const canvas = $containerRef.current
-    if (canvas) {
+    if (canvas && !enableScroll) {
       canvas.addEventListener('wheel', handleWheel, { passive: false })
     }
     return () => {
       canvas?.removeEventListener('wheel', handleWheel)
     }
-  }, [scale, offset])
+  }, [scale, offset, enableScroll])
 
   useEffect(() => {
     if (isCenter) return centerAndFit()
@@ -149,7 +149,7 @@ const useBoard = ({ isCenter }: IUseBoardHook) => {
     setPrevChild(prevChild)
     setNextChild(nextChild)
     setMoveToChild(moveToChild)
-  }, [setPrevChild, setNextChild, setMoveToChild, $containerRef.current])
+  }, [setPrevChild, setNextChild, setMoveToChild])
 
   return {
     $containerRef,

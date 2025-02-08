@@ -12,7 +12,7 @@ import {
 import { getContext } from '@scripts/transformCanvas'
 import { MouseEvent, useMemo, useRef, useState } from 'react'
 
-import CanvasStore, { TPositions } from '../store/canvas.store'
+import { TPositions } from '../store/canvas.store'
 import PixelStore from '../store/pixel.store'
 import ToolsStore from '../store/tools.store'
 import { ShapeTools, handleBresenhamTools, shapeTools } from '../store/tools.types'
@@ -64,8 +64,6 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
   )
 
   const handleCanvasMouseDown = (e: MouseEvent) => {
-    console.log('prev-drag', e.target)
-
     if (e.ctrlKey) return
     e.preventDefault()
     const { x, y } = getCanvasCoordinates(e, canvasId)
@@ -135,12 +133,17 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
       return handleBresenhamTools[selectedTool as ShapeTools](shapeProps)
     }
   }
+  const handleCanvasMouseLeave = (e: MouseEvent) => {
+    if (e.ctrlKey) return
+    handleCanvasMouseUp()
+  }
 
   return {
     $canvasRef,
     handleCanvasMouseDown,
     handleCanvasMouseMove,
-    handleCanvasMouseUp
+    handleCanvasMouseUp,
+    handleCanvasMouseLeave
   }
 }
 

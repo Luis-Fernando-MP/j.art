@@ -1,3 +1,4 @@
+import Offline from '@/shared/components/Offline'
 import { bodyFonts } from '@/shared/fonts'
 import '@sass/config/global.scss'
 import NextTopLoader from 'nextjs-toploader'
@@ -19,6 +20,7 @@ const RootLayout = async ({ children }: IRootLayout): Promise<JSX.Element> => {
       <body className={`${bodyFonts}`}>
         <NextTopLoader color='rgb(var(--tn-primary))' showSpinner={false} />
         <Providers>{children}</Providers>
+        <Offline />
         <Toaster
           position='top-center'
           toastOptions={{

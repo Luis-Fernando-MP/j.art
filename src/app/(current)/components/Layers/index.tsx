@@ -24,7 +24,7 @@ const Layers = ({ layers, isDisable, parentId, index }: ILayers): JSX.Element =>
   const handleClick = useCallback(
     (e: MouseEvent) => {
       if (e.ctrlKey || !isDisable) return
-      setIdParentLayer(parentId)
+      setIdParentLayer({ id: parentId, index })
       moveToChild(index)
       mvHorizontalSlider(index)
     },
@@ -38,6 +38,7 @@ const Layers = ({ layers, isDisable, parentId, index }: ILayers): JSX.Element =>
       className={`layers ${acl(isDisable, 'disable')}`}
       style={{ width: dimensions.width, height: dimensions.height }}
       onClick={handleClick}
+      id={parentId}
     >
       <div className='layers-background' />
       {layers.map(layer => {

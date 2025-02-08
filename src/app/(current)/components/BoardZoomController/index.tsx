@@ -20,11 +20,11 @@ const BoardZoomController = ({ className = '' }: IBoardZoomController): JSX.Elem
   }
   return (
     <div className={`boardZoomCtrl ${className}`}>
-      <button className='boardZoomCtrl-action' onClick={() => handleChangeScale(0.5)}>
+      <button className='boardZoomCtrl-action' onClick={() => handleChangeScale(0.1)}>
         <ZoomInIcon />
       </button>
       <VerticalRange rangeValue={scale} handleChange={setScale} min={MIN_SCALE} max={MAX_SCALE} step={0.005} />
-      <button className='boardZoomCtrl-action' onClick={() => handleChangeScale(-0.5)}>
+      <button className='boardZoomCtrl-action' onClick={() => handleChangeScale(-0.1)}>
         <ZoomOutIcon />
       </button>
     </div>

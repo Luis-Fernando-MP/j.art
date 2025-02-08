@@ -5,6 +5,11 @@ export interface Layer {
   parentId: string
 }
 
+export interface ParentLayer {
+  index: number
+  id: string
+}
+
 export interface ListOfLayers {
   [key: string]: Layer[]
 }
@@ -12,11 +17,11 @@ export interface ListOfLayers {
 interface ILayerStore {
   listOfLayers: ListOfLayers
   activeLayer: Layer
-  idParentLayer: string
+  idParentLayer: ParentLayer
 
   setListOfLayers: (listOfLayers: ListOfLayers) => void
   setActiveLayer: (activeLayer: Layer) => void
-  setIdParentLayer: (idParentLayer: string) => void
+  setIdParentLayer: (idParentLayer: ParentLayer) => void
 }
 
 const DEFAULT_CANVAS = 'default-canvas'
@@ -24,7 +29,10 @@ const DEFAULT_LAYER = `${DEFAULT_CANVAS}-layer1`
 export const MAX_LAYERS = 20
 
 const state: StateCreator<ILayerStore> = set => ({
-  idParentLayer: DEFAULT_CANVAS,
+  idParentLayer: {
+    index: 0,
+    id: DEFAULT_CANVAS
+  },
   listOfLayers: {
     [DEFAULT_CANVAS]: [
       { id: DEFAULT_LAYER, parentId: DEFAULT_CANVAS },

@@ -29,7 +29,7 @@ const BoardFrames = (): JSX.Element => {
       if (Object.keys(newList).length > MAX_LAYERS) return toast.error('🔥 hay muchos canvas')
 
       setListOfLayers(newList)
-      setIdParentLayer(id)
+      setIdParentLayer({ id, index })
       moveToChild(index)
       horizontalMvChild(index)
       toast.success('🎨 Estamos listos!!')
@@ -46,7 +46,7 @@ const BoardFrames = (): JSX.Element => {
     <HorizontalSlider parentClass='boardFrames' className='boardFrames-list'>
       {Object.entries(listOfLayers).map((layer, i) => {
         const [parentKey] = layer
-        const isActive = idParentLayer === parentKey
+        const isActive = idParentLayer.id === parentKey
         return (
           <BoardFrame
             key={parentKey}

@@ -1,0 +1,64 @@
+@use '@sass/config/vars' as v;
+@use '@sass/utils/defs' as d;
+
+.canvasViewer {
+  position: relative;
+
+  display: grid;
+  place-content: center;
+
+  width: 100%;
+  height: 100%;
+  border-radius: v.$radius;
+
+  &-wrapper {
+    position: relative;
+    border: 2px solid rgb(v.$bg3);
+    border-radius: v.$radius;
+  }
+
+  &-camera {
+    touch-action: none;
+    cursor: grab;
+
+    position: absolute;
+
+    width: 50px;
+    height: 30px;
+    border: 2px solid rgb(v.$tn1);
+    border-radius: v.$radius;
+
+    transition: all 0.1s ease;
+
+    &.move {
+      transition: none;
+    }
+  }
+
+  &-canvas {
+    position: relative;
+
+    max-width: 230px;
+    max-height: 180px;
+    border-radius: v.$radius;
+
+    background-color: rgb(v.$bg2);
+  }
+
+  &-background {
+    pointer-events: none;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: conic-gradient(rgb(v.$bg2) 25%, rgb(v.$bg3) 25% 50%, rgb(v.$bg2) 50% 75%, rgb(v.$bg3) 75%),
+      conic-gradient(from 45deg, rgb(v.$bg2) 25%, rgb(v.$bg3) 25% 50%, rgb(v.$bg2) 50% 75%, rgb(v.$bg3) 75%);
+    background-color: rgb(v.$bg1);
+    background-position: 0 0;
+    background-size: v.$pixelSize * 0.5 v.$pixelSize * 0.5;
+  }
+}

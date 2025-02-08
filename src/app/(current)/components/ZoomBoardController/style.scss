@@ -2,6 +2,7 @@
 @use '@sass/utils/defs' as d;
 
 .zoomController {
+  max-height: 250px;
   background-color: rgb(v.$bg1);
 
   @include d.flex;
@@ -31,16 +32,6 @@
     display: grid;
     grid-template-columns: 1fr 30px;
     grid-template-rows: 1fr;
-    height: 250px;
-
-    .canvasViewer {
-      overflow: hidden;
-      width: 100%;
-      background-color: red;
-
-      canvas {
-        width: 100%;
-      }
-    }
+    height: 200px;
   }
 }

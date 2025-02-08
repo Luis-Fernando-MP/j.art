@@ -10,7 +10,9 @@ interface ICanvas {
 
 const Canvas = ({ canvasId }: ICanvas): JSX.Element => {
   const { dimensions } = CanvasStore()
-  const { $canvasRef, handleCanvasMouseDown, handleCanvasMouseMove, handleCanvasMouseUp } = useCanvas({ canvasId })
+  const { $canvasRef, handleCanvasMouseDown, handleCanvasMouseMove, handleCanvasMouseUp, handleCanvasMouseLeave } = useCanvas({
+    canvasId
+  })
 
   return (
     <canvas
@@ -22,6 +24,7 @@ const Canvas = ({ canvasId }: ICanvas): JSX.Element => {
       onMouseDown={handleCanvasMouseDown}
       onMouseMove={handleCanvasMouseMove}
       onMouseUp={handleCanvasMouseUp}
+      onMouseLeave={handleCanvasMouseLeave}
     />
   )
 }
