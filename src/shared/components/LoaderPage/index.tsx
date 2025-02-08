@@ -2,7 +2,6 @@
 
 import Logo from '@/shared/assets/Logo'
 import React, { useLayoutEffect, useRef, useState } from 'react'
-import { createPortal } from 'react-dom'
 
 import './style.scss'
 
@@ -13,18 +12,16 @@ const LoaderPage = () => {
   useLayoutEffect(() => {
     setTimeout(() => {
       setLoading(false)
-    }, 500)
+    }, 300)
   }, [])
 
   if (!loading) return null
 
-  const RenderLoader = (
-    <section ref={$loaderRef} className='loaderApp'>
-      <Logo />
+  return (
+    <section ref={$loaderRef} className='loaderApp' style={{ opacity: loading ? 1 : 0 }}>
+      <Logo className='loaderApp-logo' />
     </section>
   )
-
-  return createPortal(RenderLoader, document.body)
 }
 
 export default LoaderPage

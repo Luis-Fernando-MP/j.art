@@ -23,7 +23,7 @@ const BoardCanvas = (): JSX.Element => {
       const id = newKey()
       const newList = { ...listOfLayers }
       const index = Object.keys(listOfLayers).length
-      newList[id] = [{ id: `${id}-layer-0`, parentId: id }]
+      newList[id] = [{ id: `${id}-layer-0`, parentId: id, imageUrl: null, title: 'capa nueva' }]
       if (Object.keys(newList).length > MAX_LAYERS) return toast.error('🔥 hay muchos canvas')
       setListOfLayers(newList)
       setIdParentLayer({

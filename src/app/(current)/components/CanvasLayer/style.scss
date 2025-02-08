@@ -1,0 +1,60 @@
+@use '@sass/config/vars' as v;
+@use '@sass/utils/defs' as d;
+
+.canvasLayer {
+  @include d.flex($dir: row, $ali: center, $gap: 0);
+
+  padding: 5px v.$padding;
+  border: 1.5px solid transparent;
+  border-radius: v.$radius * 2;
+  background-color: rgb(v.$bg2);
+
+  &-see {
+    padding: v.$padding 0;
+  }
+
+  &-viewer {
+    @include d.flex($dir: row, $ali: center);
+
+    pointer-events: none;
+    user-select: none;
+
+    input {
+      width: 100%;
+      padding: 0;
+
+      font-size: 0.8rem;
+
+      background-color: transparent;
+      background-color: none;
+    }
+  }
+
+  &-image {
+    width: 50px;
+    min-width: 50px;
+    height: 50px;
+    min-height: 50px;
+    border-radius: v.$radius;
+
+    background-color: rgb(v.$bg1);
+  }
+
+  &-delete {
+    padding: 7px;
+    border-radius: v.$radius;
+    background-color: rgb(v.$bg1);
+  }
+
+  &.active {
+    border-color: rgb(v.$tn1);
+
+    input {
+      color: rgb(v.$fn1);
+    }
+
+    svg {
+      stroke: rgb(v.$fn1);
+    }
+  }
+}

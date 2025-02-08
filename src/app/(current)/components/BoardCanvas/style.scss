@@ -10,11 +10,16 @@ $pixelSize: 15px;
     display: grid;
     place-content: center;
 
+    border: 2px dashed transparent;
     border-radius: v.$radius;
 
     background-color: rgb(v.$bg3, 0.2);
 
-    transition: background-color 0.5s;
+    transition: border-color 0.5s;
+
+    &:hover {
+      border-color: rgb(v.$tn2);
+    }
 
     svg {
       width: 80px;
@@ -24,10 +29,6 @@ $pixelSize: 15px;
 
       stroke: rgb(v.$bg3);
       stroke-width: 3px;
-    }
-
-    &:hover {
-      background-color: rgb(v.$bg3, 0.4);
     }
   }
 }

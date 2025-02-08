@@ -1,4 +1,4 @@
-import LoaderPage from '@/shared/components/LoaderPage'
+import LoaderPage from '@/shared/components/LoaderPage/'
 import Offline from '@/shared/components/Offline'
 import { bodyFonts } from '@/shared/fonts'
 import '@sass/config/global.scss'

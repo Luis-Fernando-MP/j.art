@@ -3,6 +3,13 @@ import { StateCreator, create } from 'zustand'
 export interface Layer {
   id: string
   parentId: string
+  title: string
+  imageUrl: string | null
+}
+
+export interface ActiveLayer {
+  id: string
+  index: number
 }
 
 export interface ParentLayer {
@@ -16,34 +23,37 @@ export interface ListOfLayers {
 
 interface ILayerStore {
   listOfLayers: ListOfLayers
-  activeLayer: Layer
   idParentLayer: ParentLayer
+  activeLayer: ActiveLayer
 
   setListOfLayers: (listOfLayers: ListOfLayers) => void
-  setActiveLayer: (activeLayer: Layer) => void
   setIdParentLayer: (idParentLayer: ParentLayer) => void
+  setActiveLayer: (activeLayer: ActiveLayer) => void
 }
 
 const DEFAULT_CANVAS = 'default-canvas'
 const DEFAULT_LAYER = `${DEFAULT_CANVAS}-layer1`
 export const MAX_LAYERS = 20
 
-const state: StateCreator<ILayerStore> = set => ({
+const state: StateCreator<ILayerStore> = (set, get) => ({
   idParentLayer: {
     index: 0,
     id: DEFAULT_CANVAS
   },
+  activeLayer: {
+    id: DEFAULT_LAYER,
+    index: 0
+  },
   listOfLayers: {
     [DEFAULT_CANVAS]: [
-      { id: DEFAULT_LAYER, parentId: DEFAULT_CANVAS },
-      { id: `${DEFAULT_CANVAS}-layer2`, parentId: DEFAULT_CANVAS }
+      { id: DEFAULT_LAYER, title: 'capa 01', parentId: DEFAULT_CANVAS, imageUrl: null },
+      { id: `${DEFAULT_CANVAS}-layer2`, title: 'capa 02', parentId: DEFAULT_CANVAS, imageUrl: null },
+      { id: `${DEFAULT_CANVAS}-layer3`, title: 'capa 03', parentId: DEFAULT_CANVAS, imageUrl: null }
     ]
   },
-  activeLayer: { id: DEFAULT_LAYER, parentId: DEFAULT_CANVAS },
-
   setListOfLayers: listOfLayers => set({ listOfLayers }),
-  setActiveLayer: activeLayer => set({ activeLayer }),
-  setIdParentLayer: idParentLayer => set({ idParentLayer })
+  setIdParentLayer: idParentLayer => set({ idParentLayer }),
+  setActiveLayer: activeLayer => set({ activeLayer })
 })
 
 const LayerStore = create(state)

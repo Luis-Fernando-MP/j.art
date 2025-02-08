@@ -3,4 +3,13 @@
 
 .rightTools {
   padding: v.$padding;
+
+  @include d.flex;
+
+  &-container {
+    height: 100%;
+    padding: v.$padding;
+    border-radius: v.$radius;
+    background-color: rgb(v.$bg2);
+  }
 }

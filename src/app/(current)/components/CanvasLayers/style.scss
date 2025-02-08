@@ -1,0 +1,34 @@
+@use '@sass/config/vars' as v;
+@use '@sass/utils/defs' as d;
+
+.canvasLayers {
+  cursor: pointer;
+
+  @include d.flex;
+
+  h5 {
+    padding: 0 v.$padding;
+  }
+
+  &-wrapper {
+    @include d.flex;
+
+    padding: v.$padding;
+    border-radius: v.$radius;
+    background-color: rgb(v.$bg3);
+  }
+
+  &-actions {
+    @include d.flex($dir: row, $ali: center, $gap: 5px);
+
+    button {
+      padding: 7px;
+      border-radius: v.$radius;
+      background-color: rgb(v.$bg1);
+    }
+  }
+
+  &-list {
+    @include d.flex($gap: v.$padding * 0.5);
+  }
+}

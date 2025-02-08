@@ -2,6 +2,7 @@
 
 import type { JSX } from 'react'
 
+import CanvasLayers from '../CanvasLayers'
 import ZoomBoardController from '../ZoomBoardController'
 import './style.scss'
 
@@ -13,7 +14,9 @@ const RightTools = ({ className = '' }: IRightTools): JSX.Element => {
   return (
     <section className={`${className} rightTools`}>
       <ZoomBoardController />
-      <div id='layers'>layers</div>
+      <section className='rightTools-container'>
+        <CanvasLayers />
+      </section>
     </section>
   )
 }
