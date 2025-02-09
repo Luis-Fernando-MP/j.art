@@ -2,8 +2,15 @@
 @use '@sass/utils/defs' as d;
 
 .canvasDraw {
+  pointer-events: none;
+
   position: absolute;
   z-index: 1;
   top: 0;
   left: 0;
+
+  &.active {
+    pointer-events: all;
+    opacity: 1;
+  }
 }

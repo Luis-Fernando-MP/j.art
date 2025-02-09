@@ -1,3 +1,4 @@
+import { acl } from '@/shared/acl'
 import { type JSX, memo } from 'react'
 
 import useCanvas from '../../hooks/useCanvas'
@@ -6,9 +7,10 @@ import './style.scss'
 
 interface ICanvas {
   canvasId: string
+  isActive: boolean
 }
 
-const Canvas = ({ canvasId }: ICanvas): JSX.Element => {
+const Canvas = ({ canvasId, isActive }: ICanvas): JSX.Element => {
   const { dimensions } = CanvasStore()
   const { $canvasRef, handleCanvasMouseDown, handleCanvasMouseMove, handleCanvasMouseUp, handleCanvasMouseLeave } = useCanvas({
     canvasId
@@ -16,7 +18,7 @@ const Canvas = ({ canvasId }: ICanvas): JSX.Element => {
 
   return (
     <canvas
-      className='canvasDraw'
+      className={`canvasDraw ${acl(isActive)}`}
       id={canvasId}
       ref={$canvasRef}
       width={dimensions.width}

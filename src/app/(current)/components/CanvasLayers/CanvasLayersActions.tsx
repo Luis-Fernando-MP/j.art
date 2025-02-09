@@ -1,26 +1,18 @@
 import { onion } from '@lucide/lab'
-import { ArrowDown, ArrowUp, CombineIcon, Icon, PlusIcon } from 'lucide-react'
-import { JSX, memo, useMemo } from 'react'
+import { ArrowDown, ArrowUp, CombineIcon, CopyIcon, Icon, MergeIcon, PlusIcon, Trash2Icon } from 'lucide-react'
+import { JSX, memo } from 'react'
 
 import LayerStore from '../../store/layer.store'
 
-const CanvasLayersActions = (): JSX.Element => {
-  const { listOfLayers, idParentLayer, setListOfLayers, activeLayer } = LayerStore()
+const CanvasLayersActions = (): JSX.Element | null => {
+  const { listOfLayers, idParentLayer, setListOfLayers, activeLayer, addLayer, deleteLayer } = LayerStore()
   const layers = listOfLayers[idParentLayer.id]
+  if (!layers) return null
 
-  const currentIndexLayer = layers.findIndex(layer => layer.id === activeLayer)
+  const currentIndexLayer = layers.findIndex(layer => layer.id === activeLayer.id)
 
-  const addLayer = () => {
-    const newLayerId = `${idParentLayer.id}-layer${layers.length + 1}`
-    const newLayer = {
-      id: newLayerId,
-      title: `capa ${layers.length + 1}`,
-      parentId: idParentLayer.id,
-      imageUrl: null,
-      isActive: false
-    }
-    const updatedLayers = [...layers, newLayer]
-    setListOfLayers({ ...listOfLayers, [idParentLayer.id]: updatedLayers })
+  const handleAddLayer = () => {
+    addLayer({ parentId: idParentLayer.id })
   }
 
   const moveLayerDown = () => {
@@ -43,9 +35,13 @@ const CanvasLayersActions = (): JSX.Element => {
     setListOfLayers(newList)
   }
 
+  const handleDelete = (): void => {
+    deleteLayer(activeLayer)
+  }
+
   return (
     <div className='canvasLayers-actions'>
-      <button onClick={addLayer}>
+      <button onClick={handleAddLayer}>
         <PlusIcon />
       </button>
       <button onClick={() => moveLayerDown()}>
@@ -55,10 +51,13 @@ const CanvasLayersActions = (): JSX.Element => {
         <ArrowUp />
       </button>
       <button>
-        <CombineIcon />
+        <MergeIcon />
+      </button>
+      <button onClick={handleDelete}>
+        <Trash2Icon />
       </button>
       <button>
-        <Icon iconNode={onion} />
+        <CopyIcon />
       </button>
     </div>
   )

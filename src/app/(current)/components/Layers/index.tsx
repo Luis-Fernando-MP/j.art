@@ -17,7 +17,7 @@ interface ILayers {
 
 const Layers = ({ layers, isDisable, parentId, index }: ILayers): JSX.Element => {
   const { dimensions } = CanvasStore()
-  const { setIdParentLayer } = LayerStore()
+  const { setIdParentLayer, activeLayer } = LayerStore()
   const { moveToChild } = boardStore()
   const { moveToChild: mvHorizontalSlider } = StoreHorizontalSlider()
 
@@ -41,9 +41,9 @@ const Layers = ({ layers, isDisable, parentId, index }: ILayers): JSX.Element =>
       id={parentId}
     >
       <div className='layers-background' />
-      {layers.map(layer => {
+      {layers.toReversed().map(layer => {
         const { id } = layer
-        return <Canvas canvasId={id} key={id} />
+        return <Canvas canvasId={id} key={id} isActive={id === activeLayer.id} />
       })}
       <div className='layers-grid' />
     </section>

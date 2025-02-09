@@ -1,23 +1,24 @@
 import { acl } from '@/shared/acl'
 import { Image } from '@unpic/react'
-import { EyeIcon, XIcon } from 'lucide-react'
+import { BlendIcon, EyeIcon } from 'lucide-react'
 import { JSX, memo } from 'react'
 
-import { Layer } from '../../store/layer.store'
+import LayerStore, { Layer } from '../../store/layer.store'
 import './style.scss'
 
 interface ICanvasLayer {
   layer: Layer
   isActive: boolean
-  handleActiveLayer: () => void
 }
 
-const CanvasLayer = ({ layer, handleActiveLayer, isActive }: ICanvasLayer): JSX.Element => {
-  const { imageUrl, title } = layer
+const CanvasLayer = ({ layer, isActive }: ICanvasLayer): JSX.Element => {
+  const { setActiveLayer } = LayerStore()
+
+  const { imageUrl, title, id, parentId } = layer
 
   const handleClick = (): void => {
     if (isActive) return
-    handleActiveLayer()
+    setActiveLayer({ id, parentId })
   }
 
   return (
@@ -31,7 +32,7 @@ const CanvasLayer = ({ layer, handleActiveLayer, isActive }: ICanvasLayer): JSX.
       </div>
 
       <button className='canvasLayer-delete'>
-        <XIcon />
+        <BlendIcon />
       </button>
     </section>
   )

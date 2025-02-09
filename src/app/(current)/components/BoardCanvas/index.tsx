@@ -3,7 +3,7 @@ import boardStore from '@/shared/components/Board/board.store'
 import StoreHorizontalSlider from '@/shared/components/HorizontalSlider/store'
 import { newKey } from '@/shared/key'
 import { PlusIcon } from 'lucide-react'
-import { type JSX, MouseEvent, useCallback } from 'react'
+import { type JSX, MouseEvent, memo, useCallback } from 'react'
 import toast from 'react-hot-toast'
 
 import CanvasStore from '../../store/canvas.store'
@@ -11,7 +11,7 @@ import LayerStore, { MAX_LAYERS } from '../../store/layer.store'
 import Layers from '../Layers'
 import './style.scss'
 
-const BoardCanvas = (): JSX.Element => {
+const Canvas = (): JSX.Element => {
   const { moveToChild } = boardStore()
   const { moveToChild: horizontalMvChild } = StoreHorizontalSlider()
   const { dimensions } = CanvasStore()
@@ -21,9 +21,9 @@ const BoardCanvas = (): JSX.Element => {
     (e: MouseEvent) => {
       if (e.ctrlKey) return
       const id = newKey()
-      const newList = { ...listOfLayers }
+      const newList = structuredClone(listOfLayers)
       const index = Object.keys(listOfLayers).length
-      newList[id] = [{ id: `${id}-layer-0`, parentId: id, imageUrl: null, title: 'capa nueva' }]
+      newList[id] = [{ id: `${id}-layer-0`, parentId: id, imageUrl: null, title: `Capa ${index} ` }]
       if (Object.keys(newList).length > MAX_LAYERS) return toast.error('🔥 hay muchos canvas')
       setListOfLayers(newList)
       setIdParentLayer({
@@ -38,35 +38,33 @@ const BoardCanvas = (): JSX.Element => {
   )
 
   return (
-    <Board className='canvasBoard' isCenter={false}>
-      {() => {
+    <>
+      {Object.entries(listOfLayers).map((layer, index) => {
+        const [parentId, layers] = layer
         return (
-          <>
-            {Object.entries(listOfLayers).map((layer, index) => {
-              const [parentId, layers] = layer
-              return (
-                <Layers
-                  key={parentId}
-                  layers={layers}
-                  isDisable={idParentLayer.id !== parentId}
-                  parentId={parentId}
-                  index={index}
-                />
-              )
-            })}
-            <button
-              className='canvasBoard-addFrame'
-              onClick={handleAddNewParentLayer}
-              style={{
-                width: dimensions.width,
-                height: dimensions.height
-              }}
-            >
-              <PlusIcon />
-            </button>
-          </>
+          <Layers key={parentId} layers={layers} isDisable={idParentLayer.id !== parentId} parentId={parentId} index={index} />
         )
-      }}
+      })}
+      <button
+        className='canvasBoard-addFrame'
+        onClick={handleAddNewParentLayer}
+        style={{
+          width: dimensions.width,
+          height: dimensions.height
+        }}
+      >
+        <PlusIcon />
+      </button>
+    </>
+  )
+}
+
+const MemoCanvas = memo(Canvas)
+
+const BoardCanvas = (): JSX.Element => {
+  return (
+    <Board className='canvasBoard' isCenter={false}>
+      {() => <MemoCanvas />}
     </Board>
   )
 }
