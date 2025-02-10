@@ -36,7 +36,7 @@ const Layers = ({ layers, isDisable, parentId, index }: ILayers): JSX.Element =>
       role='button'
       tabIndex={0}
       className={`layers ${acl(isDisable, 'disable')}`}
-      style={{ width: dimensions.width, height: dimensions.height }}
+      style={{ minWidth: dimensions.width + 4, minHeight: dimensions.height + 4 }}
       onClick={handleClick}
       id={parentId}
     >

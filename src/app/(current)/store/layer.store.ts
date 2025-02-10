@@ -50,7 +50,7 @@ const state: StateCreator<ILayerStore> = (set, get) => ({
     const listOfLayers = get().listOfLayers
     const currentList = structuredClone(listOfLayers[parentId])
     if (!currentList) return
-    if (currentList?.length <= 1) return toast.error('❗️Trabajemos con una sola capa', { id: 'min-layers' })
+    if (currentList?.length <= 1) return toast.error('❗️Una cpa como mínimo', { id: 'min-layers' })
     const selectLayer = get().activeLayer
     const updatedList = currentList.filter(f => f.id !== id)
     const existLayer = updatedList.some(l => l.id === selectLayer.id)
