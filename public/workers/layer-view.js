@@ -34,24 +34,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var _a;
 export var EWorkerActions;
 (function (EWorkerActions) {
     EWorkerActions["GENERATE_FRAME"] = "generateFrameView";
     EWorkerActions["GENERATE_FULL_VIEW"] = "generateFullView";
 })(EWorkerActions || (EWorkerActions = {}));
-var actions = (_a = {},
-    _a[EWorkerActions.GENERATE_FRAME] = generateImage,
-    _a[EWorkerActions.GENERATE_FULL_VIEW] = generateFullImage,
-    _a);
 self.onmessage = function (event) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, imageBitmap, action, imagesBitmap, error_1;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 _a = event.data, imageBitmap = _a.imageBitmap, action = _a.action, imagesBitmap = _a.imagesBitmap;
-                if (!imageBitmap)
-                    return [2 /*return*/, self.postMessage({ error: 'No imageBitmap provided' })];
                 if (!action)
                     return [2 /*return*/, self.postMessage({ error: 'No action' })];
                 _b.label = 1;
@@ -63,7 +56,7 @@ self.onmessage = function (event) { return __awaiter(void 0, void 0, void 0, fun
                 _b.sent();
                 _b.label = 3;
             case 3:
-                if (!(action === EWorkerActions.GENERATE_FRAME && imagesBitmap)) return [3 /*break*/, 5];
+                if (!(action === EWorkerActions.GENERATE_FULL_VIEW && imagesBitmap)) return [3 /*break*/, 5];
                 return [4 /*yield*/, generateFullImage(imagesBitmap)];
             case 4:
                 _b.sent();
@@ -93,7 +86,7 @@ function generateImage(imageBitmap) {
                 case 1:
                     _a.trys.push([1, 3, , 4]);
                     return [4 /*yield*/, offscreen.convertToBlob({
-                            quality: 1
+                            quality: 0.2
                         })];
                 case 2:
                     blob = _a.sent();
@@ -131,7 +124,7 @@ function generateFullImage(imagesBitmap) {
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 4]);
-                    return [4 /*yield*/, offscreen.convertToBlob({ quality: 1 })];
+                    return [4 /*yield*/, offscreen.convertToBlob({ quality: 0.2 })];
                 case 2:
                     blob = _a.sent();
                     reader_2 = new FileReader();

@@ -38,25 +38,12 @@ const BoardFrames = (): JSX.Element => {
     [listOfLayers, setListOfLayers, newKey]
   )
 
-  const width = dimensions.width * 0.1
-  const height = dimensions.height * 0.1
-  const clampWidth = Math.min(60, width)
-  const clampHeight = Math.min(60, height)
-
   return (
     <HorizontalSlider parentClass='boardFrames' className='boardFrames-list'>
-      {Object.entries(listOfLayers).map((layer, i) => {
-        const [parentKey] = layer
+      {Object.entries(listOfLayers).map((element, i) => {
+        const [parentKey] = element
         const isActive = idParentLayer.id === parentKey
-        return (
-          <BoardFrame
-            key={parentKey}
-            parentKey={parentKey}
-            index={i}
-            isActive={isActive}
-            dimensions={{ width: clampWidth, height: clampHeight }}
-          />
-        )
+        return <BoardFrame key={parentKey} parentKey={parentKey} index={i} isActive={isActive} />
       })}
       <button className='boardFrames-action' onClick={handleAddNewParentLayer}>
         <PlusIcon />

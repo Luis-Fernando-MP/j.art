@@ -14,9 +14,6 @@ $actionWidth: 70px;
     display: grid;
     place-content: center;
 
-    width: $actionWidth;
-    min-width: $actionWidth;
-    height: $actionWidth;
     border: 2px solid rgb(v.$bg3);
     border-radius: v.$radius;
 
@@ -39,7 +36,14 @@ $actionWidth: 70px;
       background-color: rgb(v.$bg3);
     }
 
-    canvas {
+    &,
+    image {
+      width: $actionWidth;
+      min-width: $actionWidth;
+      height: $actionWidth;
+    }
+
+    image {
       pointer-events: none;
     }
   }

@@ -10,19 +10,13 @@ export interface WorkerMessage {
   action?: EWorkerActions
 }
 
-const actions: Record<EWorkerActions, (p: any) => Promise<void>> = {
-  [EWorkerActions.GENERATE_FRAME]: generateImage,
-  [EWorkerActions.GENERATE_FULL_VIEW]: generateFullImage
-}
-
 self.onmessage = async (event: WorkerEvent) => {
   const { imageBitmap, action, imagesBitmap } = event.data
-  if (!imageBitmap) return self.postMessage({ error: 'No imageBitmap provided' })
   if (!action) return self.postMessage({ error: 'No action' })
 
   try {
     if (action === EWorkerActions.GENERATE_FRAME && imageBitmap) await generateImage(imageBitmap)
-    if (action === EWorkerActions.GENERATE_FRAME && imagesBitmap) await generateFullImage(imagesBitmap)
+    if (action === EWorkerActions.GENERATE_FULL_VIEW && imagesBitmap) await generateFullImage(imagesBitmap)
   } catch (error) {
     self.postMessage({ error: (error as Error).message })
   }
@@ -36,7 +30,7 @@ async function generateImage(imageBitmap: ImageBitmap) {
   ctx.drawImage(imageBitmap, 0, 0)
   try {
     const blob = await offscreen.convertToBlob({
-      quality: 1
+      quality: 0.2
     })
     const reader = new FileReader()
 
@@ -59,7 +53,7 @@ async function generateFullImage(imagesBitmap: ImageBitmap[]) {
     ctx.drawImage(image, 0, 0)
   })
   try {
-    const blob = await offscreen.convertToBlob({ quality: 1 })
+    const blob = await offscreen.convertToBlob({ quality: 0.2 })
     const reader = new FileReader()
     reader.onloadend = () => self.postMessage({ base64: reader.result })
     reader.readAsDataURL(blob)

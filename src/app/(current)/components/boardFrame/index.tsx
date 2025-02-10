@@ -4,6 +4,7 @@ import { acl } from '@/shared/acl'
 import boardStore from '@/shared/components/Board/board.store'
 import StoreHorizontalSlider from '@/shared/components/HorizontalSlider/store'
 import { newKey } from '@/shared/key'
+import { Image } from '@unpic/react'
 import { Layers2Icon, XIcon } from 'lucide-react'
 import { type JSX, MouseEvent, memo } from 'react'
 import toast from 'react-hot-toast'
@@ -15,13 +16,9 @@ interface IBoardFrame {
   isActive: boolean
   index: number
   parentKey: string
-  dimensions: {
-    width: number
-    height: number
-  }
 }
 
-const BoardFrame = ({ isActive, index, parentKey, dimensions }: IBoardFrame): JSX.Element => {
+const BoardFrame = ({ isActive, index, parentKey }: IBoardFrame): JSX.Element => {
   const { moveToChild } = boardStore()
   const { setIdParentLayer, listOfLayers, setListOfLayers } = LayerStore()
   const { moveToChild: horizontalMvChild } = StoreHorizontalSlider()
@@ -60,7 +57,8 @@ const BoardFrame = ({ isActive, index, parentKey, dimensions }: IBoardFrame): JS
   return (
     <div className={`boardFrame ${acl(isActive)}`}>
       <button className='boardFrame-button' onClick={handleClick}>
-        <canvas id={`${parentKey}-frame`} width={dimensions.width} height={dimensions.height} />
+        <Image src='/images/blank-image.webp' alt='canvas-frame' layout='fullWidth' id={`${parentKey}-frame-view`} />
+        {/* <canvas id={`${parentKey}-frame`} width={dimensions.width} height={dimensions.height} /> */}
       </button>
       <div className='boardFrame-controls'>
         <button className='boardFrame-control' onClick={handleRemoveLayer}>

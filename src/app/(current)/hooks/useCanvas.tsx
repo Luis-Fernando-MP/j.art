@@ -32,7 +32,7 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
 
   const { pixelColor, pixelOpacity, pixelSize, setPixelColor } = PixelStore()
   const { selectedTool, xMirror, yMirror } = ToolsStore()
-  const { activeLayer, listOfLayers, setListOfLayers } = LayerStore()
+  const { activeLayer, listOfLayers, setListOfLayers, idParentLayer } = LayerStore()
 
   const activatePerfectShape = (isActive: boolean = true) => {
     $perfectShape.current = isActive
@@ -101,7 +101,7 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
     }
   }, [])
 
-  const drawInLayerView = useCallback(
+  const drawImageInLayerView = useCallback(
     (image: string | null) => {
       const updatedLayers = { ...listOfLayers }
       const parentLayers = updatedLayers[activeLayer.parentId]
@@ -111,38 +111,50 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
       )
       setListOfLayers(updatedLayers)
     },
-    [activeLayer]
+    [activeLayer, listOfLayers]
   )
 
-  const drawInFrameView = useCallback(
+  const drawImageInFrameView = useCallback(
     (image: string | null) => {
-      const updatedLayers = { ...listOfLayers }
-      const parentLayers = updatedLayers[activeLayer.parentId]
-      if (!parentLayers) return
-      updatedLayers[activeLayer.parentId] = parentLayers.map(layer =>
-        layer.id === activeLayer.id ? { ...layer, imageUrl: image } : layer
-      )
-      setListOfLayers(updatedLayers)
+      const frameID = `${idParentLayer.id}-frame-view`
+      const $imageFrame = document.getElementById(frameID)
+      if (!($imageFrame instanceof HTMLImageElement) || !image) return
+      $imageFrame.src = image
     },
-    [activeLayer]
+    [idParentLayer]
   )
 
-  const handleCanvasMouseUp = async () => {
-    setIsDrawing(false)
-    startPos.current = null
-    canvasSnapshot.current = null
-    activatePerfectShape(false)
+  const bitmapFrameView = async () => {
+    if (!secondWorkerRef.current) return
+    const parentElement = document.getElementById(idParentLayer.id)
+    if (!(parentElement instanceof HTMLElement)) return
+    const listOfCanvas = parentElement.querySelectorAll('canvas')
 
+    try {
+      const imagesBitmap = await Promise.all(Array.from(listOfCanvas).map(canvas => createImageBitmap(canvas)))
+      const message: WorkerMessage = { imagesBitmap, action: EWorkerActions.GENERATE_FULL_VIEW }
+      secondWorkerRef.current.postMessage(message, imagesBitmap)
+      secondWorkerRef.current.onmessage = event => {
+        console.log('frame responde', event.data.base64)
+        drawImageInFrameView(event.data.base64)
+      }
+      secondWorkerRef.current.onerror = error => {
+        console.error('Worker Error:', error)
+      }
+    } catch (error) {
+      console.error('Failed to create ImageBitmap:', error)
+    }
+  }
+
+  const bitmapLayerView = async () => {
     if (!firstWorkerRef.current) return
     const { canvas } = getContext(canvasId)
-
     try {
       const imageBitmap = await createImageBitmap(canvas)
       const message: WorkerMessage = { imageBitmap, action: EWorkerActions.GENERATE_FRAME }
       firstWorkerRef.current.postMessage(message, [imageBitmap])
       firstWorkerRef.current.onmessage = event => {
-        console.log('Response from Worker:', event.data.base64)
-        drawInLayerView(event.data.base64)
+        drawImageInLayerView(event.data.base64)
       }
       firstWorkerRef.current.onerror = error => {
         console.error('Worker Error:', error)
@@ -150,6 +162,16 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
     } catch (error) {
       console.error('Failed to create ImageBitmap:', error)
     }
+  }
+
+  const handleCanvasMouseUp = async () => {
+    setIsDrawing(false)
+    startPos.current = null
+    canvasSnapshot.current = null
+    activatePerfectShape(false)
+
+    await bitmapLayerView()
+    await bitmapFrameView()
 
     // try {
     //   // Crear un ImageBitmap directamente desde el canvas
