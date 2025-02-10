@@ -3,11 +3,13 @@
   "version": "0.2.0",
   "private": true,
   "scripts": {
-    "dev": "rimraf .next && pnpm store prune && next dev",
+    "dev:workers": "tsc -p tsconfig.worker.json --watch",
+    "dev": "rimraf .next && pnpm store prune && next dev ",
     "build": "pnpm lint && next build",
     "start": "next start",
     "lint": "npx stylelint '**/*.{css,scss}' && next lint",
-    "format": "pnpx stylelint '**/*.{css,scss}' --fix && prettier --write '**/*.{js,jsx,ts,tsx,json,md,scss,css}'"
+    "format": "pnpx stylelint '**/*.{css,scss}' --fix && prettier --write '**/*.{js,jsx,ts,tsx,json,md,scss,css}'",
+    "build:workers": "tsc -p tsconfig.worker.json"
   },
   "dependencies": {
     "@lucide/lab": "^0.1.2",

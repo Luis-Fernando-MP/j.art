@@ -38,9 +38,9 @@ const state: StateCreator<ILayerStore> = (set, get) => ({
   activeLayer: { id: DEFAULT_LAYER, parentId: DEFAULT_CANVAS },
   listOfLayers: {
     [DEFAULT_CANVAS]: [
-      { id: DEFAULT_LAYER, title: 'capa 01', parentId: DEFAULT_CANVAS, imageUrl: null },
-      { id: `${DEFAULT_CANVAS}-layer2`, title: 'capa 02', parentId: DEFAULT_CANVAS, imageUrl: null },
-      { id: `${DEFAULT_CANVAS}-layer3`, title: 'capa 03', parentId: DEFAULT_CANVAS, imageUrl: null }
+      { id: DEFAULT_LAYER, title: 'capa 01', parentId: DEFAULT_CANVAS, imageUrl: null }
+      // { id: `${DEFAULT_CANVAS}-layer2`, title: 'capa 02', parentId: DEFAULT_CANVAS, imageUrl: null },
+      // { id: `${DEFAULT_CANVAS}-layer3`, title: 'capa 03', parentId: DEFAULT_CANVAS, imageUrl: null }
     ]
   },
   setListOfLayers: listOfLayers => set({ listOfLayers }),

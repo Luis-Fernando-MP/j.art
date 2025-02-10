@@ -16,6 +16,8 @@ const CanvasLayer = ({ layer, isActive }: ICanvasLayer): JSX.Element => {
 
   const { imageUrl, title, id, parentId } = layer
 
+  console.log('imageUrl', imageUrl)
+
   const handleClick = (): void => {
     if (isActive) return
     setActiveLayer({ id, parentId })

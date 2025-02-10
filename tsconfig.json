@@ -24,9 +24,10 @@
       "@home/*": ["./src/app/(current)/*"],
       "@home-store/*": ["./src/app/(current)/store/*"],
       "@scripts/*": ["./src/scripts/*"],
-      "@sass/*": ["./src/sass/*"]
+      "@sass/*": ["./src/sass/*"],
+      "@workers/*": ["./workers/*"]
     }
   },
-  "include": ["next-env.d.ts", "./config.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "./config.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "workers/**/*.ts"],
   "exclude": ["node_modules"]
 }
