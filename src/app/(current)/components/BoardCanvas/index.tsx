@@ -8,14 +8,14 @@ import toast from 'react-hot-toast'
 
 import CanvasStore from '../../store/canvas.store'
 import LayerStore, { MAX_LAYERS } from '../../store/layer.store'
-import Layers from '../Layers'
+import CanvasList from './CanvasList'
 import './style.scss'
 
 const Canvas = (): JSX.Element => {
   const { moveToChild } = boardStore()
   const { moveToChild: horizontalMvChild } = StoreHorizontalSlider()
   const { dimensions } = CanvasStore()
-  const { listOfLayers, idParentLayer, setListOfLayers, setIdParentLayer } = LayerStore()
+  const { listOfLayers, setListOfLayers, setIdParentLayer } = LayerStore()
 
   const handleAddNewParentLayer = useCallback(
     (e: MouseEvent) => {
@@ -39,12 +39,7 @@ const Canvas = (): JSX.Element => {
 
   return (
     <>
-      {Object.entries(listOfLayers).map((layer, index) => {
-        const [parentId, layers] = layer
-        return (
-          <Layers key={parentId} layers={layers} isDisable={idParentLayer.id !== parentId} parentId={parentId} index={index} />
-        )
-      })}
+      <CanvasList />
       <button
         className='canvasBoard-addFrame'
         onClick={handleAddNewParentLayer}

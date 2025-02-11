@@ -1,7 +1,8 @@
 'use client'
 
+import { Image } from '@unpic/react'
 import dynamic from 'next/dynamic'
-import React, { useRef } from 'react'
+import React, { JSX, useRef } from 'react'
 
 import CanvasStore from '../../store/canvas.store'
 import './style.scss'
@@ -10,11 +11,9 @@ const CameraViewer = dynamic(() => import('./CameraViewer'), {
   ssr: false
 })
 
-const CanvasViewer: React.FC = () => {
+const CanvasViewer = (): JSX.Element => {
   const { dimensions } = CanvasStore()
   const { width: originalWidth, height: originalHeight } = dimensions
-
-  const $canvas = useRef<HTMLCanvasElement>(null)
   const $parentRef = useRef<HTMLDivElement>(null)
 
   const maxWidth = 230
@@ -26,8 +25,14 @@ const CanvasViewer: React.FC = () => {
     <div className='canvasViewer'>
       <div className='canvasViewer-background' />
       <div className='canvasViewer-wrapper' ref={$parentRef} style={{ width: canvasWidth, height: canvasHeight }}>
-        <canvas className='canvasViewer-canvas' ref={$canvas} width={canvasWidth} height={canvasHeight} />
-        <CameraViewer $canvas={$canvas} canvasHeight={canvasHeight} canvasWidth={canvasWidth} />
+        <Image
+          className='canvasViewer-image'
+          src='/images/blank-image.webp'
+          alt='viewer-frame'
+          layout='fullWidth'
+          id='viewer-frame'
+        />
+        <CameraViewer $canvas={$parentRef} canvasHeight={canvasHeight} canvasWidth={canvasWidth} />
       </div>
     </div>
   )

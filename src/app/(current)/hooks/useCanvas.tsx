@@ -118,8 +118,10 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
     (image: string | null) => {
       const frameID = `${idParentLayer.id}-frame-view`
       const $imageFrame = document.getElementById(frameID)
-      if (!($imageFrame instanceof HTMLImageElement) || !image) return
-      $imageFrame.src = image
+      const $viewerFrame = document.getElementById('viewer-frame')
+      if (!image) return
+      if ($imageFrame instanceof HTMLImageElement) $imageFrame.src = image
+      if ($viewerFrame instanceof HTMLImageElement) $viewerFrame.src = image
     },
     [idParentLayer]
   )

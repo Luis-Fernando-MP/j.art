@@ -35,13 +35,14 @@
     }
   }
 
-  &-canvas {
+  &-image {
     position: relative;
 
-    max-width: 230px;
-    max-height: 180px;
+    width: 100%;
+    height: 100%;
     border-radius: v.$radius;
 
+    object-fit: cover;
     background-color: rgb(v.$bg2);
   }
 

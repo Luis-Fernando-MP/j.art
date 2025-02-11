@@ -8,13 +8,14 @@ import './style.scss'
 
 interface ICanvasLayer {
   layer: Layer
-  isActive: boolean
 }
 
-const CanvasLayer = ({ layer, isActive }: ICanvasLayer): JSX.Element => {
-  const { setActiveLayer } = LayerStore()
+const CanvasLayer = ({ layer }: ICanvasLayer): JSX.Element => {
+  const { setActiveLayer, activeLayer } = LayerStore()
 
   const { imageUrl, title, id, parentId } = layer
+
+  const isActive = layer.id === activeLayer.id
 
   const handleClick = (): void => {
     if (isActive) return

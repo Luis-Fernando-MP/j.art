@@ -5,23 +5,23 @@ import { TPositions } from '../../store/canvas.store'
 import LayerStore from '../../store/layer.store'
 
 interface ICameraViewer {
-  $canvas: RefObject<HTMLCanvasElement | null>
+  $canvas: RefObject<HTMLElement | null>
   canvasWidth: number
   canvasHeight: number
 }
 
 const CameraViewer = ({ $canvas, canvasHeight, canvasWidth }: ICameraViewer) => {
   const [isDragging, setIsDragging] = useState(false)
-  const { scale, setOffset, offset, moveToChild } = boardStore()
+  const { scale, setOffset, offset } = boardStore()
   const { idParentLayer } = LayerStore()
-  const isMovingCamera = useRef<Boolean>(false)
+  const isMovingCamera = useRef<boolean>(false)
 
   const $camera = useRef<HTMLButtonElement>(null)
 
   const startPosition = useRef<TPositions>({ x: 0, y: 0 })
   const [cameraPosition, setCameraPosition] = useState<TPositions>({
-    x: canvasWidth / 3.5,
-    y: canvasHeight / 3.5
+    x: canvasWidth / 5,
+    y: canvasHeight / 5
   })
 
   const handleMouseCameraMove = (e: globalThis.MouseEvent) => {

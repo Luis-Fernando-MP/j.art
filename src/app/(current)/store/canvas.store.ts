@@ -13,7 +13,7 @@ interface ICanvasStore {
   setDimensions: (dimensions: TDimensionPosition) => void
 }
 
-const DEFAULT_WIDTH_CANVAS = 15 * 16
+const DEFAULT_WIDTH_CANVAS = 15 * 25
 const DEFAULT_HEIGHT_CANVAS = 15 * 16
 
 const state: StateCreator<ICanvasStore> = set => ({
