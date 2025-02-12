@@ -1,0 +1,88 @@
+@use '@sass/config/vars' as v;
+@use '@sass/utils/defs' as d;
+@use '@sass/utils/pointActive' as po;
+
+.mergeTool {
+  position: relative;
+
+  @include d.flex;
+
+  &-separator {
+    position: relative;
+    width: 100%;
+    height: 0;
+
+    &::before {
+      content: '';
+
+      position: absolute;
+      z-index: -1;
+      top: -20px;
+      left: 50%;
+      transform: translate(-50%);
+
+      width: 30px;
+      height: 50px;
+      border: 4px solid rgb(v.$bg3);
+    }
+  }
+
+  &-popup {
+    width: 200px;
+    height: fit-content;
+
+    @include d.flex($ali: center);
+  }
+
+  &-dropdown {
+    position: relative;
+  }
+
+  &-itemDropdown {
+    position: relative;
+
+    overflow: hidden;
+
+    width: 140px;
+    max-width: 140px;
+    height: 80px;
+
+    background-color: rgb(v.$bg2);
+
+    &__title {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+
+      padding: 2px 5px;
+      border-radius: v.$radius;
+
+      font-size: 1rem;
+
+      background-color: rgb(v.$bg2, 0.7);
+      backdrop-filter: blur(10px);
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+
+  &-action {
+    @include d.flex($dir: row, $ali: center, $gap: 5px);
+
+    width: fit-content;
+    padding: 3px v.$padding * 2;
+    border-radius: v.$radius;
+
+    color: rgb(v.$bg1);
+
+    background-color: rgb(v.$tn1);
+
+    .lucide {
+      stroke: rgb(v.$bg1);
+    }
+  }
+}

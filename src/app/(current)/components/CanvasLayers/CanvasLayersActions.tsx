@@ -1,8 +1,12 @@
-import { onion } from '@lucide/lab'
-import { ArrowDown, ArrowUp, CombineIcon, CopyIcon, Icon, MergeIcon, PlusIcon, Trash2Icon } from 'lucide-react'
+import { ArrowDown, ArrowUp, CopyIcon, PlusIcon, Trash2Icon } from 'lucide-react'
+import dynamic from 'next/dynamic'
 import { JSX, memo } from 'react'
 
 import LayerStore from '../../store/layer.store'
+
+const MergeTool = dynamic(() => import('../MergeTool'), {
+  ssr: false
+})
 
 const CanvasLayersActions = (): JSX.Element | null => {
   const { listOfLayers, idParentLayer, setListOfLayers, activeLayer, addLayer, deleteLayer } = LayerStore()
@@ -50,9 +54,7 @@ const CanvasLayersActions = (): JSX.Element | null => {
       <button onClick={() => moveLayerUp()}>
         <ArrowUp />
       </button>
-      <button>
-        <MergeIcon />
-      </button>
+      <MergeTool />
       <button onClick={handleDelete}>
         <Trash2Icon />
       </button>

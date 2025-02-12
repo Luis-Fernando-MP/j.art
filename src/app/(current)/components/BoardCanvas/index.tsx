@@ -23,7 +23,8 @@ const Canvas = (): JSX.Element => {
       const id = newKey()
       const newList = structuredClone(listOfLayers)
       const index = Object.keys(listOfLayers).length
-      newList[id] = [{ id: `${id}-layer-0`, parentId: id, imageUrl: null, title: `Capa ${index} ` }]
+      const newId = newKey(`${id}-layer-0`)
+      newList[id] = [{ id: newId, parentId: id, imageUrl: null, title: `Capa ${index.toString().padStart(2, '0')}` }]
       if (Object.keys(newList).length > MAX_LAYERS) return toast.error('🔥 hay muchos canvas')
       setListOfLayers(newList)
       setIdParentLayer({

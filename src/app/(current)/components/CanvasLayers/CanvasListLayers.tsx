@@ -1,3 +1,4 @@
+import { newKey } from '@/shared/key'
 import { type JSX } from 'react'
 
 import LayerStore from '../../store/layer.store'
@@ -10,7 +11,8 @@ const CanvasListLayers = (): JSX.Element | null => {
   return (
     <div className='canvasLayers-list'>
       {layers.map(layer => {
-        return <CanvasLayer layer={layer} key={`item-layer-${layer.id}`} />
+        const key = newKey()
+        return <CanvasLayer layer={layer} key={key} />
       })}
     </div>
   )

@@ -8,7 +8,6 @@ import { PlusIcon } from 'lucide-react'
 import { type JSX, MouseEvent, useCallback } from 'react'
 import toast from 'react-hot-toast'
 
-import CanvasStore from '../../store/canvas.store'
 import LayerStore, { MAX_LAYERS } from '../../store/layer.store'
 import BoardFrame from '../boardFrame'
 import './style.scss'
@@ -16,7 +15,6 @@ import './style.scss'
 const BoardFrames = (): JSX.Element => {
   const { moveToChild } = boardStore()
   const { moveToChild: horizontalMvChild } = StoreHorizontalSlider()
-  const { dimensions } = CanvasStore()
   const { listOfLayers, idParentLayer, setListOfLayers, setIdParentLayer } = LayerStore()
 
   const handleAddNewParentLayer = useCallback(
@@ -26,7 +24,8 @@ const BoardFrames = (): JSX.Element => {
       const index = Object.keys(listOfLayers).length
       const newList = { ...listOfLayers }
       const title = `${id}-layer-0`
-      newList[id] = [{ id: title, parentId: id, imageUrl: null, title }]
+      const newId = newKey(`${id}-layer-0`)
+      newList[id] = [{ id: newId, parentId: id, imageUrl: null, title }]
       if (Object.keys(newList).length > MAX_LAYERS) return toast.error('🔥 hay muchos canvas')
 
       setListOfLayers(newList)

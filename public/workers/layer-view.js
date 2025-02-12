@@ -105,7 +105,7 @@ function generateImage(imageBitmap) {
 }
 function generateFullImage(imagesBitmap) {
     return __awaiter(this, void 0, void 0, function () {
-        var maxWidth, maxHeight, offscreen, ctx, blob, reader_2, error_3;
+        var maxWidth, maxHeight, offscreen, ctx, blob, mergedBitmap_1, reader_2, error_3;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -123,19 +123,24 @@ function generateFullImage(imagesBitmap) {
                     });
                     _a.label = 1;
                 case 1:
-                    _a.trys.push([1, 3, , 4]);
+                    _a.trys.push([1, 4, , 5]);
                     return [4 /*yield*/, offscreen.convertToBlob({ quality: 0.2 })];
                 case 2:
                     blob = _a.sent();
-                    reader_2 = new FileReader();
-                    reader_2.onloadend = function () { return self.postMessage({ base64: reader_2.result }); };
-                    reader_2.readAsDataURL(blob);
-                    return [3 /*break*/, 4];
+                    return [4 /*yield*/, createImageBitmap(offscreen)];
                 case 3:
+                    mergedBitmap_1 = _a.sent();
+                    reader_2 = new FileReader();
+                    reader_2.onloadend = function () {
+                        self.postMessage({ base64: reader_2.result, mergedBitmap: mergedBitmap_1 });
+                    };
+                    reader_2.readAsDataURL(blob);
+                    return [3 /*break*/, 5];
+                case 4:
                     error_3 = _a.sent();
                     self.postMessage({ error: error_3.message });
-                    return [3 /*break*/, 4];
-                case 4: return [2 /*return*/];
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
             }
         });
     });

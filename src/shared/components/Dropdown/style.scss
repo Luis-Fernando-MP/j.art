@@ -1,0 +1,53 @@
+@use '@sass/config/vars' as v;
+@use '@sass/utils/defs' as d;
+@use '@sass/utils/scrollbar' as *;
+
+.dropdown {
+  position: relative;
+  width: fit-content;
+  height: fit-content;
+
+  &-menu {
+    @extend %scroll-hidden;
+
+    position: absolute;
+    z-index: 10;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%);
+
+    overflow: auto;
+
+    width: fit-content;
+    height: fit-content;
+    max-height: 200px;
+    padding: none;
+    padding-top: v.$padding;
+    border-radius: v.$radius;
+
+    background-color: rgb(v.$bg2, 0.5);
+    backdrop-filter: blur(2px);
+
+    @include d.flex($ali: center);
+  }
+
+  &-item {
+    border: 2px solid rgb(v.$bg3);
+    border-radius: v.$radius;
+    transition: border-color 0.2s ease-in-out;
+
+    &.hidden {
+      display: none;
+    }
+
+    &.showBorder {
+      border-color: rgb(v.$tn1);
+    }
+  }
+
+  &-wrapper {
+    pointer-events: none;
+    touch-action: none;
+    user-select: none;
+  }
+}

@@ -95,9 +95,7 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
 
     return () => {
       firstWorkerRef.current?.terminate()
-      firstWorkerRef.current = null
       secondWorkerRef.current?.terminate()
-      secondWorkerRef.current = null
     }
   }, [])
 
@@ -137,7 +135,6 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
       const message: WorkerMessage = { imagesBitmap, action: EWorkerActions.GENERATE_FULL_VIEW }
       secondWorkerRef.current.postMessage(message, imagesBitmap)
       secondWorkerRef.current.onmessage = event => {
-        console.log('frame responde', event.data.base64)
         drawImageInFrameView(event.data.base64)
       }
       secondWorkerRef.current.onerror = error => {

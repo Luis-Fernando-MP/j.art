@@ -26,7 +26,7 @@ const PopupComponent = ({ children, className = '', isOpen, onClose, title, ...p
         opacity: $popupRef.current ? 1 : 0
       }}
     >
-      <div className={`${className} popup-container`} {...props}>
+      <div className={`popup-container ${className}`} {...props}>
         {children}
       </div>
       <header

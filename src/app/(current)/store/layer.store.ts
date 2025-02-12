@@ -1,3 +1,4 @@
+import { newKey } from '@/shared/key'
 import toast from 'react-hot-toast'
 import { StateCreator, create } from 'zustand'
 
@@ -23,6 +24,7 @@ interface ILayerStore {
   setActiveLayer: (activeLayer: ILayerStore['activeLayer']) => void
   deleteLayer: (p: { id: string; parentId: string }) => void
   addLayer: (_: { parentId: string }) => void
+  updateLayer: (_: { parentId: string; layer: Partial<Layer>; list?: Layer[] }) => void
 }
 
 const DEFAULT_CANVAS = 'default-canvas'
@@ -37,11 +39,7 @@ const state: StateCreator<ILayerStore> = (set, get) => ({
   },
   activeLayer: { id: DEFAULT_LAYER, parentId: DEFAULT_CANVAS },
   listOfLayers: {
-    [DEFAULT_CANVAS]: [
-      { id: DEFAULT_LAYER, title: 'capa 01', parentId: DEFAULT_CANVAS, imageUrl: null },
-      { id: `${DEFAULT_CANVAS}-layer2`, title: 'capa 02', parentId: DEFAULT_CANVAS, imageUrl: null },
-      { id: `${DEFAULT_CANVAS}-layer3`, title: 'capa 03', parentId: DEFAULT_CANVAS, imageUrl: null }
-    ]
+    [DEFAULT_CANVAS]: [{ id: DEFAULT_LAYER, title: 'capa 01', parentId: DEFAULT_CANVAS, imageUrl: null }]
   },
   setListOfLayers: listOfLayers => set({ listOfLayers }),
   setIdParentLayer: idParentLayer => set({ idParentLayer }),
@@ -56,7 +54,6 @@ const state: StateCreator<ILayerStore> = (set, get) => ({
     const existLayer = updatedList.some(l => l.id === selectLayer.id)
     let newSelected = selectLayer
     if (!existLayer) newSelected = updatedList[0] ?? null
-    console.log(newSelected)
     set({
       listOfLayers: { ...listOfLayers, [parentId]: updatedList },
       activeLayer: newSelected
@@ -70,7 +67,7 @@ const state: StateCreator<ILayerStore> = (set, get) => ({
       return toast.error(`❗️Máximo ${MAX_LAYERS} capas por frame`, { id: 'max-layers' })
     }
     const layerName = String(currentList.length + 1).padStart(2, '0')
-    const newLayerId = `${parentId}-layer-${layerName}`
+    const newLayerId = newKey(`${parentId}-layer-${layerName}`)
     const newLayer = {
       id: newLayerId,
       title: `capa-${layerName}`,
@@ -80,6 +77,18 @@ const state: StateCreator<ILayerStore> = (set, get) => ({
     }
     const updatedLayers = [...currentList, newLayer]
     set({ listOfLayers: { ...listOfLayers, [parentId]: updatedLayers } })
+  },
+  updateLayer({ parentId, layer, list }) {
+    const listOfLayers = get().listOfLayers
+    const currentList = list ?? [...listOfLayers[parentId]]
+    if (!currentList) return
+    const updatedList = currentList.map(f => {
+      if (f.id !== layer.id) return f
+      return { ...f, ...layer }
+    })
+    set({
+      listOfLayers: { ...listOfLayers, [parentId]: updatedList }
+    })
   }
 })
 
