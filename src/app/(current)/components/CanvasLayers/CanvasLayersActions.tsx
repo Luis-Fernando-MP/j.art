@@ -3,10 +3,11 @@ import dynamic from 'next/dynamic'
 import { JSX, memo } from 'react'
 
 import LayerStore from '../../store/layer.store'
+import MergeTool from '../MergeTool'
 
-const MergeTool = dynamic(() => import('../MergeTool'), {
-  ssr: false
-})
+// const MergeTool = dynamic(() => import('../MergeTool'), {
+//   ssr: false
+// })
 
 const CanvasLayersActions = (): JSX.Element | null => {
   const { listOfLayers, idParentLayer, setListOfLayers, activeLayer, addLayer, deleteLayer } = LayerStore()

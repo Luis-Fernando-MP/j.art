@@ -43,8 +43,8 @@
 
     overflow: hidden;
 
-    width: 140px;
-    max-width: 140px;
+    width: 130px;
+    max-width: 130px;
     height: 80px;
 
     background-color: rgb(v.$bg2);
@@ -59,8 +59,8 @@
 
       font-size: 1rem;
 
-      background-color: rgb(v.$bg2, 0.7);
-      backdrop-filter: blur(10px);
+      background-color: rgb(v.$bg2, 0.6);
+      backdrop-filter: blur(5px);
     }
 
     img {

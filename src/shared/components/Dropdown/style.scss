@@ -32,8 +32,13 @@
   }
 
   &-item {
+    pointer-events: auto;
+    cursor: pointer;
+    user-select: none;
+
     border: 2px solid rgb(v.$bg3);
     border-radius: v.$radius;
+
     transition: border-color 0.2s ease-in-out;
 
     &.hidden {
@@ -43,11 +48,5 @@
     &.showBorder {
       border-color: rgb(v.$tn1);
     }
-  }
-
-  &-wrapper {
-    pointer-events: none;
-    touch-action: none;
-    user-select: none;
   }
 }
