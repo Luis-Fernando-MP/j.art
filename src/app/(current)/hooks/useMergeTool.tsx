@@ -36,6 +36,7 @@ const useMergeTool = () => {
   const handleMergeLayers = async () => {
     if (!mergeWorker.current || selectedLayers.length < 2) return
     const [firstLayer, secondLayer] = selectedLayers
+    console.log('from', firstLayer.slice(0, 7), 'to', secondLayer.slice(0, 7))
     const validate = currentLayers.some(layer => layer.id === firstLayer) || currentLayers.some(layer => layer.id === secondLayer)
     if (!validate || firstLayer === secondLayer) return toast.error('❗️Asegúrate de elegir bien las capas')
     const $firstCanvas = document.getElementById(firstLayer) as HTMLCanvasElement

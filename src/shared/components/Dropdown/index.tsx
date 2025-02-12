@@ -43,7 +43,10 @@ const Dropdown = <T extends WithId>({ list, children, onChange, revalidateChange
       <Option
         key={newKey(selectedItem.id)}
         item={selectedItem}
-        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+        onClick={() => {
+          setIsDropdownOpen(!isDropdownOpen)
+          onChange && onChange(selectedItem)
+        }}
         className={acl(isDropdownOpen, 'showBorder')}
       >
         {item => children(item as T)}
