@@ -12,4 +12,16 @@
     border-radius: v.$radius;
     background-color: rgb(v.$bg2);
   }
+
+  &-section {
+    @include d.flex;
+  }
+
+  &-wrapper {
+    @include d.flex;
+
+    padding: v.$padding;
+    border-radius: v.$radius;
+    background-color: rgb(v.$bg3);
+  }
 }

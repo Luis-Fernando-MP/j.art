@@ -4,7 +4,7 @@
 .footer {
   justify-content: space-between;
   padding: 0 v.$padding;
-  background-color: rgb(v.$tn1, 0.4);
+  background-color: rgb(v.$tn1);
 
   @include d.flex($ali: center, $dir: row);
 
@@ -14,19 +14,19 @@
     &__icon {
       width: 25px;
       height: 25px;
-      border: 2.5px solid rgb(v.$fn1);
+      border: 2.5px solid rgb(v.$bg1);
       border-radius: 50%;
     }
 
     h3 {
       font-size: 1rem;
-      color: rgb(v.$fn1);
+      color: rgb(v.$bg1);
     }
   }
 
   &-positions {
     user-select: none;
     font-size: 0.8rem;
-    color: rgb(v.$fn1);
+    color: rgb(v.$bg1);
   }
 }

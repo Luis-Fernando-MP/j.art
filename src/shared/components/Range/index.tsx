@@ -4,12 +4,19 @@ import './style.scss'
 
 interface IRange extends Omit<DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, 'children'> {
   rangeValue: number
-  typeRange: 'vertical' | 'horizontal'
+  typeRange?: 'vertical' | 'horizontal'
   handleChange: (value: number) => void
   handleMouseUp?: (value: number) => void
 }
 
-const Range = ({ className = '', typeRange, rangeValue, handleChange, handleMouseUp, ...props }: IRange): JSX.Element => {
+const Range = ({
+  className = '',
+  typeRange = 'vertical',
+  rangeValue,
+  handleChange,
+  handleMouseUp,
+  ...props
+}: IRange): JSX.Element => {
   const handleInputChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
     const value = Number(target.value)
     handleChange(value)

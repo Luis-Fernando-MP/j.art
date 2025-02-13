@@ -3,6 +3,7 @@
 import type { JSX } from 'react'
 
 import CanvasLayers from '../CanvasLayers'
+import CanvasTools from '../CanvasTools'
 import ZoomBoardController from '../ZoomBoardController'
 import './style.scss'
 
@@ -16,6 +17,7 @@ const RightTools = ({ className = '' }: IRightTools): JSX.Element => {
       <ZoomBoardController />
       <section className='rightTools-container'>
         <CanvasLayers />
+        <CanvasTools />
       </section>
     </section>
   )

@@ -2,20 +2,8 @@
 @use '@sass/utils/defs' as d;
 
 .canvasLayers {
-  cursor: pointer;
-
-  @include d.flex;
-
   h5 {
     padding: 0 v.$padding;
-  }
-
-  &-wrapper {
-    @include d.flex;
-
-    padding: v.$padding;
-    border-radius: v.$radius;
-    background-color: rgb(v.$bg3);
   }
 
   &-actions {
