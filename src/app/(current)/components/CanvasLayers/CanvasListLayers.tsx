@@ -8,6 +8,7 @@ const CanvasListLayers = (): JSX.Element | null => {
   const { listOfLayers, idParentLayer } = LayerStore()
   const layers = listOfLayers[idParentLayer.id]
   if (!layers) return null
+
   return (
     <div className='canvasLayers-list'>
       {layers.map(layer => {

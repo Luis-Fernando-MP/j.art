@@ -7,6 +7,8 @@ export interface Layer {
   parentId: string
   title: string
   imageUrl: string | null
+  isWatching: boolean
+  opacity: number
 }
 
 export interface ParentLayer {
@@ -39,7 +41,9 @@ const state: StateCreator<ILayerStore> = (set, get) => ({
   },
   activeLayer: { id: DEFAULT_LAYER, parentId: DEFAULT_CANVAS },
   listOfLayers: {
-    [DEFAULT_CANVAS]: [{ id: DEFAULT_LAYER, title: 'capa 01', parentId: DEFAULT_CANVAS, imageUrl: null }]
+    [DEFAULT_CANVAS]: [
+      { id: DEFAULT_LAYER, title: 'capa 01', parentId: DEFAULT_CANVAS, imageUrl: null, isWatching: true, opacity: 100 }
+    ]
   },
   setListOfLayers: listOfLayers => set({ listOfLayers }),
   setIdParentLayer: idParentLayer => set({ idParentLayer }),
@@ -73,7 +77,9 @@ const state: StateCreator<ILayerStore> = (set, get) => ({
       title: `capa-${layerName}`,
       parentId: parentId,
       imageUrl: null,
-      isActive: false
+      isActive: false,
+      isWatching: true,
+      opacity: 100
     }
     const updatedLayers = [...currentList, newLayer]
     set({ listOfLayers: { ...listOfLayers, [parentId]: updatedLayers } })

@@ -38,18 +38,19 @@ export var EWorkerActions;
 (function (EWorkerActions) {
     EWorkerActions["GENERATE_FRAME"] = "generateFrameView";
     EWorkerActions["GENERATE_FULL_VIEW"] = "generateFullView";
+    EWorkerActions["CHANGE_OPACITY"] = "changeOpacity";
 })(EWorkerActions || (EWorkerActions = {}));
 self.onmessage = function (event) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, imageBitmap, action, imagesBitmap, error_1;
+    var _a, imageBitmap, action, imagesBitmap, alpha, error_1;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                _a = event.data, imageBitmap = _a.imageBitmap, action = _a.action, imagesBitmap = _a.imagesBitmap;
+                _a = event.data, imageBitmap = _a.imageBitmap, action = _a.action, imagesBitmap = _a.imagesBitmap, alpha = _a.alpha;
                 if (!action)
                     return [2 /*return*/, self.postMessage({ error: 'No action' })];
                 _b.label = 1;
             case 1:
-                _b.trys.push([1, 6, , 7]);
+                _b.trys.push([1, 8, , 9]);
                 if (!(action === EWorkerActions.GENERATE_FRAME && imageBitmap)) return [3 /*break*/, 3];
                 return [4 /*yield*/, generateImage(imageBitmap)];
             case 2:
@@ -61,18 +62,69 @@ self.onmessage = function (event) { return __awaiter(void 0, void 0, void 0, fun
             case 4:
                 _b.sent();
                 _b.label = 5;
-            case 5: return [3 /*break*/, 7];
+            case 5:
+                if (!(action === EWorkerActions.CHANGE_OPACITY && imageBitmap && alpha)) return [3 /*break*/, 7];
+                return [4 /*yield*/, changeAlpha(imageBitmap, alpha)];
             case 6:
+                _b.sent();
+                _b.label = 7;
+            case 7: return [3 /*break*/, 9];
+            case 8:
                 error_1 = _b.sent();
                 self.postMessage({ error: error_1.message });
-                return [3 /*break*/, 7];
-            case 7: return [2 /*return*/];
+                return [3 /*break*/, 9];
+            case 9: return [2 /*return*/];
         }
     });
 }); };
+function changeAlpha(imageBitmap, alpha) {
+    return __awaiter(this, void 0, void 0, function () {
+        var width, height, offscreen, ctx, imageData, data, i, updatedBitmap_1, blob, reader_1, error_2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    width = imageBitmap.width, height = imageBitmap.height;
+                    offscreen = new OffscreenCanvas(width, height);
+                    ctx = offscreen.getContext('2d');
+                    if (!ctx)
+                        return [2 /*return*/, self.postMessage({ error: 'Failed to get 2D context' })];
+                    ctx.imageSmoothingEnabled = false;
+                    ctx.drawImage(imageBitmap, 0, 0);
+                    imageData = ctx.getImageData(0, 0, width, height);
+                    data = imageData.data;
+                    for (i = 3; i < data.length; i += 4) {
+                        data[i] = data[i] * alpha;
+                    }
+                    ctx.putImageData(imageData, 0, 0);
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 4, , 5]);
+                    return [4 /*yield*/, createImageBitmap(offscreen)];
+                case 2:
+                    updatedBitmap_1 = _a.sent();
+                    return [4 /*yield*/, offscreen.convertToBlob({
+                            quality: 0.2
+                        })];
+                case 3:
+                    blob = _a.sent();
+                    reader_1 = new FileReader();
+                    reader_1.onloadend = function () {
+                        self.postMessage({ base64: reader_1.result, bitmap: updatedBitmap_1 });
+                    };
+                    reader_1.readAsDataURL(blob);
+                    return [3 /*break*/, 5];
+                case 4:
+                    error_2 = _a.sent();
+                    self.postMessage({ error: error_2.message });
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
+            }
+        });
+    });
+}
 function generateImage(imageBitmap) {
     return __awaiter(this, void 0, void 0, function () {
-        var offscreen, ctx, blob, reader_1, error_2;
+        var offscreen, ctx, blob, reader_2, error_3;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -90,13 +142,13 @@ function generateImage(imageBitmap) {
                         })];
                 case 2:
                     blob = _a.sent();
-                    reader_1 = new FileReader();
-                    reader_1.onloadend = function () { return self.postMessage({ base64: reader_1.result }); };
-                    reader_1.readAsDataURL(blob);
+                    reader_2 = new FileReader();
+                    reader_2.onloadend = function () { return self.postMessage({ base64: reader_2.result }); };
+                    reader_2.readAsDataURL(blob);
                     return [3 /*break*/, 4];
                 case 3:
-                    error_2 = _a.sent();
-                    self.postMessage({ error: error_2.message });
+                    error_3 = _a.sent();
+                    self.postMessage({ error: error_3.message });
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
             }
@@ -105,7 +157,7 @@ function generateImage(imageBitmap) {
 }
 function generateFullImage(imagesBitmap) {
     return __awaiter(this, void 0, void 0, function () {
-        var maxWidth, maxHeight, offscreen, ctx, blob, mergedBitmap_1, reader_2, error_3;
+        var maxWidth, maxHeight, offscreen, ctx, blob, mergedBitmap_1, reader_3, error_4;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -130,15 +182,15 @@ function generateFullImage(imagesBitmap) {
                     return [4 /*yield*/, createImageBitmap(offscreen)];
                 case 3:
                     mergedBitmap_1 = _a.sent();
-                    reader_2 = new FileReader();
-                    reader_2.onloadend = function () {
-                        self.postMessage({ base64: reader_2.result, mergedBitmap: mergedBitmap_1 });
+                    reader_3 = new FileReader();
+                    reader_3.onloadend = function () {
+                        self.postMessage({ base64: reader_3.result, mergedBitmap: mergedBitmap_1 });
                     };
-                    reader_2.readAsDataURL(blob);
+                    reader_3.readAsDataURL(blob);
                     return [3 /*break*/, 5];
                 case 4:
-                    error_3 = _a.sent();
-                    self.postMessage({ error: error_3.message });
+                    error_4 = _a.sent();
+                    self.postMessage({ error: error_4.message });
                     return [3 /*break*/, 5];
                 case 5: return [2 /*return*/];
             }

@@ -25,7 +25,7 @@ const BoardFrames = (): JSX.Element => {
       const newList = { ...listOfLayers }
       const title = `${id}-layer-0`
       const newId = newKey(`${id}-layer-0`)
-      newList[id] = [{ id: newId, parentId: id, imageUrl: null, title }]
+      newList[id] = [{ id: newId, parentId: id, imageUrl: null, title, isWatching: true, opacity: 100 }]
       if (Object.keys(newList).length > MAX_LAYERS) return toast.error('🔥 hay muchos canvas')
 
       setListOfLayers(newList)

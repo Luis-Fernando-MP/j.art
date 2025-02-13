@@ -1,0 +1,100 @@
+@use '@sass/config/vars' as v;
+@use '@sass/utils/defs' as d;
+
+.range {
+  &.vertical {
+    cursor: row-resize;
+
+    transform: rotateZ(180deg);
+
+    width: 100%;
+    max-width: 30px;
+    height: 100%;
+    border: none;
+
+    writing-mode: vertical-rl;
+
+    appearance: none;
+    background: none;
+
+    // Estilos para WebKit (Chrome, Edge, Safari)
+    &::-webkit-slider-runnable-track {
+      width: 5px;
+      border-radius: v.$radius;
+      background-color: rgb(v.$bg3);
+    }
+
+    &::-webkit-slider-thumb {
+      position: relative;
+      left: 5px;
+
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+
+      appearance: none;
+      background-color: rgb(v.$tn1);
+    }
+
+    // Estilos para Firefox
+    &::-moz-range-track {
+      width: 5px;
+      border-radius: v.$radius;
+      background-color: rgb(v.$bg3);
+    }
+
+    &::-moz-range-thumb {
+      width: 15px;
+      height: 15px;
+      border: none;
+      border-radius: 50%;
+
+      background-color: rgb(v.$tn1);
+    }
+  }
+
+  &.horizontal {
+    cursor: col-resize;
+
+    width: 100%;
+    height: 15px;
+    border: none;
+
+    appearance: none;
+    background: none;
+
+    &::-webkit-slider-runnable-track {
+      height: 5px;
+      border-radius: v.$radius;
+      background-color: rgb(v.$bg3);
+    }
+
+    &::-webkit-slider-thumb {
+      position: relative;
+      top: -5px;
+
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+
+      appearance: none;
+      background-color: rgb(v.$tn1);
+    }
+
+    // Estilos para Firefox
+    &::-moz-range-track {
+      height: 5px;
+      border-radius: v.$radius;
+      background-color: rgb(v.$bg3);
+    }
+
+    &::-moz-range-thumb {
+      width: 15px;
+      height: 15px;
+      border: none;
+      border-radius: 50%;
+
+      background-color: rgb(v.$tn1);
+    }
+  }
+}

@@ -1,10 +1,23 @@
 import { acl } from '@/shared/acl'
 import { Image } from '@unpic/react'
-import { BlendIcon, EyeIcon } from 'lucide-react'
-import { JSX, memo } from 'react'
+import { EyeIcon } from 'lucide-react'
+import dynamic from 'next/dynamic'
+import { JSX, memo, useEffect } from 'react'
 
 import LayerStore, { Layer } from '../../store/layer.store'
 import './style.scss'
+
+const CanvasSeeMode = dynamic(() => import('./CanvasSeeMode'), {
+  ssr: false,
+  loading: () => <EyeIcon />
+})
+
+const OpacityCanvasMode = dynamic(() => import('./OpacityCanvasMode'), {
+  ssr: false,
+  loading() {
+    return <p>loading</p>
+  }
+})
 
 interface ICanvasLayer {
   layer: Layer
@@ -12,29 +25,30 @@ interface ICanvasLayer {
 
 const CanvasLayer = ({ layer }: ICanvasLayer): JSX.Element => {
   const { setActiveLayer, activeLayer } = LayerStore()
-
-  const { imageUrl, title, id, parentId } = layer
-
+  const { imageUrl, title, id, parentId, isWatching, opacity } = layer
   const isActive = layer.id === activeLayer.id
-
   const handleClick = (): void => {
     if (isActive) return
     setActiveLayer({ id, parentId })
   }
 
+  useEffect(() => {
+    console.log('render')
+    return () => {
+      console.log('unmount')
+    }
+  }, [])
+
   return (
-    <section role='button' tabIndex={0} className={`canvasLayer ${acl(isActive)}`} onClick={handleClick}>
+    <section className={`canvasLayer ${acl(isActive)}`}>
       <div className='canvasLayer-viewer'>
-        <button className='canvasLayer-see'>
-          <EyeIcon />
-        </button>
-        <div className='canvasLayer-image'>{imageUrl && <Image src={imageUrl} alt='canvas-layer' layout='fullWidth' />}</div>
+        <CanvasSeeMode className='canvasLayer-see' layerId={id} isWatching={isWatching} parentId={parentId} />
+        <div className='canvasLayer-image' role='button' tabIndex={0} onClick={handleClick}>
+          {imageUrl && <Image src={imageUrl} alt='canvas-layer' layout='fullWidth' />}
+        </div>
         <input defaultValue={title} />
       </div>
-
-      <button className='canvasLayer-delete'>
-        <BlendIcon />
-      </button>
+      <OpacityCanvasMode opacity={opacity} layerId={id} parentId={parentId} />
     </section>
   )
 }

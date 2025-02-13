@@ -1,7 +1,7 @@
 'use client'
 
 import boardStore, { MAX_SCALE, MIN_SCALE } from '@/shared/components/Board/board.store'
-import VerticalRange from '@/shared/components/VerticalRange'
+import Range from '@/shared/components/Range'
 import { ZoomInIcon, ZoomOutIcon } from 'lucide-react'
 import type { JSX } from 'react'
 
@@ -23,7 +23,7 @@ const BoardZoomController = ({ className = '' }: IBoardZoomController): JSX.Elem
       <button className='boardZoomCtrl-action' onClick={() => handleChangeScale(0.1)}>
         <ZoomInIcon />
       </button>
-      <VerticalRange rangeValue={scale} handleChange={setScale} min={MIN_SCALE} max={MAX_SCALE} step={0.005} />
+      <Range typeRange='vertical' rangeValue={scale} handleChange={setScale} min={MIN_SCALE} max={MAX_SCALE} step={0.005} />
       <button className='boardZoomCtrl-action' onClick={() => handleChangeScale(-0.1)}>
         <ZoomOutIcon />
       </button>
