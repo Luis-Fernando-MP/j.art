@@ -32,13 +32,6 @@ const CanvasLayer = ({ layer }: ICanvasLayer): JSX.Element => {
     setActiveLayer({ id, parentId })
   }
 
-  useEffect(() => {
-    console.log('render')
-    return () => {
-      console.log('unmount')
-    }
-  }, [])
-
   return (
     <section className={`canvasLayer ${acl(isActive)}`}>
       <div className='canvasLayer-viewer'>

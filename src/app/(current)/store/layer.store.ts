@@ -29,20 +29,20 @@ interface ILayerStore {
   updateLayer: (_: { parentId: string; layer: Partial<Layer>; list?: Layer[] }) => void
 }
 
-const DEFAULT_CANVAS = 'default-canvas'
-const DEFAULT_LAYER = `${DEFAULT_CANVAS}-layer1`
+export const DEFAULT_PARENT_ID = 'default-canvas'
+export const DEFAULT_LAYER_ID = `${DEFAULT_PARENT_ID}-layer1`
 export const MAX_FRAMES = 20
 export const MAX_LAYERS = 15
 
 const state: StateCreator<ILayerStore> = (set, get) => ({
   idParentLayer: {
     index: 0,
-    id: DEFAULT_CANVAS
+    id: DEFAULT_PARENT_ID
   },
-  activeLayer: { id: DEFAULT_LAYER, parentId: DEFAULT_CANVAS },
+  activeLayer: { id: DEFAULT_LAYER_ID, parentId: DEFAULT_PARENT_ID },
   listOfLayers: {
-    [DEFAULT_CANVAS]: [
-      { id: DEFAULT_LAYER, title: 'capa 01', parentId: DEFAULT_CANVAS, imageUrl: null, isWatching: true, opacity: 100 }
+    [DEFAULT_PARENT_ID]: [
+      { id: DEFAULT_LAYER_ID, title: 'capa 01', parentId: DEFAULT_PARENT_ID, imageUrl: null, isWatching: true, opacity: 100 }
     ]
   },
   setListOfLayers: listOfLayers => set({ listOfLayers }),
