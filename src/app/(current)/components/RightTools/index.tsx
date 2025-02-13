@@ -2,6 +2,7 @@
 
 import type { JSX } from 'react'
 
+import CanvasFile from '../CanvasFile'
 import CanvasLayers from '../CanvasLayers'
 import CanvasTools from '../CanvasTools'
 import ZoomBoardController from '../ZoomBoardController'
@@ -14,10 +15,11 @@ interface IRightTools {
 const RightTools = ({ className = '' }: IRightTools): JSX.Element => {
   return (
     <section className={`${className} rightTools`}>
-      <ZoomBoardController />
+      <ZoomBoardController className='rightTools-zoomController' />
       <section className='rightTools-container'>
         <CanvasLayers />
         <CanvasTools />
+        <CanvasFile />
       </section>
     </section>
   )

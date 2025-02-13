@@ -1,0 +1,68 @@
+@use '@sass/config/vars' as v;
+@use '@sass/utils/defs' as d;
+
+.canvasFile {
+  content-visibility: auto;
+
+  &-new {
+    @include d.flex;
+
+    width: 100%;
+
+    &__wrapper {
+      @include d.flex($dir: row, $ali: center);
+
+      justify-content: center;
+    }
+
+    &__field {
+      @include d.flex($gap: 5px);
+
+      input {
+        padding: 2px v.$padding;
+        border-radius: v.$radius;
+        background-color: rgb(v.$bg1);
+
+        &[type='text'] {
+          width: 100px;
+        }
+      }
+    }
+
+    &__sizes {
+      @include d.flex($dir: row, $gap: 5px);
+
+      flex-wrap: wrap;
+      justify-content: center;
+
+      button {
+        transform: rotateZ(180deg);
+
+        padding: v.$padding 3px;
+        border: 1.5px dashed transparent;
+        border-radius: 5px;
+
+        writing-mode: vertical-rl;
+
+        background-color: rgb(v.$bg2);
+
+        &.active {
+          border-color: rgb(v.$tn1);
+        }
+      }
+    }
+
+    &__submit {
+      width: 100%;
+      padding: 5px 0;
+      border-radius: v.$radius;
+
+      font-size: v.$fH3;
+      font-weight: bold;
+      color: rgb(v.$bg1);
+      text-align: center;
+
+      background-color: rgb(v.$tn1);
+    }
+  }
+}

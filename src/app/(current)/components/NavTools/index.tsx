@@ -15,6 +15,7 @@ const NavTools = ({ className = '' }: INavTools): JSX.Element => {
   const [activeHash, setActiveHash] = useState<string>('#layers')
 
   const links = [
+    { href: '#zoomController', label: 'zoom' },
     { href: '#layers', label: 'Capas' },
     { href: '#filters', label: 'Filtros' },
     { href: '#tools', label: 'Herramientas' },

@@ -107,6 +107,20 @@ body {
     }
   }
 
+  input {
+    width: min-content;
+  }
+
+  input[type='number'] {
+    appearance: textfield;
+
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+      margin: 0;
+      appearance: none;
+    }
+  }
+
   small,
   span,
   input,

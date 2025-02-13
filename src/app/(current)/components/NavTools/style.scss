@@ -14,11 +14,14 @@
     border-radius: v.$radius;
 
     writing-mode: vertical-rl;
+    font-weight: 400;
 
     background-color: rgb(v.$bg2);
 
     &.active {
+      font-weight: 700;
       color: rgb(v.$bg1);
+      text-transform: uppercase;
       background-color: rgb(v.$tn1);
     }
   }

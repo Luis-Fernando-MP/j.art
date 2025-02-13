@@ -17,12 +17,16 @@ const RenderCanvasViewer = memo(() => {
   )
 })
 
-const ZoomBoardController = (): JSX.Element => {
+interface IZoomBoardController {
+  className: string
+}
+
+const ZoomBoardController = ({ className }: IZoomBoardController): JSX.Element => {
   const [isPopup, setIsPopup] = useState(false)
   const { setEnableScroll, enableScroll } = boardStore()
 
   return (
-    <section className='zoomController'>
+    <section className={`zoomController ${className}`} id='zoomController'>
       <div className='zoomController-options'>
         <button onClick={() => setIsPopup(!isPopup)}>
           Popup
