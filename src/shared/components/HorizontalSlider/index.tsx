@@ -96,7 +96,7 @@ function HorizontalSlider({ children, className, parentClass = '', ...props }: R
 
   useEffect(() => {
     setMoveToChild(moveToChild)
-  }, [setMoveToChild, moveToChild, $parentRef.current])
+  }, [setMoveToChild, moveToChild])
 
   return (
     <section

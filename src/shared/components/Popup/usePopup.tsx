@@ -43,7 +43,7 @@ const usePopup = ({ isOpen }: IUsePopupHook) => {
       const newX = bodyRect.width / 2 - rect.width / 2
       setPosition({ x: newX, y: bodyRect.height / 2 })
     }
-  }, [setPosition, $popupRef.current, isOpen])
+  }, [setPosition, isOpen])
 
   useEffect(() => {
     document.addEventListener('mousemove', handleMouseMove)

@@ -18,14 +18,10 @@ export interface ParentLayer {
 
 interface ILayerStore {
   listOfLayers: { [key: string]: Layer[] }
-  idParentLayer: ParentLayer
-  activeLayer: { id: string; parentId: string }
-
   setListOfLayers: (listOfLayers: ILayerStore['listOfLayers']) => void
-  setIdParentLayer: (idParentLayer: ParentLayer) => void
-  setActiveLayer: (activeLayer: ILayerStore['activeLayer']) => void
-  deleteLayer: (p: { id: string; parentId: string }) => void
-  addLayer: (_: { parentId: string }) => void
+  deleteLayer: (p: { id: string; parentId: string; actLayerId: string }) => void
+  addNewLayer: (_: { parentId: string }) => void
+  addNewFrame: (index?: number) => { index: number; frameKey: string; layerId: string } | null
   updateLayer: (_: { parentId: string; layer: Partial<Layer>; list?: Layer[] }) => void
 }
 
@@ -42,28 +38,26 @@ const state: StateCreator<ILayerStore> = (set, get) => ({
   activeLayer: { id: DEFAULT_LAYER_ID, parentId: DEFAULT_PARENT_ID },
   listOfLayers: {
     [DEFAULT_PARENT_ID]: [
-      { id: DEFAULT_LAYER_ID, title: 'capa 01', parentId: DEFAULT_PARENT_ID, imageUrl: null, isWatching: true, opacity: 100 }
+      { id: DEFAULT_LAYER_ID, title: 'Capa 01', parentId: DEFAULT_PARENT_ID, imageUrl: null, isWatching: true, opacity: 100 }
     ]
   },
   setListOfLayers: listOfLayers => set({ listOfLayers }),
-  setIdParentLayer: idParentLayer => set({ idParentLayer }),
-  setActiveLayer: activeLayer => set({ activeLayer }),
-  deleteLayer({ id, parentId }) {
+  deleteLayer({ id, parentId, actLayerId }) {
     const listOfLayers = get().listOfLayers
     const currentList = structuredClone(listOfLayers[parentId])
     if (!currentList) return
     if (currentList?.length <= 1) return toast.error('❗️Una cpa como mínimo', { id: 'min-layers' })
-    const selectLayer = get().activeLayer
     const updatedList = currentList.filter(f => f.id !== id)
-    const existLayer = updatedList.some(l => l.id === selectLayer.id)
-    let newSelected = selectLayer
-    if (!existLayer) newSelected = updatedList[0] ?? null
+    const existLayer = updatedList.some(l => l.id === actLayerId)
+    console.log(existLayer)
+    // let newSelected = actLayerId
+    // if (!existLayer) newSelected = updatedList[0] ?? null
     set({
-      listOfLayers: { ...listOfLayers, [parentId]: updatedList },
-      activeLayer: newSelected
+      listOfLayers: { ...listOfLayers, [parentId]: updatedList }
+      // activeLayer: newSelected
     })
   },
-  addLayer({ parentId }) {
+  addNewLayer({ parentId }) {
     const listOfLayers = get().listOfLayers
     const currentList = structuredClone(listOfLayers[parentId])
     if (!currentList) return
@@ -83,6 +77,30 @@ const state: StateCreator<ILayerStore> = (set, get) => ({
     }
     const updatedLayers = [...currentList, newLayer]
     set({ listOfLayers: { ...listOfLayers, [parentId]: updatedLayers } })
+  },
+  addNewFrame(selectIndex) {
+    const listOfLayers = get().listOfLayers
+    const frameKey = newKey()
+    const layerId = newKey()
+    const newList = structuredClone(listOfLayers)
+    const index = selectIndex ?? Object.keys(listOfLayers).length
+    newList[frameKey] = [
+      {
+        id: layerId,
+        parentId: frameKey,
+        imageUrl: null,
+        title: `Capa 01`,
+        isWatching: true,
+        opacity: 100
+      }
+    ]
+    if (Object.keys(newList).length > MAX_LAYERS) {
+      toast.error('🔥 hay muchos canvas')
+      return null
+    }
+
+    set({ listOfLayers: newList })
+    return { index, frameKey, layerId }
   },
   updateLayer({ parentId, layer, list }) {
     const listOfLayers = get().listOfLayers

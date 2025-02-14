@@ -1,14 +1,17 @@
 import { EWorkerActions, WorkerMessage } from '@workers/layer-view'
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 
+import ActiveDrawsStore from '../store/ActiveDraws.store'
 import LayerStore from '../store/layer.store'
 
 type UpdateSelectedLayer = { index: number; layerId: string }
 
 const useMergeTool = () => {
-  const { listOfLayers, idParentLayer, updateLayer } = LayerStore()
-  const currentLayers = listOfLayers[idParentLayer.id]
+  const { listOfLayers, updateLayer } = LayerStore()
+  const { actParentId } = ActiveDrawsStore()
+
+  const currentLayers = useMemo(() => listOfLayers[actParentId], [listOfLayers, actParentId])
   const [selectedLayers, setSelectedLayers] = useState<string[]>([])
 
   const mergeWorker = useRef<Worker | null>(null)
@@ -57,7 +60,7 @@ const useMergeTool = () => {
         canvasCtx.clearRect(0, 0, $firstCanvas.width, $firstCanvas.height)
         canvasCtx.drawImage(mergedBitmap, 0, 0, $firstCanvas.width, $firstCanvas.height)
         updateLayer({
-          parentId: idParentLayer.id,
+          parentId: actParentId,
           layer: { id: firstLayer, imageUrl: base64 },
           list: updatedLayers
         })

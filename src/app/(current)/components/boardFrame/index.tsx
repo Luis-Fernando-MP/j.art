@@ -3,70 +3,69 @@
 import { acl } from '@/shared/acl'
 import boardStore from '@/shared/components/Board/board.store'
 import StoreHorizontalSlider from '@/shared/components/HorizontalSlider/store'
-import { newKey } from '@/shared/key'
 import { Image } from '@unpic/react'
-import { Layers2Icon, XIcon } from 'lucide-react'
+import { XIcon } from 'lucide-react'
 import { type JSX, MouseEvent, memo } from 'react'
 import toast from 'react-hot-toast'
 
-import LayerStore, { MAX_LAYERS } from '../../store/layer.store'
+import ActiveDrawsStore from '../../store/ActiveDraws.store'
+import LayerStore from '../../store/layer.store'
+import RepaintDrawingStore from '../../store/repaintDrawing.store'
+import CloneFrame from './CloneFrame'
 import './style.scss'
 
 interface IBoardFrame {
   isActive: boolean
   index: number
   parentKey: string
+  firstLayer: string
 }
 
-const BoardFrame = ({ isActive, index, parentKey }: IBoardFrame): JSX.Element => {
+export interface ISelectAndMoveFrame {
+  parentIndex: number
+  frameId: string
+  layerId: string
+}
+
+const BoardFrame = ({ isActive, index, parentKey, firstLayer }: IBoardFrame): JSX.Element => {
   const { moveToChild } = boardStore()
-  const { setIdParentLayer, listOfLayers, setListOfLayers } = LayerStore()
+  const { listOfLayers, setListOfLayers } = LayerStore()
+  const { setActLayerId, setActParentIndex, setActParentId } = ActiveDrawsStore()
+  const { setRepaint } = RepaintDrawingStore()
   const { moveToChild: horizontalMvChild } = StoreHorizontalSlider()
 
-  const handleClick = (e: MouseEvent): void => {
+  const handleSelectFrame = (e: MouseEvent): void => {
     if (e.ctrlKey) return
-    moveToChild(index)
-    horizontalMvChild(index)
-    if (isActive) return
-    setIdParentLayer({ id: parentKey, index })
+    selectAndMoveFrame({ parentIndex: index, frameId: parentKey, layerId: firstLayer })
+    setRepaint('frames')
+  }
+
+  const selectAndMoveFrame = ({ frameId, layerId, parentIndex }: ISelectAndMoveFrame) => {
+    moveToChild(parentIndex)
+    horizontalMvChild(parentIndex)
+    setActParentId(frameId)
+    setActParentIndex(parentIndex)
+    setActLayerId(layerId)
   }
 
   const handleRemoveLayer = (e: MouseEvent): void => {
     if (e.ctrlKey) return
     const cloneLayers = structuredClone(listOfLayers)
-    toast.success('👋 OK')
+    toast.success('❌ Bye!! Bye!!')
     delete cloneLayers[parentKey]
     setListOfLayers(cloneLayers)
   }
 
-  const handleCloneLayer = (e: MouseEvent) => {
-    if (e.ctrlKey) return
-    const cloneLayers = structuredClone(listOfLayers)
-    const currentLayer = cloneLayers[parentKey]
-    if (!currentLayer) return toast.error('❗️ Este canvas no existe')
-    const entries = Object.entries(cloneLayers)
-    const layerIndex = entries.findIndex(([key]) => key === parentKey)
-    if (layerIndex === -1) return toast.error('❗️ Este canvas no existe')
-    if (entries.length >= MAX_LAYERS) return toast.error('🔥 hay muchos canvas')
-    const key = newKey()
-    const newEntries = [...entries.slice(0, layerIndex + 1), [key, currentLayer], ...entries.slice(layerIndex + 1)]
-    setListOfLayers(Object.fromEntries(newEntries))
-    toast.success('👁️ Clonado')
-  }
-
   return (
     <div className={`boardFrame ${acl(isActive)}`}>
-      <button className='boardFrame-button' onClick={handleClick}>
+      <button className='boardFrame-button' onClick={handleSelectFrame}>
         <Image src='/images/blank-image.webp' alt='canvas-frame' layout='fullWidth' id={`${parentKey}-frame-view`} />
-        {/* <canvas id={`${parentKey}-frame`} width={dimensions.width} height={dimensions.height} /> */}
       </button>
       <div className='boardFrame-controls'>
         <button className='boardFrame-control' onClick={handleRemoveLayer}>
           <XIcon />
         </button>
-        <button className='boardFrame-control' onClick={handleCloneLayer}>
-          <Layers2Icon />
-        </button>
+        <CloneFrame parentKey={parentKey} onClone={selectAndMoveFrame} />
       </div>
     </div>
   )

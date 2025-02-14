@@ -3,17 +3,21 @@ import { StateCreator, create } from 'zustand'
 import { DEFAULT_LAYER_ID, DEFAULT_PARENT_ID } from './layer.store'
 
 interface IActiveDrawsStore {
-  activeParentId: string
-  activeLayerId: string
-  setActiveParentId: (activeParentId: string) => void
-  setActiveLayerId: (activeLayerId: string) => void
+  actParentId: string
+  actLayerId: string
+  actParentIndex: number
+  setActParentId: (actParentId: string) => void
+  setActLayerId: (actLayerId: string) => void
+  setActParentIndex: (actParentIndex: number) => void
 }
 
 const state: StateCreator<IActiveDrawsStore> = set => ({
-  activeLayerId: DEFAULT_LAYER_ID,
-  activeParentId: DEFAULT_PARENT_ID,
-  setActiveLayerId: activeLayerId => set({ activeLayerId }),
-  setActiveParentId: activeParentId => set({ activeParentId })
+  actLayerId: DEFAULT_LAYER_ID,
+  actParentId: DEFAULT_PARENT_ID,
+  actParentIndex: 0,
+  setActParentId: actParentId => set({ actParentId }),
+  setActLayerId: actLayerId => set({ actLayerId }),
+  setActParentIndex: actParentIndex => set({ actParentIndex })
 })
 
 const ActiveDrawsStore = create(state)

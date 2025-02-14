@@ -3,47 +3,44 @@
 import boardStore from '@/shared/components/Board/board.store'
 import HorizontalSlider from '@/shared/components/HorizontalSlider'
 import StoreHorizontalSlider from '@/shared/components/HorizontalSlider/store'
-import { newKey } from '@/shared/key'
 import { PlusIcon } from 'lucide-react'
 import { type JSX, MouseEvent, useCallback } from 'react'
 import toast from 'react-hot-toast'
 
-import LayerStore, { MAX_LAYERS } from '../../store/layer.store'
-import BoardFrame from '../boardFrame'
+import ActiveDrawsStore from '../../store/ActiveDraws.store'
+import LayerStore from '../../store/layer.store'
+import ListBoardFrames from './ListBoardFrames'
 import './style.scss'
 
 const BoardFrames = (): JSX.Element => {
   const { moveToChild } = boardStore()
   const { moveToChild: horizontalMvChild } = StoreHorizontalSlider()
-  const { listOfLayers, idParentLayer, setListOfLayers, setIdParentLayer } = LayerStore()
+  const { setListOfLayers, addNewFrame } = LayerStore()
+
+  const { setActParentId, setActParentIndex, setActLayerId } = ActiveDrawsStore()
 
   const handleAddNewParentLayer = useCallback(
     (e: MouseEvent) => {
       if (e.ctrlKey) return
-      const id = newKey()
-      const index = Object.keys(listOfLayers).length
-      const newList = { ...listOfLayers }
-      const title = `${id}-layer-0`
-      const newId = newKey(`${id}-layer-0`)
-      newList[id] = [{ id: newId, parentId: id, imageUrl: null, title, isWatching: true, opacity: 100 }]
-      if (Object.keys(newList).length > MAX_LAYERS) return toast.error('🔥 hay muchos canvas')
+      const frame = addNewFrame()
+      if (!frame) return
+      const { frameKey, index, layerId } = frame
 
-      setListOfLayers(newList)
-      setIdParentLayer({ id, index })
+      setActParentId(frameKey)
+      setActParentIndex(index)
+      setActLayerId(layerId)
+
       moveToChild(index)
       horizontalMvChild(index)
       toast.success('🎨 Estamos listos!!')
     },
-    [listOfLayers, setListOfLayers, newKey]
+    [setListOfLayers, horizontalMvChild, moveToChild, setActParentId, setActParentIndex, setActLayerId]
   )
 
   return (
     <HorizontalSlider parentClass='boardFrames' className='boardFrames-list'>
-      {Object.entries(listOfLayers).map((element, i) => {
-        const [parentKey] = element
-        const isActive = idParentLayer.id === parentKey
-        return <BoardFrame key={parentKey} parentKey={parentKey} index={i} isActive={isActive} />
-      })}
+      <ListBoardFrames />
+
       <button className='boardFrames-action' onClick={handleAddNewParentLayer}>
         <PlusIcon />
       </button>

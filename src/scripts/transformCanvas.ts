@@ -9,7 +9,6 @@ export const getContext = (id: string = 'canvas') => {
   const canvas = document.getElementById(id) as HTMLCanvasElement
   const ctx = canvas?.getContext('2d')
   if (!(canvas instanceof HTMLCanvasElement) || !ctx) {
-    location.reload()
     toast.error('canvas element is undefined')
     throw new Error('canvas element is undefined')
   }

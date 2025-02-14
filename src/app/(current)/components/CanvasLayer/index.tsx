@@ -2,9 +2,10 @@ import { acl } from '@/shared/acl'
 import { Image } from '@unpic/react'
 import { EyeIcon } from 'lucide-react'
 import dynamic from 'next/dynamic'
-import { JSX, memo, useEffect } from 'react'
+import { JSX, memo } from 'react'
 
-import LayerStore, { Layer } from '../../store/layer.store'
+import ActiveDrawsStore from '../../store/ActiveDraws.store'
+import { Layer } from '../../store/layer.store'
 import './style.scss'
 
 const CanvasSeeMode = dynamic(() => import('./CanvasSeeMode'), {
@@ -24,12 +25,13 @@ interface ICanvasLayer {
 }
 
 const CanvasLayer = ({ layer }: ICanvasLayer): JSX.Element => {
-  const { setActiveLayer, activeLayer } = LayerStore()
+  const { actLayerId, setActLayerId, setActParentId } = ActiveDrawsStore()
   const { imageUrl, title, id, parentId, isWatching, opacity } = layer
-  const isActive = layer.id === activeLayer.id
+  const isActive = layer.id === actLayerId
   const handleClick = (): void => {
     if (isActive) return
-    setActiveLayer({ id, parentId })
+    setActLayerId(id)
+    setActParentId(parentId)
   }
 
   return (

@@ -31,7 +31,7 @@ const Dropdown = <T extends WithId>({
   useEffect(() => {
     if (!list.length) return setSelectedItem(null)
     if (!list.some(item => item.id === selectedItem?.id)) setSelectedItem(list[0])
-  }, [list])
+  }, [list, selectedItem?.id])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -40,7 +40,7 @@ const Dropdown = <T extends WithId>({
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+  }, [selectedItem?.id])
 
   const handleSelectItem = useCallback(
     (item: T): void => {

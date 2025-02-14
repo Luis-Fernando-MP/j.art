@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import toast from 'react-hot-toast'
 
 import OfflineStore from './offline.store'
@@ -18,19 +18,19 @@ const Offline = () => {
       window.removeEventListener('online', updateNetworkStatus)
       window.removeEventListener('offline', updateNetworkStatus)
     }
-  }, [])
+  }, [setIsOffline])
 
-  const showToast = () => {
+  const showToast = useCallback(() => {
     const toastId = 'offline'
     if (isOffline) {
       return toast.loading('😟 Te haz quedado sin internet', { id: toastId })
     }
     toast.success('🙂 Estamos de regreso', { id: toastId })
-  }
+  }, [isOffline])
 
   useEffect(() => {
     showToast()
-  }, [isOffline])
+  }, [isOffline, showToast])
 
   return null
 }

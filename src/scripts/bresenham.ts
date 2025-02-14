@@ -88,10 +88,10 @@ export function drawTriangleBresenham({
   const directionY = endY > startY ? 1 : -1
   const directionX = endX > startX ? 1 : -1
 
-  let baseX1 = startX
-  let baseY1 = startY
+  const baseX1 = startX
+  const baseY1 = startY
   let baseX2 = endX
-  let baseY2 = startY
+  const baseY2 = startY
   let apexX = startX + (width / 2) * directionX
   let apexY = startY + height * directionY
 

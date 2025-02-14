@@ -24,7 +24,7 @@ const Range = ({
 
   const handleInputUp = (event: MouseEvent<HTMLInputElement>) => {
     const value = Number(event.currentTarget.value)
-    handleMouseUp && handleMouseUp(value)
+    if (handleMouseUp) handleMouseUp(value)
   }
 
   return (

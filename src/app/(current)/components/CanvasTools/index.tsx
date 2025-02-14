@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic'
 import { type JSX } from 'react'
 
-import LayerStore from '../../store/layer.store'
+import ActiveDrawsStore from '../../store/ActiveDraws.store'
 import './style.scss'
 
 const CanvasToolsComponent = dynamic(() => import('./CanvasToolsComponent'), {
@@ -9,13 +9,13 @@ const CanvasToolsComponent = dynamic(() => import('./CanvasToolsComponent'), {
 })
 
 const CanvasTools = (): JSX.Element => {
-  const { activeLayer } = LayerStore()
+  const { actLayerId } = ActiveDrawsStore()
 
   return (
     <article className='rightTools-section' id='tools'>
       <h5>Herramientas</h5>
       <aside className='rightTools-wrapper canvasTools'>
-        <CanvasToolsComponent currentLayerID={activeLayer.id} />
+        <CanvasToolsComponent currentLayerID={actLayerId} />
       </aside>
     </article>
   )

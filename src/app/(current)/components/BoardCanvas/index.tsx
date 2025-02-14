@@ -1,13 +1,13 @@
 import Board from '@/shared/components/Board'
 import boardStore from '@/shared/components/Board/board.store'
 import StoreHorizontalSlider from '@/shared/components/HorizontalSlider/store'
-import { newKey } from '@/shared/key'
 import { PlusIcon } from 'lucide-react'
 import { type JSX, MouseEvent, memo, useCallback } from 'react'
 import toast from 'react-hot-toast'
 
+import ActiveDrawsStore from '../../store/ActiveDraws.store'
 import CanvasStore from '../../store/canvas.store'
-import LayerStore, { MAX_LAYERS } from '../../store/layer.store'
+import LayerStore from '../../store/layer.store'
 import CanvasList from './CanvasList'
 import './style.scss'
 
@@ -15,35 +15,25 @@ const Canvas = (): JSX.Element => {
   const { moveToChild } = boardStore()
   const { moveToChild: horizontalMvChild } = StoreHorizontalSlider()
   const { dimensions } = CanvasStore()
-  const { listOfLayers, setListOfLayers, setIdParentLayer } = LayerStore()
+  const { setListOfLayers, addNewFrame } = LayerStore()
+  const { setActParentId, setActParentIndex, setActLayerId } = ActiveDrawsStore()
 
-  const handleAddNewParentLayer = useCallback(
+  const handleAddNewParentFrame = useCallback(
     (e: MouseEvent) => {
       if (e.ctrlKey) return
-      const id = newKey()
-      const newList = structuredClone(listOfLayers)
-      const index = Object.keys(listOfLayers).length
-      newList[id] = [
-        {
-          id: newKey(),
-          parentId: id,
-          imageUrl: null,
-          title: `Capa ${index.toString().padStart(2, '0')}`,
-          isWatching: true,
-          opacity: 100
-        }
-      ]
-      if (Object.keys(newList).length > MAX_LAYERS) return toast.error('🔥 hay muchos canvas')
-      setListOfLayers(newList)
-      setIdParentLayer({
-        id,
-        index
-      })
+      const frame = addNewFrame()
+      if (!frame) return
+      const { frameKey, index, layerId } = frame
+
+      setActParentId(frameKey)
+      setActParentIndex(index)
+      setActLayerId(layerId)
+
       moveToChild(index)
       horizontalMvChild(index)
       toast.success('🎨 Estamos listos!!')
     },
-    [listOfLayers, setListOfLayers, newKey]
+    [setListOfLayers, horizontalMvChild, moveToChild, setActParentId, setActParentIndex, setActLayerId]
   )
 
   return (
@@ -51,7 +41,7 @@ const Canvas = (): JSX.Element => {
       <CanvasList />
       <button
         className='canvasBoard-addFrame'
-        onClick={handleAddNewParentLayer}
+        onClick={handleAddNewParentFrame}
         style={{
           width: dimensions.width,
           height: dimensions.height
@@ -64,7 +54,6 @@ const Canvas = (): JSX.Element => {
 }
 
 const MemoCanvas = memo(Canvas)
-
 const BoardCanvas = (): JSX.Element => {
   return (
     <Board className='canvasBoard' isCenter={false}>

@@ -17,6 +17,8 @@ const RenderCanvasViewer = memo(() => {
   )
 })
 
+RenderCanvasViewer.displayName = 'RenderCanvasViewer'
+
 interface IZoomBoardController {
   className: string
 }

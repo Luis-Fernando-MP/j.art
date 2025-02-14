@@ -24,18 +24,18 @@ const Dropdown = <T extends WithId>({ list, children, onChange, revalidateChange
     if (list.length < 1) return
     const updatedItem = list.find(l => l.id === selectedItem?.id)
     if (!updatedItem) {
-      revalidateChange && revalidateChange(list[0])
+      if (revalidateChange) revalidateChange(list[0])
       return setSelectedItem(list[0])
     }
     if (updatedItem !== selectedItem) setSelectedItem(updatedItem)
-  }, [list])
+  }, [list, revalidateChange, selectedItem])
 
   if (list.length < 1 || !selectedItem) return null
 
   const handleSelectItem = (item: T & WithId): void => {
     setIsDropdownOpen(false)
     setSelectedItem(item)
-    onChange && onChange(item)
+    if (onChange) onChange(item)
   }
 
   return (
@@ -45,7 +45,7 @@ const Dropdown = <T extends WithId>({ list, children, onChange, revalidateChange
         item={selectedItem}
         onClick={() => {
           setIsDropdownOpen(!isDropdownOpen)
-          onChange && onChange(selectedItem)
+          if (onChange) onChange(selectedItem)
         }}
         className={acl(isDropdownOpen, 'showBorder')}
       >

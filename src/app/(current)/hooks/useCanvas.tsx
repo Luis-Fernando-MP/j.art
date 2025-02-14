@@ -1,6 +1,6 @@
 'use client'
 
-import boardStore from '@/shared/components/Board/board.store'
+import { getBitmapFromCanvasList } from '@/shared/bitmap'
 import { IShapeBresenham, alignCord } from '@scripts/bresenham'
 import {
   HandleDeletePixel,
@@ -13,8 +13,8 @@ import { getContext } from '@scripts/transformCanvas'
 import { EWorkerActions, WorkerMessage } from '@workers/layer-view'
 import { MouseEvent, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
+import ActiveDrawsStore from '../store/ActiveDraws.store'
 import { TPositions } from '../store/canvas.store'
-import LayerStore from '../store/layer.store'
 import PixelStore from '../store/pixel.store'
 import RepaintDrawingStore from '../store/repaintDrawing.store'
 import ToolsStore from '../store/tools.store'
@@ -23,7 +23,7 @@ import { ShapeTools, handleBresenhamTools, shapeTools } from '../store/tools.typ
 type TUseCanvas = { canvasId: string }
 
 const useCanvas = ({ canvasId }: TUseCanvas) => {
-  const { scale } = boardStore()
+  // const { scale } = boardStore()
   const $canvasRef = useRef<HTMLCanvasElement>(null)
   const $perfectShape = useRef(false)
 
@@ -33,7 +33,10 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
 
   const { pixelColor, pixelOpacity, pixelSize, setPixelColor } = PixelStore()
   const { selectedTool, xMirror, yMirror } = ToolsStore()
-  const { activeLayer, listOfLayers, setListOfLayers, idParentLayer } = LayerStore()
+  // const { activeLayer, listOfLayers, setListOfLayers, idParentLayer } = LayerStore()
+  // const { listOfLayers } = LayerStore()
+
+  const { actParentId, actLayerId } = ActiveDrawsStore()
 
   const { repaint, setRepaint } = RepaintDrawingStore()
 
@@ -69,7 +72,7 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
         console.log(color)
       }
     }),
-    [pixelColor, pixelSize, pixelOpacity, xMirror, yMirror, scale]
+    [pixelColor, pixelSize, pixelOpacity, xMirror, yMirror, setPixelColor]
   )
 
   const handleCanvasMouseDown = (e: MouseEvent) => {
@@ -93,38 +96,35 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
 
   const drawImageInLayerView = useCallback(
     (image: string | null) => {
-      console.log('in id', activeLayer.id.slice(0, 5), 'image', image)
+      console.log('in id', actLayerId.slice(0, 5), 'image', image)
       // const updatedLayers = { ...listOfLayers }
       // const parentLayers = updatedLayers[activeLayer.parentId]
       // if (!parentLayers) return
       // updatedLayers[activeLayer.parentId] = parentLayers.map(layer =>
-      //   layer.id === activeLayer.id ? { ...layer, imageUrl: image } : layer
+      //   layer.id === actLayerId ? { ...layer, imageUrl: image } : layer
       // )
       // setListOfLayers(updatedLayers)
     },
-    [activeLayer, listOfLayers]
+    [actLayerId]
   )
 
   const drawImageInFrameView = useCallback(
     (image: string | null) => {
-      const frameID = `${idParentLayer.id}-frame-view`
+      const frameID = `${actParentId}-frame-view`
       const $imageFrame = document.getElementById(frameID)
       const $viewerFrame = document.getElementById('viewer-frame')
       if (!image) return
       if ($imageFrame instanceof HTMLImageElement) $imageFrame.src = image
       if ($viewerFrame instanceof HTMLImageElement) $viewerFrame.src = image
     },
-    [idParentLayer]
+    [actParentId]
   )
 
-  const bitmapFrameView = async () => {
+  const bitmapFrameView = useCallback(async () => {
     if (!secondWorkerRef.current) return
-    const parentElement = document.getElementById(idParentLayer.id)
-    if (!(parentElement instanceof HTMLElement)) return
-    const listOfCanvas = parentElement.querySelectorAll('canvas')
-
     try {
-      const imagesBitmap = await Promise.all(Array.from(listOfCanvas).map(canvas => createImageBitmap(canvas)))
+      const imagesBitmap = await getBitmapFromCanvasList(actParentId)
+      if (!imagesBitmap) throw new Error('fail to load canvas bitmap')
       const message: WorkerMessage = { imagesBitmap, action: EWorkerActions.GENERATE_FULL_VIEW }
       secondWorkerRef.current.postMessage(message, imagesBitmap)
       secondWorkerRef.current.onmessage = event => {
@@ -136,9 +136,9 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
     } catch (error) {
       console.error('Failed to create ImageBitmap:', error)
     }
-  }
+  }, [actParentId, drawImageInFrameView])
 
-  const bitmapLayerView = async () => {
+  const bitmapLayerView = useCallback(async () => {
     if (!firstWorkerRef.current) return
     const { canvas } = getContext(canvasId)
     try {
@@ -154,7 +154,7 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
     } catch (error) {
       console.error('Failed to create ImageBitmap:', error)
     }
-  }
+  }, [canvasId, drawImageInLayerView])
 
   const handleCanvasMouseUp = async () => {
     setIsDrawing(false)
@@ -171,9 +171,9 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
     const endX = alignCord(x, pixelSize)
     const endY = alignCord(y, pixelSize)
 
-    const { width, height } = ctx.canvas
-    const mirroredX = width - x - pixelSize
-    const mirroredY = height - y - pixelSize
+    // const { width, height } = ctx.canvas
+    // const mirroredX = width - x - pixelSize
+    // const mirroredY = height - y - pixelSize
 
     if (selectedTool in handleUtilTools) {
       const handleTool = handleUtilTools[selectedTool as keyof typeof handleUtilTools]
@@ -216,14 +216,17 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
 
   useLayoutEffect(() => {
     if (!repaint || !$canvasRef.current) return
+
     const handleRepaint = async () => {
-      await bitmapFrameView()
-      await bitmapLayerView()
+      if (repaint === 'frames') await bitmapFrameView()
+      if (repaint === 'layers') await bitmapLayerView()
+      if (repaint === 'all') await Promise.all([bitmapFrameView(), bitmapLayerView()])
+
+      setRepaint(null)
     }
-    setRepaint(false)
+
     handleRepaint()
-    return () => {}
-  }, [repaint])
+  }, [repaint, bitmapFrameView, bitmapLayerView, setRepaint])
 
   return {
     $canvasRef,

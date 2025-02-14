@@ -1,7 +1,7 @@
 import Range from '@/shared/components/Range'
 import { EWorkerActions, WorkerMessage } from '@workers/layer-view'
 import { BlendIcon } from 'lucide-react'
-import { type JSX, type ReactNode, memo, useEffect, useRef, useState } from 'react'
+import { type JSX, memo, useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 
 interface IOpacityCanvasMode {
@@ -10,7 +10,7 @@ interface IOpacityCanvasMode {
   parentId: string
 }
 
-const OpacityCanvasMode = ({ opacity, layerId, parentId }: IOpacityCanvasMode): JSX.Element => {
+const OpacityCanvasMode = ({ opacity, layerId }: IOpacityCanvasMode): JSX.Element => {
   const [active, setActive] = useState(false)
   const [rangeOpacity, setRangeOpacity] = useState(opacity)
   const layerWorker = useRef<Worker | null>(null)
