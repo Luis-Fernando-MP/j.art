@@ -10,6 +10,534 @@ interface Theme {
 }
 
 export const THEMES: Record<string, Theme> = {
+  'Rose Blush': {
+    'bg-primary': '255, 228, 225',
+    'bg-secondary': '255, 200, 200',
+    'bg-tertiary': '255, 170, 170',
+    'fnt-primary': '50, 30, 30',
+    'fnt-secondary': '80, 50, 50',
+    'fnt-tertiary': '110, 70, 70',
+    'tn-primary': '255, 180, 180',
+    'tn-secondary': '220, 150, 150'
+  },
+  'Lavender Love': {
+    'bg-primary': '230, 230, 250',
+    'bg-secondary': '210, 210, 230',
+    'bg-tertiary': '190, 190, 210',
+    'fnt-primary': '50, 30, 70',
+    'fnt-secondary': '80, 60, 100',
+    'fnt-tertiary': '110, 90, 130',
+    'tn-primary': '200, 180, 255',
+    'tn-secondary': '180, 160, 220'
+  },
+  'Passionate Red': {
+    'bg-primary': '255, 105, 180',
+    'bg-secondary': '255, 85, 160',
+    'bg-tertiary': '255, 65, 140',
+    'fnt-primary': '50, 30, 50',
+    'fnt-secondary': '80, 50, 80',
+    'fnt-tertiary': '110, 70, 110',
+    'tn-primary': '255, 50, 100',
+    'tn-secondary': '220, 40, 80'
+  },
+  'Soft Pink': {
+    'bg-primary': '255, 200, 200',
+    'bg-secondary': '255, 180, 180',
+    'bg-tertiary': '255, 160, 160',
+    'fnt-primary': '50, 30, 30',
+    'fnt-secondary': '80, 50, 50',
+    'fnt-tertiary': '110, 70, 70',
+    'tn-primary': '255, 150, 150',
+    'tn-secondary': '220, 120, 120'
+  },
+  'Romantic Purple': {
+    'bg-primary': '200, 150, 255',
+    'bg-secondary': '180, 130, 235',
+    'bg-tertiary': '160, 110, 215',
+    'fnt-primary': '50, 30, 70',
+    'fnt-secondary': '80, 60, 100',
+    'fnt-tertiary': '110, 90, 130',
+    'tn-primary': '200, 100, 255',
+    'tn-secondary': '180, 80, 235'
+  },
+  'Warm Embrace': {
+    'bg-primary': '255, 220, 180',
+    'bg-secondary': '255, 200, 160',
+    'bg-tertiary': '255, 180, 140',
+    'fnt-primary': '50, 30, 10',
+    'fnt-secondary': '80, 50, 20',
+    'fnt-tertiary': '110, 70, 30',
+    'tn-primary': '255, 150, 50',
+    'tn-secondary': '220, 120, 40'
+  },
+  'Blissful Blue': {
+    'bg-primary': '173, 216, 230',
+    'bg-secondary': '135, 206, 235',
+    'bg-tertiary': '97, 196, 238',
+    'fnt-primary': '30, 30, 50',
+    'fnt-secondary': '60, 60, 80',
+    'fnt-tertiary': '90, 90, 110',
+    'tn-primary': '100, 180, 255',
+    'tn-secondary': '80, 160, 235'
+  },
+  'Heartfelt Hue': {
+    'bg-primary': '255, 180, 180',
+    'bg-secondary': '255, 160, 160',
+    'bg-tertiary': '255, 140, 140',
+    'fnt-primary': '50, 30, 30',
+    'fnt-secondary': '80, 50, 50',
+    'fnt-tertiary': '110, 70, 70',
+    'tn-primary': '255, 100, 100',
+    'tn-secondary': '220, 80, 80'
+  },
+  'Eternal Flame': {
+    'bg-primary': '255, 150, 50',
+    'bg-secondary': '255, 130, 30',
+    'bg-tertiary': '255, 110, 10',
+    'fnt-primary': '50, 30, 10',
+    'fnt-secondary': '80, 50, 20',
+    'fnt-tertiary': '110, 70, 30',
+    'tn-primary': '255, 100, 0',
+    'tn-secondary': '220, 80, 0'
+  },
+  'Love at Dusk': {
+    'bg-primary': '200, 150, 255',
+    'bg-secondary': '180, 130, 235',
+    'bg-tertiary': '160, 110, 215',
+    'fnt-primary': '50, 30, 70',
+    'fnt-secondary': '80, 60, 100',
+    'fnt-tertiary': '110, 90, 130',
+    'tn-primary': '200, 100, 255',
+    'tn-secondary': '180, 80, 235'
+  },
+  // maso
+  'Marble White': {
+    'bg-primary': '240, 240, 240',
+    'bg-secondary': '230, 230, 230',
+    'bg-tertiary': '220, 220, 220',
+    'fnt-primary': '30, 30, 50',
+    'fnt-secondary': '60, 60, 80',
+    'fnt-tertiary': '90, 90, 110',
+    'tn-primary': '160, 160, 160',
+    'tn-secondary': '180, 180, 180'
+  },
+  'Granite Gray': {
+    'bg-primary': '120, 120, 120',
+    'bg-secondary': '100, 100, 100',
+    'bg-tertiary': '80, 80, 80',
+    'fnt-primary': '255, 255, 255',
+    'fnt-secondary': '230, 230, 230',
+    'fnt-tertiary': '200, 200, 200',
+    'tn-primary': '60, 60, 60',
+    'tn-secondary': '100, 100, 100'
+  },
+  'Obsidian Black': {
+    'bg-primary': '30, 30, 30',
+    'bg-secondary': '20, 20, 20',
+    'bg-tertiary': '10, 10, 10',
+    'fnt-primary': '255, 255, 255',
+    'fnt-secondary': '230, 230, 230',
+    'fnt-tertiary': '200, 200, 200',
+    'tn-primary': '100, 100, 100',
+    'tn-secondary': '30, 30, 30'
+  },
+  // Chocolates
+  Sandstone: {
+    'bg-primary': '200, 180, 140',
+    'bg-secondary': '180, 160, 120',
+    'bg-tertiary': '160, 140, 100',
+    'fnt-primary': '255, 255, 255',
+    'fnt-secondary': '230, 230, 230',
+    'fnt-tertiary': '200, 200, 200',
+    'tn-primary': '160, 140, 100',
+    'tn-secondary': '200, 180, 140'
+  },
+  'Rustic Oak': {
+    'bg-primary': '165, 124, 90',
+    'bg-secondary': '145, 104, 70',
+    'bg-tertiary': '125, 84, 50',
+    'fnt-primary': '255, 255, 255',
+    'fnt-secondary': '230, 230, 230',
+    'fnt-tertiary': '200, 200, 200',
+    'tn-primary': '120, 70, 30',
+    'tn-secondary': '170, 124, 80'
+  },
+  'Walnut Warmth': {
+    'bg-primary': '100, 70, 50',
+    'bg-secondary': '80, 50, 30',
+    'bg-tertiary': '60, 30, 10',
+    'fnt-primary': '255, 255, 255',
+    'fnt-secondary': '230, 230, 230',
+    'fnt-tertiary': '200, 200, 200',
+    'tn-primary': '50, 20, 0',
+    'tn-secondary': '100, 70, 50'
+  },
+  'Ebony Elegance': {
+    'bg-primary': '50, 40, 30',
+    'bg-secondary': '40, 30, 20',
+    'bg-tertiary': '30, 20, 10',
+    'fnt-primary': '255, 255, 255',
+    'fnt-secondary': '230, 230, 230',
+    'fnt-tertiary': '200, 200, 200',
+    'tn-primary': '130, 120, 110',
+    'tn-secondary': '50, 40, 30'
+  },
+  // mas omenos en blancos
+  'Soft Cloud': {
+    'bg-primary': '240, 240, 255',
+    'bg-secondary': '220, 220, 245',
+    'bg-tertiary': '200, 200, 235',
+    'fnt-primary': '30, 30, 50',
+    'fnt-secondary': '60, 60, 80',
+    'fnt-tertiary': '90, 90, 110',
+    'tn-primary': '0, 120, 240',
+    'tn-secondary': '0, 100, 200'
+  },
+  'Fresh Snow': {
+    'bg-primary': '250, 250, 250',
+    'bg-secondary': '240, 240, 240',
+    'bg-tertiary': '230, 230, 230',
+    'fnt-primary': '30, 30, 50',
+    'fnt-secondary': '60, 60, 80',
+    'fnt-tertiary': '90, 90, 110',
+    'tn-primary': '0, 120, 240',
+    'tn-secondary': '0, 100, 200'
+  },
+
+  // paso oscuro
+
+  'Dark Slate': {
+    'bg-primary': '40, 40, 40',
+    'bg-secondary': '50, 50, 50',
+    'bg-tertiary': '60, 60, 60',
+    'fnt-primary': '255, 255, 255',
+    'fnt-secondary': '200, 200, 200',
+    'fnt-tertiary': '150, 150, 150',
+    'tn-primary': '0, 120, 240',
+    'tn-secondary': '0, 100, 200'
+  },
+  'Twilight Pink': {
+    'bg-primary': '50, 10, 30',
+    'bg-secondary': '70, 20, 40',
+    'bg-tertiary': '90, 30, 50',
+    'fnt-primary': '255, 255, 255',
+    'fnt-secondary': '200, 200, 200',
+    'fnt-tertiary': '150, 150, 150',
+    'tn-primary': '255, 100, 150',
+    'tn-secondary': '220, 80, 120'
+  },
+
+  // pasan pasteles
+  'Nebula Light': {
+    'bg-primary': '255, 240, 255',
+    'bg-secondary': '245, 220, 245',
+    'bg-tertiary': '235, 200, 235',
+    'fnt-primary': '30, 30, 50',
+    'fnt-secondary': '60, 60, 80',
+    'fnt-tertiary': '90, 90, 110',
+    'tn-primary': '230, 173, 230',
+    'tn-secondary': '235, 135, 235'
+  },
+  'Peach Sorbet': {
+    'bg-primary': '255, 220, 200',
+    'bg-secondary': '255, 200, 180',
+    'bg-tertiary': '255, 180, 160',
+    'fnt-primary': '50, 30, 20',
+    'fnt-secondary': '80, 50, 40',
+    'fnt-tertiary': '110, 70, 60',
+    'tn-primary': '255, 180, 150',
+    'tn-secondary': '220, 160, 130'
+  },
+  'Cotton Candy': {
+    'bg-primary': '255, 200, 240',
+    'bg-secondary': '255, 180, 220',
+    'bg-tertiary': '255, 160, 200',
+    'fnt-primary': '50, 30, 50',
+    'fnt-secondary': '80, 50, 80',
+    'fnt-tertiary': '110, 70, 110',
+    'tn-primary': '255, 150, 200',
+    'tn-secondary': '220, 130, 180'
+  },
+
+  // PASAN PERO LETRA
+  'Coral Reef': {
+    'bg-primary': '255, 127, 80',
+    'bg-secondary': '255, 110, 70',
+    'bg-tertiary': '255, 95, 60',
+    'fnt-primary': '50, 30, 10',
+    'fnt-secondary': '80, 50, 20',
+    'fnt-tertiary': '110, 70, 30',
+    'tn-primary': '255, 100, 50',
+    'tn-secondary': '220, 80, 40'
+  },
+  'Tropical Sunset': {
+    'bg-primary': '255, 105, 180',
+    'bg-secondary': '255, 90, 160',
+    'bg-tertiary': '255, 75, 140',
+    'fnt-primary': '50, 30, 50',
+    'fnt-secondary': '80, 50, 80',
+    'fnt-tertiary': '110, 70, 110',
+    'tn-primary': '255, 50, 150',
+    'tn-secondary': '220, 40, 120'
+  },
+  'Volcanic Red': {
+    'bg-primary': '220, 20, 60',
+    'bg-secondary': '200, 15, 50',
+    'bg-tertiary': '180, 10, 40',
+    'fnt-primary': '255, 255, 255',
+    'fnt-secondary': '200, 200, 200',
+    'fnt-tertiary': '150, 150, 150',
+    'tn-primary': '255, 50, 100',
+    'tn-secondary': '220, 40, 80'
+  },
+
+  //pastel
+  'Pastel Pink': {
+    'bg-primary': '255, 230, 230',
+    'bg-secondary': '250, 200, 200',
+    'bg-tertiary': '240, 170, 170',
+    'fnt-primary': '50, 30, 30',
+    'fnt-secondary': '80, 50, 50',
+    'fnt-tertiary': '110, 70, 70',
+    'tn-primary': '255, 180, 180',
+    'tn-secondary': '220, 150, 150'
+  },
+  'Lavender Dream': {
+    'bg-primary': '240, 230, 255',
+    'bg-secondary': '220, 210, 245',
+    'bg-tertiary': '200, 190, 235',
+    'fnt-primary': '50, 30, 70',
+    'fnt-secondary': '80, 60, 100',
+    'fnt-tertiary': '110, 90, 130',
+    'tn-primary': '200, 180, 255',
+    'tn-secondary': '180, 160, 220'
+  },
+  'Baby Blue': {
+    'bg-primary': '200, 230, 255',
+    'bg-secondary': '180, 210, 245',
+    'bg-tertiary': '160, 190, 235',
+    'fnt-primary': '30, 50, 70',
+    'fnt-secondary': '60, 80, 100',
+    'fnt-tertiary': '90, 110, 130',
+    'tn-primary': '150, 200, 255',
+    'tn-secondary': '120, 180, 220'
+  },
+  'Peach Blossom': {
+    'bg-primary': '255, 230, 200',
+    'bg-secondary': '250, 210, 180',
+    'bg-tertiary': '240, 190, 160',
+    'fnt-primary': '50, 30, 10',
+    'fnt-secondary': '80, 50, 20',
+    'fnt-tertiary': '110, 70, 30',
+    'tn-primary': '255, 200, 150',
+    'tn-secondary': '220, 180, 130'
+  },
+  'Galactic Nebula': {
+    'bg-primary': '15, 15, 30',
+    'bg-secondary': '25, 25, 45',
+    'bg-tertiary': '35, 35, 60',
+    'fnt-primary': '255, 255, 255',
+    'fnt-secondary': '200, 200, 200',
+    'fnt-tertiary': '150, 150, 150',
+    'tn-primary': '0, 200, 255',
+    'tn-secondary': '0, 150, 200'
+  },
+
+  //Mas o menos
+
+  'Vibrant Sunrise': {
+    'bg-primary': '255, 150, 50',
+    'bg-secondary': '255, 120, 30',
+    'bg-tertiary': '255, 90, 10',
+    'fnt-primary': '50, 30, 10',
+    'fnt-secondary': '80, 50, 20',
+    'fnt-tertiary': '110, 70, 30',
+    'tn-primary': '255, 100, 0',
+    'tn-secondary': '220, 80, 0'
+  },
+  'Electric Violet': {
+    'bg-primary': '50, 0, 70',
+    'bg-secondary': '70, 0, 100',
+    'bg-tertiary': '90, 0, 130',
+    'fnt-primary': '255, 255, 255',
+    'fnt-secondary': '200, 200, 200',
+    'fnt-tertiary': '150, 150, 150',
+    'tn-primary': '150, 0, 200',
+    'tn-secondary': '200, 0, 255'
+  },
+  'Radiant Orchid': {
+    'bg-primary': '200, 100, 200',
+    'bg-secondary': '180, 80, 180',
+    'bg-tertiary': '160, 60, 160',
+    'fnt-primary': '255, 255, 255',
+    'fnt-secondary': '200, 200, 200',
+    'fnt-tertiary': '150, 150, 150',
+    'tn-primary': '255, 105, 180',
+    'tn-secondary': '255, 50, 120'
+  },
+  'Fiery Sunset': {
+    'bg-primary': '255, 100, 50',
+    'bg-secondary': '255, 80, 30',
+    'bg-tertiary': '255, 60, 10',
+    'fnt-primary': '50, 30, 10',
+    'fnt-secondary': '80, 50, 20',
+    'fnt-tertiary': '110, 70, 30',
+    'tn-primary': '255, 50, 0',
+    'tn-secondary': '220, 40, 0'
+  },
+  'Celestial Blue': {
+    'bg-primary': '0, 50, 100',
+    'bg-secondary': '0, 70, 130',
+    'bg-tertiary': '0, 90, 160',
+    'fnt-primary': '255, 255, 255',
+    'fnt-secondary': '200, 200, 200',
+    'fnt-tertiary': '150, 150, 150',
+    'tn-primary': '0, 150, 255',
+    'tn-secondary': '0, 120, 220'
+  },
+  'Luminous Green': {
+    'bg-primary': '50, 150, 50',
+    'bg-secondary': '70, 180, 70',
+    'bg-tertiary': '90, 210, 90',
+    'fnt-primary': '255, 255, 255',
+    'fnt-secondary': '200, 200, 200',
+    'fnt-tertiary': '150, 150, 150',
+    'tn-primary': '0, 200, 100',
+    'tn-secondary': '0, 180, 80'
+  },
+  'Mystic Teal': {
+    'bg-primary': '0, 100, 100',
+    'bg-secondary': '0, 120, 120',
+    'bg-tertiary': '0, 140, 140',
+    'fnt-primary': '255, 255, 255',
+    'fnt-secondary': '200, 200, 200',
+    'fnt-tertiary': '150, 150, 150',
+    'tn-primary': '0, 255, 255',
+    'tn-secondary': '0, 200, 200'
+  },
+  'Radiant Gold': {
+    'bg-primary': '200, 150, 50',
+    'bg-secondary': '220, 170, 70',
+    'bg-tertiary': '240, 190, 90',
+    'fnt-primary': '50, 30, 10',
+    'fnt-secondary': '80, 50, 20',
+    'fnt-tertiary': '110, 70, 30',
+    'tn-primary': '255, 200, 50',
+    'tn-secondary': '220, 180, 40'
+  },
+  'Cosmic Fusion': {
+    'bg-primary': '50, 0, 70',
+    'bg-secondary': '70, 0, 100',
+    'bg-tertiary': '90, 0, 130',
+    'fnt-primary': '255, 255, 255',
+    'fnt-secondary': '200, 200, 200',
+    'fnt-tertiary': '150, 150, 150',
+    'tn-primary': '255, 0, 255',
+    'tn-secondary': '200, 0, 200'
+  },
+
+  //Primeros 10
+  'Cherry Blossom': {
+    'bg-primary': '255, 220, 220',
+    'bg-secondary': '255, 180, 180',
+    'bg-tertiary': '255, 140, 140',
+    'fnt-primary': '50, 20, 20',
+    'fnt-secondary': '100, 40, 40',
+    'fnt-tertiary': '150, 60, 60',
+    'tn-primary': '255, 105, 180',
+    'tn-secondary': '255, 50, 120'
+  },
+  'Deep Ocean': {
+    'bg-primary': '0, 50, 70',
+    'bg-secondary': '0, 70, 100',
+    'bg-tertiary': '0, 90, 130',
+    'fnt-primary': '255, 255, 255',
+    'fnt-secondary': '200, 200, 200',
+    'fnt-tertiary': '150, 150, 150',
+    'tn-primary': '0, 200, 255',
+    'tn-secondary': '0, 150, 200'
+  },
+  'Forest Twilight': {
+    'bg-primary': '30, 40, 30',
+    'bg-secondary': '40, 60, 40',
+    'bg-tertiary': '50, 80, 50',
+    'fnt-primary': '210, 230, 210',
+    'fnt-secondary': '150, 180, 150',
+    'fnt-tertiary': '100, 140, 100',
+    'tn-primary': '0, 150, 50',
+    'tn-secondary': '0, 200, 100'
+  },
+  'Sunrise Glow': {
+    'bg-primary': '255, 200, 150',
+    'bg-secondary': '255, 180, 120',
+    'bg-tertiary': '255, 160, 90',
+    'fnt-primary': '50, 30, 10',
+    'fnt-secondary': '80, 50, 20',
+    'fnt-tertiary': '110, 70, 30',
+    'tn-primary': '255, 100, 50',
+    'tn-secondary': '220, 80, 40'
+  },
+  'Mystic Purple': {
+    'bg-primary': '80, 40, 100',
+    'bg-secondary': '100, 60, 130',
+    'bg-tertiary': '120, 80, 160',
+    'fnt-primary': '255, 255, 255',
+    'fnt-secondary': '200, 200, 200',
+    'fnt-tertiary': '150, 150, 150',
+    'tn-primary': '150, 100, 200',
+    'tn-secondary': '200, 150, 230'
+  },
+  'Icy Blue': {
+    'bg-primary': '180, 220, 255',
+    'bg-secondary': '160, 200, 245',
+    'bg-tertiary': '140, 180, 235',
+    'fnt-primary': '20, 30, 50',
+    'fnt-secondary': '40, 50, 70',
+    'fnt-tertiary': '60, 70, 90',
+    'tn-primary': '0, 120, 240',
+    'tn-secondary': '0, 100, 200'
+  },
+  'Golden Sunset': {
+    'bg-primary': '255, 200, 100',
+    'bg-secondary': '255, 180, 80',
+    'bg-tertiary': '255, 160, 60',
+    'fnt-primary': '50, 30, 10',
+    'fnt-secondary': '80, 50, 20',
+    'fnt-tertiary': '110, 70, 30',
+    'tn-primary': '255, 150, 50',
+    'tn-secondary': '220, 120, 40'
+  },
+  'Emerald Forest': {
+    'bg-primary': '50, 100, 50',
+    'bg-secondary': '70, 130, 70',
+    'bg-tertiary': '90, 160, 90',
+    'fnt-primary': '255, 255, 255',
+    'fnt-secondary': '200, 200, 200',
+    'fnt-tertiary': '150, 150, 150',
+    'tn-primary': '0, 150, 50',
+    'tn-secondary': '0, 200, 100'
+  },
+  'Cosmic Night': {
+    'bg-primary': '30, 30, 50',
+    'bg-secondary': '40, 40, 70',
+    'bg-tertiary': '50, 50, 90',
+    'fnt-primary': '230, 230, 250',
+    'fnt-secondary': '180, 180, 220',
+    'fnt-tertiary': '130, 130, 190',
+    'tn-primary': '100, 100, 255',
+    'tn-secondary': '80, 80, 220'
+  },
+  'Rustic Sunrise': {
+    'bg-primary': '255, 180, 120',
+    'bg-secondary': '255, 150, 90',
+    'bg-tertiary': '255, 120, 60',
+    'fnt-primary': '50, 30, 10',
+    'fnt-secondary': '80, 50, 20',
+    'fnt-tertiary': '110, 70, 30',
+    'tn-primary': '255, 100, 50',
+    'tn-secondary': '220, 80, 40'
+  },
+
   // Temas oscuros
   'Purple Dark': {
     'bg-primary': '19, 20, 23',

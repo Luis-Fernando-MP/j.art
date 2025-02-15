@@ -11,9 +11,9 @@
     'leftTools draw navTool rightTools'
     'leftTools draw navTool rightTools'
     'leftTools draw navTool rightTools'
-    'footer footer footer footer';
+    'footer footer footer rightTools';
   grid-template-columns: 50px 1fr 35px 300px;
-  grid-template-rows: repeat(3, 1fr) 38px;
+  grid-template-rows: repeat(3, 1fr) 25px;
 
   width: 100%;
   height: 100%;

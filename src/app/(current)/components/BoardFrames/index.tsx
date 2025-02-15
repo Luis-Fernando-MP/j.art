@@ -9,6 +9,7 @@ import toast from 'react-hot-toast'
 
 import ActiveDrawsStore from '../../store/ActiveDraws.store'
 import LayerStore from '../../store/layer.store'
+import RepaintDrawingStore from '../../store/repaintDrawing.store'
 import ListBoardFrames from './ListBoardFrames'
 import './style.scss'
 
@@ -18,6 +19,8 @@ const BoardFrames = (): JSX.Element => {
   const { setListOfLayers, addNewFrame } = LayerStore()
 
   const { setActParentId, setActParentIndex, setActLayerId } = ActiveDrawsStore()
+
+  const { cleanViewerFrame } = RepaintDrawingStore()
 
   const handleAddNewParentLayer = useCallback(
     (e: MouseEvent) => {
@@ -29,6 +32,8 @@ const BoardFrames = (): JSX.Element => {
       setActParentId(frameKey)
       setActParentIndex(index)
       setActLayerId(layerId)
+
+      cleanViewerFrame()
 
       moveToChild(index)
       horizontalMvChild(index)

@@ -1,5 +1,6 @@
 'use client'
 
+import { BLANK_IMAGE } from '@/shared/constants'
 import { Image } from '@unpic/react'
 import dynamic from 'next/dynamic'
 import React, { JSX, useRef } from 'react'
@@ -25,13 +26,7 @@ const CanvasViewer = (): JSX.Element => {
     <div className='canvasViewer'>
       <div className='canvasViewer-background' />
       <div className='canvasViewer-wrapper' ref={$parentRef} style={{ width: canvasWidth, height: canvasHeight }}>
-        <Image
-          className='canvasViewer-image'
-          src='/images/blank-image.webp'
-          alt='viewer-frame'
-          layout='fullWidth'
-          id='viewer-frame'
-        />
+        <Image className='canvasViewer-image' src={BLANK_IMAGE} alt='viewer-frame' layout='fullWidth' id='viewer-frame' />
         <CameraViewer $canvas={$parentRef} canvasHeight={canvasHeight} canvasWidth={canvasWidth} />
       </div>
     </div>

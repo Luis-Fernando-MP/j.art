@@ -17,7 +17,7 @@ const ThemeController = (): JSX.Element => {
   return (
     <section className='theme'>
       <button className='theme-controller' onClick={togglePopup}>
-        Tema: {appTheme}
+        {appTheme}
       </button>
       <Popup isOpen={openThemes} onClose={togglePopup} title='Temas' className='theme-popup'>
         {Object.entries(THEMES).map(current => {

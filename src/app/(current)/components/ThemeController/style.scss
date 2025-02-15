@@ -3,14 +3,8 @@
 
 .theme {
   &-controller {
-    padding: 0 v.$padding * 2;
-    border-radius: 5px;
-
-    font-size: 0.9rem;
+    font-size: v.$fP;
     color: rgb(v.$fn1);
-
-    background-color: rgb(v.$bg1);
-    outline: 3px dashed rgb(v.$bg1);
   }
 
   &-popup {

@@ -8,6 +8,7 @@ import toast from 'react-hot-toast'
 import ActiveDrawsStore from '../../store/ActiveDraws.store'
 import CanvasStore from '../../store/canvas.store'
 import LayerStore from '../../store/layer.store'
+import RepaintDrawingStore from '../../store/repaintDrawing.store'
 import CanvasList from './CanvasList'
 import './style.scss'
 
@@ -17,6 +18,7 @@ const Canvas = (): JSX.Element => {
   const { dimensions } = CanvasStore()
   const { setListOfLayers, addNewFrame } = LayerStore()
   const { setActParentId, setActParentIndex, setActLayerId } = ActiveDrawsStore()
+  const { cleanViewerFrame } = RepaintDrawingStore()
 
   const handleAddNewParentFrame = useCallback(
     (e: MouseEvent) => {
@@ -24,7 +26,7 @@ const Canvas = (): JSX.Element => {
       const frame = addNewFrame()
       if (!frame) return
       const { frameKey, index, layerId } = frame
-
+      cleanViewerFrame()
       setActParentId(frameKey)
       setActParentIndex(index)
       setActLayerId(layerId)

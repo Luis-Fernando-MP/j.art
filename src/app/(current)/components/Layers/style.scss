@@ -14,7 +14,7 @@
 
   &.disable {
     cursor: pointer;
-    opacity: 0.7;
+    opacity: 0.5;
     background-color: rgb(v.$bg3, 0.2);
     transition:
       opacity 0.5s ease-in-out,

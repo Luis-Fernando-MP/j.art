@@ -6,6 +6,7 @@ import { type JSX, MouseEvent, memo, useCallback } from 'react'
 import ActiveDrawsStore from '../../store/ActiveDraws.store'
 import CanvasStore from '../../store/canvas.store'
 import { Layer } from '../../store/layer.store'
+import RepaintDrawingStore from '../../store/repaintDrawing.store'
 import Canvas from '../Canvas'
 import './style.scss'
 
@@ -21,6 +22,8 @@ const Layers = ({ layers, isDisable, parentId, index, firstLayerId }: ILayers): 
   const { dimensions } = CanvasStore()
   const { actLayerId, setActParentId, setActParentIndex, setActLayerId } = ActiveDrawsStore()
 
+  const { setRepaint } = RepaintDrawingStore()
+
   const { moveToChild } = boardStore()
   const { moveToChild: mvHorizontalSlider } = StoreHorizontalSlider()
 
@@ -30,7 +33,7 @@ const Layers = ({ layers, isDisable, parentId, index, firstLayerId }: ILayers): 
       setActParentId(parentId)
       setActParentIndex(index)
       setActLayerId(firstLayerId)
-
+      setRepaint('frames')
       moveToChild(index)
       mvHorizontalSlider(index)
     },

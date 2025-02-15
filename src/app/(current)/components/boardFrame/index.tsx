@@ -3,15 +3,16 @@
 import { acl } from '@/shared/acl'
 import boardStore from '@/shared/components/Board/board.store'
 import StoreHorizontalSlider from '@/shared/components/HorizontalSlider/store'
+import { BLANK_IMAGE } from '@/shared/constants'
 import { Image } from '@unpic/react'
 import { XIcon } from 'lucide-react'
+import dynamic from 'next/dynamic'
 import { type JSX, MouseEvent, memo } from 'react'
 import toast from 'react-hot-toast'
 
 import ActiveDrawsStore from '../../store/ActiveDraws.store'
 import LayerStore from '../../store/layer.store'
 import RepaintDrawingStore from '../../store/repaintDrawing.store'
-import CloneFrame from './CloneFrame'
 import './style.scss'
 
 interface IBoardFrame {
@@ -26,6 +27,10 @@ export interface ISelectAndMoveFrame {
   frameId: string
   layerId: string
 }
+
+const CloneFrame = dynamic(() => import('./CloneFrame'), {
+  ssr: false
+})
 
 const BoardFrame = ({ isActive, index, parentKey, firstLayer }: IBoardFrame): JSX.Element => {
   const { moveToChild } = boardStore()
@@ -59,7 +64,7 @@ const BoardFrame = ({ isActive, index, parentKey, firstLayer }: IBoardFrame): JS
   return (
     <div className={`boardFrame ${acl(isActive)}`}>
       <button className='boardFrame-button' onClick={handleSelectFrame}>
-        <Image src='/images/blank-image.webp' alt='canvas-frame' layout='fullWidth' id={`${parentKey}-frame-view`} />
+        <Image src={BLANK_IMAGE} alt='canvas-frame' layout='fullWidth' id={`${parentKey}-frame-view`} />
       </button>
       <div className='boardFrame-controls'>
         <button className='boardFrame-control' onClick={handleRemoveLayer}>

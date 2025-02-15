@@ -2,9 +2,10 @@
 @use '@sass/utils/defs' as d;
 
 .footer {
-  justify-content: space-between;
+  justify-content: center;
   padding: 0 v.$padding;
-  background-color: rgb(v.$tn1);
+  border-top-right-radius: v.$radius;
+  background-color: rgb(v.$tn1, 0.6);
 
   @include d.flex($ali: center, $dir: row);
 
@@ -18,16 +19,10 @@
       border-radius: 50%;
     }
 
-    h3 {
-      font-size: v.$fP;
-      font-weight: bold;
-      color: rgb(v.$bg1);
+    p {
+      font-weight: bolder;
+      color: rgb(v.$fn1);
+      text-transform: uppercase;
     }
-  }
-
-  &-positions {
-    user-select: none;
-    font-size: 0.8rem;
-    color: rgb(v.$bg1);
   }
 }

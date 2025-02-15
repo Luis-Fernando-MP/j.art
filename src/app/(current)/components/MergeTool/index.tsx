@@ -1,5 +1,6 @@
 import Dropdown from '@/shared/components/Dropdown'
 import Popup from '@/shared/components/Popup'
+import { BLANK_IMAGE } from '@/shared/constants'
 import { Image } from '@unpic/react'
 import { MergeIcon } from 'lucide-react'
 import { type JSX, useState } from 'react'
@@ -24,7 +25,7 @@ const MergeTool = (): JSX.Element | null => {
           revalidateChange={layer => updateSelectedLayer({ index: 0, layerId: layer.id })}
         >
           {layer => {
-            const image = layer.imageUrl ?? '/images/blank-image.webp'
+            const image = layer.imageUrl ?? BLANK_IMAGE
             return (
               <div className='mergeTool-itemDropdown'>
                 <p className='mergeTool-itemDropdown__title'>{layer.title}</p>
@@ -41,7 +42,7 @@ const MergeTool = (): JSX.Element | null => {
           revalidateChange={layer => updateSelectedLayer({ index: 1, layerId: layer.id })}
         >
           {layer => {
-            const image = layer.imageUrl ?? '/images/blank-image.webp'
+            const image = layer.imageUrl ?? BLANK_IMAGE
             return (
               <div className='mergeTool-itemDropdown'>
                 <p className='mergeTool-itemDropdown__title'>{layer.title}</p>
