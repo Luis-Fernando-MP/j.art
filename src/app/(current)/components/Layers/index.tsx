@@ -55,6 +55,7 @@ const Layers = ({ layers, isDisable, parentId, index, firstLayerId }: ILayers): 
         return <Canvas canvasId={id} key={id} isActive={id === actLayerId} />
       })}
       <div className='layers-grid' />
+      <div className='layers-cross' />
     </section>
   )
 }

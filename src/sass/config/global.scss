@@ -134,7 +134,8 @@ body {
   }
 
   .active {
-    color: rgb($fn1);
+    border: 2px solid red !important;
+    color: rgb($fnA) !important;
     background-color: rgb($bg1);
 
     svg {

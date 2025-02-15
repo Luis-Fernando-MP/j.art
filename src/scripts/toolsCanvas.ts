@@ -26,12 +26,81 @@ type TMirrorTool = {
   xMirror: boolean
   yMirror: boolean
 }
-
+type Position = { x: number; y: number }
 type THandleDrawPixel = THandleTool &
   TMirrorTool & {
     pixelColor: string
     pixelOpacity: number
   }
+
+export function interpolatePoints(props: any): Position[] {
+  let { x0, y0, x1, y1, pixelSize } = { ...props }
+
+  const points: Position[] = []
+
+  const dx = Math.abs(x1 - x0)
+  const dy = Math.abs(y1 - y0)
+
+  const sx = x0 < x1 ? pixelSize : -pixelSize
+  const sy = y0 < y1 ? pixelSize : -pixelSize
+
+  let err = dx - dy
+
+  let x = x0
+  let y = y0
+
+  while (true) {
+    points.push({ x, y })
+
+    if (x === x1 && y === y1) break
+
+    const e2 = 2 * err
+    if (e2 > -dy) {
+      err -= dy
+      x += sx
+    }
+    if (e2 < dx) {
+      err += dx
+      y += sy
+    }
+  }
+
+  return points
+}
+
+export function interpolateBresenham(props: any) {
+  let { x0, y0, x1, y1, pixelSize } = { ...props }
+
+  const points = []
+
+  const dx = Math.abs(x1 - x0)
+  const dy = Math.abs(y1 - y0)
+
+  let sx = x1 > x0 ? pixelSize : -pixelSize
+  let sy = y1 > y0 ? pixelSize : -pixelSize
+
+  let err = dx - dy
+
+  let x = x0
+  let y = y0
+
+  while (true) {
+    points.push([x0, y0])
+
+    if (x0 === x1 && y0 === y1) break
+    const e2 = err * 2
+    if (e2 > -dy) {
+      err -= dy
+      x0 += sx
+    }
+    if (e2 < dx) {
+      err += dx
+      y0 += sy
+    }
+  }
+
+  return points
+}
 
 export function handleDrawPixel({ pixelColor, ctx, pixelOpacity, pixelSize, x, xMirror, y, yMirror }: THandleDrawPixel) {
   const { width, height } = ctx.canvas
@@ -39,7 +108,6 @@ export function handleDrawPixel({ pixelColor, ctx, pixelOpacity, pixelSize, x, x
   const mirroredY = height - y - pixelSize
 
   ctx.beginPath()
-
   ctx.imageSmoothingEnabled = false
   ctx.globalAlpha = pixelOpacity
   ctx.fillStyle = pixelColor
@@ -51,6 +119,25 @@ export function handleDrawPixel({ pixelColor, ctx, pixelOpacity, pixelSize, x, x
 
   ctx.closePath()
 }
+
+// export function handleDrawPixel({ pixelColor, ctx, pixelOpacity, pixelSize, x, xMirror, y, yMirror }: THandleDrawPixel) {
+//   // const { width, height } = ctx.canvas
+//   // const mirroredX = width - x - pixelSize
+//   // const mirroredY = height - y - pixelSize
+
+//   ctx.beginPath()
+
+//   // ctx.imageSmoothingEnabled = false
+//   // ctx.globalAlpha = pixelOpacity
+//   ctx.fillStyle = pixelColor
+//   ctx.fillRect(x, y, pixelSize, pixelSize)
+
+//   // if (xMirror) ctx.fillRect(mirroredX, y, pixelSize, pixelSize)
+//   // if (yMirror) ctx.fillRect(x, mirroredY, pixelSize, pixelSize)
+//   // if (xMirror && yMirror) ctx.fillRect(mirroredX, mirroredY, pixelSize, pixelSize)
+
+//   ctx.closePath()
+// }
 
 export function HandleDeletePixel({ ctx, pixelSize, x, y, xMirror, yMirror }: THandleTool & TMirrorTool) {
   const { width, height } = ctx.canvas

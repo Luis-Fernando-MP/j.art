@@ -1,13 +1,15 @@
 'use client'
 
 import { getBitmapFromCanvasList } from '@/shared/bitmap'
-import { IShapeBresenham, alignCord } from '@scripts/bresenham'
+import { IShapeBresenham, alignCord, bresenham } from '@scripts/bresenham'
 import {
   HandleDeletePixel,
   getCanvasCoordinates,
   handleDrawPixel,
   handlePaintBucket,
-  handlePipetteColor
+  handlePipetteColor,
+  interpolateBresenham,
+  interpolatePoints
 } from '@scripts/toolsCanvas'
 import { getContext } from '@scripts/transformCanvas'
 import { EWorkerActions, WorkerMessage } from '@workers/layer-view'
@@ -29,6 +31,7 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
 
   const [isDrawing, setIsDrawing] = useState(false)
   const startPos = useRef<TPositions | null>(null)
+  const endPos = useRef<TPositions | null>(null)
   const canvasSnapshot = useRef<ImageData | null>(null)
 
   const { pixelColor, pixelOpacity, pixelSize, setPixelColor } = PixelStore()
@@ -78,25 +81,28 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
   const handleCanvasMouseDown = (e: MouseEvent) => {
     if (e.ctrlKey) return
     e.preventDefault()
+    setIsDrawing(true)
+
     const { x, y } = getCanvasCoordinates(e, canvasId)
     startPos.current = { x, y }
     handleDrawing(x, y)
-    setIsDrawing(true)
-    if (!(selectedTool in shapeTools) || canvasSnapshot.current) return
-    const { ctx } = getContext(canvasId)
-    canvasSnapshot.current = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height)
+    // if (!(selectedTool in shapeTools) || canvasSnapshot.current) return
+    // const { ctx } = getContext(canvasId)
+    // canvasSnapshot.current = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height)
   }
 
   const handleCanvasMouseMove = (e: MouseEvent) => {
     if (!isDrawing) return
-    activatePerfectShape(e.shiftKey)
+    // requestAnimationFrame(() => {
+    // activatePerfectShape(e.shiftKey)
     const { x, y } = getCanvasCoordinates(e, canvasId)
     handleDrawing(x, y)
+    // })
   }
 
   const drawImageInLayerView = useCallback(
     (image: string | null) => {
-      console.log('in id', actLayerId.slice(0, 5), 'image', image)
+      // console.log('in id', actLayerId.slice(0, 5), 'image', image)
       // const updatedLayers = { ...listOfLayers }
       // const parentLayers = updatedLayers[activeLayer.parentId]
       // if (!parentLayers) return
@@ -159,49 +165,54 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
   const handleCanvasMouseUp = async () => {
     setIsDrawing(false)
     startPos.current = null
+    endPos.current = null
     canvasSnapshot.current = null
     activatePerfectShape(false)
-
     await bitmapLayerView()
     await bitmapFrameView()
   }
 
   const handleDrawing = (x: number, y: number) => {
+    if (!startPos.current) return
     const { ctx } = getContext(canvasId)
+    const { x: stX, y: stY } = startPos.current
+
+    const startX = alignCord(stX, pixelSize)
     const endX = alignCord(x, pixelSize)
+    const startY = alignCord(stY, pixelSize)
     const endY = alignCord(y, pixelSize)
 
-    // const { width, height } = ctx.canvas
-    // const mirroredX = width - x - pixelSize
-    // const mirroredY = height - y - pixelSize
-
-    if (selectedTool in handleUtilTools) {
-      const handleTool = handleUtilTools[selectedTool as keyof typeof handleUtilTools]
-      return handleTool(ctx, endX, endY)
+    const dx = Math.abs(endX - startX) / pixelSize
+    const dy = Math.abs(endY - startY) / pixelSize
+    let steps = Math.max(dx, dy)
+    if (startX === endX && startY === endY) {
+      steps = 1
     }
 
-    if (selectedTool in shapeTools && canvasSnapshot.current && startPos.current) {
-      const { x: stX, y: stY } = startPos.current
-      const startX = alignCord(stX, pixelSize)
-      const startY = alignCord(stY, pixelSize)
-      const shapeProps: IShapeBresenham = {
+    for (let i = 0; i <= steps; i++) {
+      const px = startX + (endX - startX) * (i / steps)
+      const py = startY + (endY - startY) * (i / steps)
+      handleDrawPixel({
         ctx,
-        startX,
-        startY,
-        endX,
-        endY,
+        x: alignCord(px, pixelSize),
+        y: alignCord(py, pixelSize),
         pixelColor,
-        pixelSize,
-        snapshot: canvasSnapshot.current,
-        perfectShape: $perfectShape.current
-      }
-      return handleBresenhamTools[selectedTool as ShapeTools](shapeProps)
+        pixelSize: pixelSize,
+        pixelOpacity,
+        xMirror,
+        yMirror
+      })
     }
+
+    startPos.current = { x, y }
   }
-  const handleCanvasMouseLeave = (e: MouseEvent) => {
-    if (e.ctrlKey) return
-    // handleCanvasMouseUp()
-  }
+
+  useEffect(() => {
+    document.addEventListener('mouseup', handleCanvasMouseUp)
+    return () => {
+      document.removeEventListener('mouseup', handleCanvasMouseUp)
+    }
+  }, [])
 
   useEffect(() => {
     if (!$canvasRef.current) return
@@ -231,9 +242,7 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
   return {
     $canvasRef,
     handleCanvasMouseDown,
-    handleCanvasMouseMove,
-    handleCanvasMouseUp,
-    handleCanvasMouseLeave
+    handleCanvasMouseMove
   }
 }
 

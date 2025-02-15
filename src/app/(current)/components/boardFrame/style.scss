@@ -73,7 +73,8 @@ $actionWidth: 70px;
     border-color: rgb(v.$tn1);
 
     &::before {
-      color: rgb(v.$bg1);
+      font-weight: bolder;
+      color: rgb(v.$fn1);
       background-color: rgb(v.$tn1);
     }
   }

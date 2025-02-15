@@ -22,7 +22,7 @@ const Page = (): JSX.Element => {
       <RightTools className='app-rightTools' />
       <NavTools className='app-navTools' />
       <Footer className='app-footer' />
-      <ClickSpark sparkColor='rgb(var(--tn-primary))' sparkSize={10} sparkRadius={15} sparkCount={8} duration={400} />
+      <ClickSpark sparkColor='rgb(var(--tn-primary))' sparkSize={10} sparkRadius={15} sparkCount={8} duration={200} />
     </div>
   )
 }

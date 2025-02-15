@@ -11,6 +11,8 @@ const useAppTheme = () => {
 
   useLayoutEffect(() => {
     const root = document.documentElement
+    const currentTheme = THEMES[appTheme]
+    if (!currentTheme) return
     Object.entries(THEMES[appTheme]).forEach(([key, color]) => {
       root.style.setProperty(`--${key}`, `${color}`)
     })
