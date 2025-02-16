@@ -8,7 +8,7 @@
 
   padding: 5px v.$padding;
   border: 1.5px solid transparent;
-  border-radius: v.$radius * 2;
+  border-radius: v.$radius;
 
   background-color: rgb(v.$bg2);
 
@@ -25,9 +25,6 @@
     input {
       width: 100%;
       padding: 0;
-
-      font-size: 0.8rem;
-
       background-color: transparent;
       background-color: none;
     }
@@ -49,7 +46,7 @@
     background-color: rgb(v.$bg1);
   }
 
-  &.active {
+  &.selected {
     border-color: rgb(v.$tn1);
 
     input {

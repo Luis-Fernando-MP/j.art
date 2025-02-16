@@ -15,15 +15,12 @@
 
       padding: 2px v.$padding;
       border-radius: v.$radius;
+      color: rgb(v.$fn2);
       background-color: rgb(v.$bg2);
 
       &.active {
         color: rgb(v.$bg1);
         background-color: rgb(v.$tn1);
-
-        svg {
-          stroke: rgb(v.$bg1);
-        }
       }
     }
   }
@@ -35,7 +32,8 @@
     grid-template-columns: 1fr 30px;
     grid-template-rows: 1fr;
 
-    width: 300px;
+    width: 100%;
+    min-width: 250px;
     height: 200px;
   }
 }
