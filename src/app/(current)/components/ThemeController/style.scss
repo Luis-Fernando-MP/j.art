@@ -18,6 +18,8 @@
   }
 
   &-action {
+    user-select: none;
+
     position: relative;
 
     overflow: hidden;

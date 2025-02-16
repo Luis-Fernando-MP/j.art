@@ -26,45 +26,39 @@ const CameraViewer = ({ $canvas, canvasHeight, canvasWidth }: ICameraViewer) => 
 
   const handleMouseCameraMove = useCallback(
     (e: globalThis.MouseEvent) => {
-      const $parentEvent = document.getElementById(actParentId)
-      if (!($parentEvent instanceof HTMLElement)) return
       if (!isDragging || !$camera.current || !$canvas.current) return
       isMovingCamera.current = true
-      const camRect = $camera.current.getBoundingClientRect()
-      const canvasRect = $canvas.current.getBoundingClientRect()
-      const { offsetWidth: offWCam, offsetHeight: offHCam } = $camera.current
-      const { offsetWidth, offsetHeight } = $canvas.current
 
-      const cameraLeft = camRect.left - canvasRect.left
-      const cameraTop = camRect.top - canvasRect.top
-      setOffset({
-        x: offset.x - cameraLeft * scale,
-        y: offset.y - cameraTop * scale
-      })
-      const deltaX = e.clientX - startPosition.current.x
-      const deltaY = e.clientY - startPosition.current.y
+      const updateCameraPosition = () => {
+        const deltaX = e.clientX - startPosition.current.x
+        const deltaY = e.clientY - startPosition.current.y
 
-      startPosition.current = { x: e.clientX, y: e.clientY }
-      setCameraPosition(prev => {
-        return {
-          x: Math.max(0, Math.min(offsetWidth - offWCam - 10, prev.x + deltaX)),
-          y: Math.max(0, Math.min(offsetHeight - offHCam - 10, prev.y + deltaY))
-        }
-      })
+        startPosition.current = { x: e.clientX, y: e.clientY }
+
+        setCameraPosition(prev => {
+          if (!$camera.current) return prev
+          const newX = Math.max(0, Math.min(canvasWidth - 60, prev.x + deltaX))
+          const newY = Math.max(0, Math.min(canvasHeight - 60, prev.y + deltaY))
+          return { x: newX, y: newY }
+        })
+
+        setOffset({
+          x: offset.x - deltaX * scale,
+          y: offset.y - deltaY * scale
+        })
+      }
+
+      requestAnimationFrame(updateCameraPosition)
     },
-    [$canvas, actParentId, isDragging, offset, scale, setOffset]
+    [isDragging, $canvas, offset, scale, setOffset, canvasWidth, canvasHeight]
   )
 
   const handleMouseCameraUp = () => {
-    if (!$camera.current) return
     isMovingCamera.current = false
-    $camera.current.classList.remove('move')
     setIsDragging(false)
   }
 
   const handleMouseDown = (e: MouseEvent) => {
-    if (!$camera.current) return
-    $camera.current.classList.add('move')
     setIsDragging(true)
     startPosition.current = { x: e.clientX, y: e.clientY }
   }
@@ -72,21 +66,34 @@ const CameraViewer = ({ $canvas, canvasHeight, canvasWidth }: ICameraViewer) => 
   const handleMove = useCallback(
     (e: globalThis.MouseEvent) => {
       if (!$camera.current || !$canvas.current || isMovingCamera.current) return
+
       const element = e.target as HTMLElement
       const rect = element.getBoundingClientRect()
       const { offsetHeight, offsetWidth } = $canvas.current
-      const { offsetWidth: offWCam, offsetHeight: offHCam } = $camera.current
 
-      const camWidth = offWCam
-      const camHeight = offHCam
+      // Tamaño fijo de la cámara
+      const cameraSize = 60
+
+      // Calcular la posición de la cámara
       const x = (e.clientX - rect.left) / scale
       const y = (e.clientY - rect.top) / scale
 
-      const mappedX = (x / element.offsetWidth) * offsetWidth - camWidth
-      const mappedY = (y / element.offsetHeight) * offsetHeight - camHeight
-      const limitedX = Math.max(0, mappedX)
-      const limitedY = Math.max(0, mappedY)
-      setCameraPosition({ x: limitedX, y: limitedY })
+      const mappedX = (x / element.offsetWidth) * offsetWidth - cameraSize / 2
+      const mappedY = (y / element.offsetHeight) * offsetHeight - cameraSize / 2
+      const limitedX = Math.max(0, Math.min(offsetWidth - cameraSize, mappedX))
+      const limitedY = Math.max(0, Math.min(offsetHeight - cameraSize, mappedY))
+
+      const updateCameraPosition = () => {
+        setCameraPosition({ x: limitedX, y: limitedY })
+
+        // Ajustar el tamaño de la cámara en el DOM
+        if ($camera.current) {
+          $camera.current.style.width = `${cameraSize}px`
+          $camera.current.style.height = `${cameraSize}px`
+        }
+      }
+
+      requestAnimationFrame(updateCameraPosition)
     },
     [$canvas, scale]
   )
@@ -94,18 +101,22 @@ const CameraViewer = ({ $canvas, canvasHeight, canvasWidth }: ICameraViewer) => 
   useEffect(() => {
     const $parentEvent = document.getElementById(actParentId)
     if (!($parentEvent instanceof HTMLElement)) return
-    $parentEvent.addEventListener('mousemove', handleMove)
+    const handleMouseMove = (e: globalThis.MouseEvent) => handleMove(e)
+    $parentEvent.addEventListener('mousemove', handleMouseMove)
     return () => {
-      $parentEvent.removeEventListener('mousemove', handleMove)
+      $parentEvent.removeEventListener('mousemove', handleMouseMove)
     }
   }, [actParentId, scale, handleMove])
 
   useEffect(() => {
-    window.addEventListener('mousemove', handleMouseCameraMove)
-    window.addEventListener('mouseup', handleMouseCameraUp)
+    const handleMouseMove = (e: globalThis.MouseEvent) => handleMouseCameraMove(e)
+    const handleMouseUp = () => handleMouseCameraUp()
+
+    window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('mouseup', handleMouseUp)
     return () => {
-      window.removeEventListener('mousemove', handleMouseCameraMove)
-      window.removeEventListener('mouseup', handleMouseCameraUp)
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('mouseup', handleMouseUp)
     }
   }, [isDragging, handleMouseCameraMove])
 
@@ -114,7 +125,9 @@ const CameraViewer = ({ $canvas, canvasHeight, canvasWidth }: ICameraViewer) => 
       ref={$camera}
       style={{
         left: `${cameraPosition.x}px`,
-        top: `${cameraPosition.y}px`
+        top: `${cameraPosition.y}px`,
+        width: '60px',
+        height: '60px'
       }}
       className='canvasViewer-camera'
       onMouseDown={handleMouseDown}

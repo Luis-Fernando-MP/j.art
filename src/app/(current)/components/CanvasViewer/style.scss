@@ -2,6 +2,8 @@
 @use '@sass/utils/defs' as d;
 
 .canvasViewer {
+  user-select: none;
+
   position: relative;
 
   display: grid;
@@ -19,20 +21,14 @@
 
   &-camera {
     touch-action: none;
-    cursor: grab;
+    cursor: move;
 
     position: absolute;
 
-    width: 50px;
-    height: 30px;
+    width: 60px;
+    height: 60px;
     border: 2px solid rgb(v.$tn1);
     border-radius: v.$radius;
-
-    transition: all 0.1s ease;
-
-    &.move {
-      transition: none;
-    }
   }
 
   &-image {

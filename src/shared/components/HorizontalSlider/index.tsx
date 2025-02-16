@@ -20,7 +20,7 @@ interface IHorizontalSlider extends HtmlHTMLAttributes<HTMLElement> {
   parentClass?: string
 }
 
-function HorizontalSlider({ children, className, parentClass = '', ...props }: Readonly<IHorizontalSlider>): JSX.Element {
+function HorizontalSlider({ children, className = '', parentClass = '', ...props }: Readonly<IHorizontalSlider>): JSX.Element {
   const $parentRef = useRef<HTMLElement>(null)
   const $sliderRef = useRef<HTMLDivElement>(null)
   const startX = useRef(0)

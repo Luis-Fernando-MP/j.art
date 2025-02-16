@@ -15,7 +15,7 @@ const Footer = ({ className = '' }: IFooter): JSX.Element => {
       <Link href='https://luisjp.vercel.app' target='_blank'>
         <h2 className='footer-title'>J-ART</h2>
       </Link>
-      <h5 className='footer-tex'>Mas información</h5>
+      <h5 className='footer-text'>Mas información</h5>
     </footer>
   )
 }

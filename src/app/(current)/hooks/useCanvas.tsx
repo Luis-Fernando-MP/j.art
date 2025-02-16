@@ -93,11 +93,11 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
 
   const handleCanvasMouseMove = (e: MouseEvent) => {
     if (!isDrawing) return
-    // requestAnimationFrame(() => {
-    // activatePerfectShape(e.shiftKey)
-    const { x, y } = getCanvasCoordinates(e, canvasId)
-    handleDrawing(x, y)
-    // })
+    requestAnimationFrame(() => {
+      // activatePerfectShape(e.shiftKey)
+      const { x, y } = getCanvasCoordinates(e, canvasId)
+      handleDrawing(x, y)
+    })
   }
 
   const drawImageInLayerView = useCallback(

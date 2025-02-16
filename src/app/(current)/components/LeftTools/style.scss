@@ -11,6 +11,8 @@
   &-logo {
     transform: rotateZ(180deg);
 
+    justify-content: center;
+
     width: 100%;
     height: fit-content;
     min-height: 110px;
@@ -19,13 +21,10 @@
 
     writing-mode: vertical-rl;
 
-    background-color: rgb(v.$tn1);
-
     @include d.flex($ali: center, $dir: row);
 
     h1 {
-      font-size: v.$fH5;
-      color: rgb(v.$bg1);
+      color: rgb(v.$fnA);
     }
 
     svg {

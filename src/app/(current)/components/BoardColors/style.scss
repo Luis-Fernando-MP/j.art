@@ -21,31 +21,48 @@
     backdrop-filter: blur(20px);
   }
 
-  &-colors {
-    min-width: 200px;
-    max-width: 500px;
-  }
-
   &-section {
     width: fit-content;
-    padding: v.$padding;
+    padding: v.$padding * 0.5;
 
     @include d.flex($dir: row, $ali: center);
   }
 
+  &-colors {
+    gap: 0;
+    min-width: 200px;
+    max-width: fit-content;
+    padding: 0 v.$padding;
+  }
+
   &-color {
-    width: v.$icon;
-    min-width: v.$icon;
-    height: v.$icon;
-    border: 2px solid transparent;
-    border-radius: 3px;
+    position: relative;
+    display: block;
+    padding: v.$padding 6px;
+
+    div {
+      pointer-events: none;
+
+      width: v.$icon;
+      min-width: v.$icon;
+      height: v.$icon;
+      border: 2px solid transparent;
+      border-radius: 3px;
+
+      transition: border-radius 0.3s ease-in-out;
+    }
 
     @include po.pointActive {
-      border-color: rgb(v.$tn1);
+      div {
+        border-color: rgb(v.$tn1);
+        border-radius: 50%;
+      }
     }
   }
 
   &-action {
+    padding: 5px;
+
     @include po.pointActive {
       border-color: rgb(v.$tn1);
     }

@@ -2,6 +2,7 @@
 
 import { acl } from '@/shared/acl'
 import Logo from '@/shared/assets/Logo'
+import dynamic from 'next/dynamic'
 import type { JSX } from 'react'
 
 import ToolsStore from '../../store/tools.store'
@@ -12,19 +13,19 @@ interface ILeftTools {
   className?: string
 }
 
-// umm const TrashTool = dynamic(() => import('./TrashTool'), {
-//   ssr: false,
-//   loading() {
-//     return <Trash2Icon />
-//   }
-// })
+const TrashTool = dynamic(() => import('./TrashTool'), {
+  ssr: false,
+  loading() {
+    return <deleteTools.Trash />
+  }
+})
 
 const LeftTools = ({ className = '' }: ILeftTools): JSX.Element => {
   const { selectedTool, setSelectedTool } = ToolsStore()
 
   return (
     <section className={`${className} leftTools`}>
-      <div className='leftTools-logo'>
+      <div className='leftTools-logo active'>
         <Logo />
         <h1>J-ART</h1>
       </div>
@@ -32,7 +33,11 @@ const LeftTools = ({ className = '' }: ILeftTools): JSX.Element => {
         {Object.entries(drawTools).map(tool => {
           const [key, Icon] = tool
           return (
-            <button key={key} onClick={() => setSelectedTool(key)} className={`leftTools-tool ${acl(selectedTool === key)}`}>
+            <button
+              key={key}
+              onClick={() => setSelectedTool(key)}
+              className={`leftTools-tool ${acl(selectedTool === key, 'selected')}`}
+            >
               <Icon />
             </button>
           )
@@ -42,7 +47,11 @@ const LeftTools = ({ className = '' }: ILeftTools): JSX.Element => {
         {Object.entries(selectTools).map(tool => {
           const [key, Icon] = tool
           return (
-            <button key={key} onClick={() => setSelectedTool(key)} className={`leftTools-tool ${acl(selectedTool === key)}`}>
+            <button
+              key={key}
+              onClick={() => setSelectedTool(key)}
+              className={`leftTools-tool ${acl(selectedTool === key, 'selected')}`}
+            >
               <Icon />
             </button>
           )
@@ -52,19 +61,24 @@ const LeftTools = ({ className = '' }: ILeftTools): JSX.Element => {
         {Object.entries(colorTools).map(tool => {
           const [key, Icon] = tool
           return (
-            <button key={key} onClick={() => setSelectedTool(key)} className={`leftTools-tool ${acl(selectedTool === key)}`}>
+            <button
+              key={key}
+              onClick={() => setSelectedTool(key)}
+              className={`leftTools-tool ${acl(selectedTool === key, 'selected')}`}
+            >
               <Icon />
             </button>
           )
         })}
       </div>
       <div className='leftTools-section'>
-        <button onClick={() => setSelectedTool('Eraser')} className={`leftTools-tool ${acl(selectedTool === 'Eraser')}`}>
+        <button
+          onClick={() => setSelectedTool('Eraser')}
+          className={`leftTools-tool ${acl(selectedTool === 'Eraser', 'selected')}`}
+        >
           <deleteTools.Eraser />
         </button>
-        <button onClick={() => {}}>
-          <deleteTools.Trash />
-        </button>
+        <TrashTool />
       </div>
     </section>
   )

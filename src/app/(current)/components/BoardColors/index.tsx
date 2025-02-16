@@ -20,7 +20,7 @@ const BoardColors = ({ className = '' }: IBoardColors): JSX.Element => {
           <PaletteIcon />
         </button>
       </div>
-      <HorizontalSlider parentClass='colorsTools-colors'>
+      <HorizontalSlider className='colorsTools-colors'>
         {basicColors.map(color => {
           const key = `${color.join()}-basic-color`
           const [r, g, b, a] = color

@@ -10,17 +10,17 @@ interface IColor {
 
 const Color = ({ className = '', rgbColor }: IColor): JSX.Element => {
   const { pixelColor, setPixelColor } = PixelStore()
-  const isActive = pixelColor === rgbColor
+  const isSelectedColor = pixelColor.replaceAll(' ', '').includes(rgbColor)
+
   const handleClick = (e: MouseEvent): void => {
-    if (e.ctrlKey || isActive) return
+    if (e.ctrlKey || isSelectedColor) return
     setPixelColor(rgbColor)
   }
+
   return (
-    <button
-      className={`${className} ${acl(pixelColor === rgbColor)}`}
-      onClick={handleClick}
-      style={{ backgroundColor: rgbColor }}
-    />
+    <button className={`${className} ${acl(isSelectedColor, 'selected')}`} onClick={handleClick}>
+      <div style={{ backgroundColor: rgbColor }} />
+    </button>
   )
 }
 

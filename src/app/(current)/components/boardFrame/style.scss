@@ -7,6 +7,19 @@ $actionWidth: 70px;
   counter-increment: frame-counter;
   position: relative;
 
+  &::before {
+    content: '';
+
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+    border-radius: v.$radius;
+
+    background-color: rgb(v.$tn1);
+  }
+
   &-button {
     position: relative;
 
@@ -30,7 +43,7 @@ $actionWidth: 70px;
       border-top-right-radius: v.$radius;
 
       font-family: v.$font2;
-      font-size: 1rem;
+      font-size: v.$fH5;
       color: rgb(v.$fn2);
 
       background-color: rgb(v.$bg3);
@@ -63,19 +76,33 @@ $actionWidth: 70px;
     @include d.flex;
   }
 
-  &.active &-controls {
-    transform: rotateZ(10deg) translateY(-40%);
-    border-color: rgb(v.$tn1);
-  }
-
-  &.active &-button {
-    transform: rotateZ(10deg);
-    border-color: rgb(v.$tn1);
+  &.selected {
+    &::before,
+    .boardFrame-button {
+      transition: transform 0.25s ease-in-out;
+      transition-delay: 0.3s;
+    }
 
     &::before {
-      font-weight: bolder;
-      color: rgb(v.$fn1);
-      background-color: rgb(v.$tn1);
+      transform: rotateZ(-15deg);
+    }
+
+    .boardFrame-controls {
+      transform: rotateZ(-30deg) translate(70%, -60%) scale(1.1);
+      border-color: rgb(v.$tn1);
+      transition: transform 0.25s ease-in-out;
+      transition-delay: 0.3s;
+    }
+
+    .boardFrame-button {
+      transform: rotateZ(15deg);
+      border-color: rgb(v.$tn1);
+
+      &::before {
+        font-weight: bolder;
+        color: rgb(v.$fnA);
+        background-color: rgb(v.$tn1);
+      }
     }
   }
 }

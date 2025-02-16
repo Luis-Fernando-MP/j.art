@@ -140,9 +140,8 @@ body {
   }
 
   .active {
-    border: 2px solid red !important;
     color: rgb($fnA) !important;
-    background-color: rgb($bg1);
+    background-color: rgb($tn1);
 
     svg {
       stroke: rgb($fn1);

@@ -19,13 +19,30 @@ const CanvasViewer = (): JSX.Element => {
 
   const maxWidth = 230
   const maxHeight = 180
-  const canvasWidth = Math.min(maxWidth, originalWidth * 0.5)
-  const canvasHeight = Math.min(maxHeight, originalHeight * 0.5)
+
+  const aspectRatio = originalWidth / originalHeight
+  const maxAspectRatio = maxWidth / maxHeight
+
+  let canvasWidth, canvasHeight
+  if (maxAspectRatio > aspectRatio) {
+    canvasHeight = maxHeight
+    canvasWidth = canvasHeight * aspectRatio
+  } else {
+    canvasWidth = maxWidth
+    canvasHeight = canvasWidth / aspectRatio
+  }
 
   return (
     <div className='canvasViewer'>
       <div className='canvasViewer-background' />
-      <div className='canvasViewer-wrapper' ref={$parentRef} style={{ width: canvasWidth, height: canvasHeight }}>
+      <div
+        className='canvasViewer-wrapper'
+        ref={$parentRef}
+        style={{
+          width: canvasWidth,
+          height: canvasHeight
+        }}
+      >
         <Image className='canvasViewer-image' src={BLANK_IMAGE} alt='viewer-frame' layout='fullWidth' id='viewer-frame' />
         <CameraViewer $canvas={$parentRef} canvasHeight={canvasHeight} canvasWidth={canvasWidth} />
       </div>

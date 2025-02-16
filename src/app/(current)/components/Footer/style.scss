@@ -14,16 +14,18 @@
 
     position: absolute;
     z-index: 0;
-    inset: 50%;
-    transform: translate(-50%, -50%);
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
 
-    width: 50%;
-    height: 50%;
-    border-top-right-radius: v.$radius;
+    width: 500px;
+    height: 50px;
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
 
     opacity: 0.8;
-    background-color: rgb(v.$tn1);
-    filter: blur(60px);
+    background-image: linear-gradient(rgb(v.$tn1, 0.1) 20%, rgb(v.$tn1));
+    filter: blur(100px);
 
     @include b.browsers('firefox') {
       opacity: 0.5;

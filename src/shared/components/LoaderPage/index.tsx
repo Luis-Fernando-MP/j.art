@@ -12,14 +12,16 @@ const LoaderPage = () => {
   useLayoutEffect(() => {
     setTimeout(() => {
       setLoading(false)
-    }, 300)
+    }, 200)
   }, [])
 
   if (!loading) return null
 
   return (
     <section ref={$loaderRef} className='loaderApp' style={{ opacity: loading ? 1 : 0 }}>
+      <h2>J-ART</h2>
       <Logo className='loaderApp-logo' />
+      <p>By: Juls dev ❤️</p>
     </section>
   )
 }

@@ -2,19 +2,23 @@
 
 import { handleClearCanvas } from '@/scripts/toolsCanvas'
 import { getContext } from '@/scripts/transformCanvas'
-import { Trash2Icon } from 'lucide-react'
 import type { JSX } from 'react'
 
+import ActiveDrawsStore from '../../store/ActiveDraws.store'
+import { deleteTools } from '../../store/tools.types'
+
 const TrashTool = (): JSX.Element => {
+  const { actLayerId } = ActiveDrawsStore()
+
   return (
     <button
       className='tools-options__tool'
       onClick={() => {
-        const { ctx } = getContext()
+        const { ctx } = getContext(actLayerId)
         handleClearCanvas(ctx)
       }}
     >
-      <Trash2Icon />
+      <deleteTools.Trash />
     </button>
   )
 }

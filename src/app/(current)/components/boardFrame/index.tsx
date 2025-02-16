@@ -62,7 +62,7 @@ const BoardFrame = ({ isActive, index, parentKey, firstLayer }: IBoardFrame): JS
   }
 
   return (
-    <div className={`boardFrame ${acl(isActive)}`}>
+    <div className={`boardFrame ${acl(isActive, 'selected')}`}>
       <button className='boardFrame-button' onClick={handleSelectFrame}>
         <Image src={BLANK_IMAGE} alt='canvas-frame' layout='fullWidth' id={`${parentKey}-frame-view`} />
       </button>
