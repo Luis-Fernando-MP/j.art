@@ -37,6 +37,8 @@
   &-draw {
     overflow: hidden;
     grid-area: draw;
+    background-image: radial-gradient(rgb(v.$fn1, 0.1) 0.5px, transparent 0);
+    background-size: 10px 4px;
   }
 
   &-rightTools {

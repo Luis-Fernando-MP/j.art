@@ -1,16 +1,21 @@
-import { Pixelify_Sans, VT323 } from 'next/font/google'
+import { Pixelify_Sans, VT323, Workbench } from 'next/font/google'
 
-// PT_MONO
-export const font1 = VT323({
+export const font1 = Pixelify_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--family1'
+})
+
+export const font2 = VT323({
   subsets: ['latin'],
   weight: ['400'],
-  variable: '--font1'
+  variable: '--family2'
 })
 
-export const font2 = Pixelify_Sans({
+export const font3 = Workbench({
   subsets: ['latin'],
-  weight: ['700', '600', '500', '400'],
-  variable: '--font2'
+  weight: ['400'],
+  variable: '--familyEspecial'
 })
 
-export const bodyFonts = `${font1.variable} ${font2.variable}`
+export const bodyFonts = `${font1.variable} ${font2.variable} ${font3.variable}`

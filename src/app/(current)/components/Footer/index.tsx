@@ -11,10 +11,11 @@ interface IFooter {
 const Footer = ({ className = '' }: IFooter): JSX.Element => {
   return (
     <footer className={`${className} footer`}>
-      <Link className='footer-logo' href='https://luisjp.vercel.app' target='_blank'>
-        <p>Juls Dev</p>
-      </Link>
       <ThemeController />
+      <Link href='https://luisjp.vercel.app' target='_blank'>
+        <h2 className='footer-title'>J-ART</h2>
+      </Link>
+      <h5 className='footer-tex'>Mas información</h5>
     </footer>
   )
 }

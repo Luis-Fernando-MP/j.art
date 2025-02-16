@@ -1,28 +1,44 @@
 @use '@sass/config/vars' as v;
 @use '@sass/utils/defs' as d;
+@use '@sass/utils/browser' as b;
 
 .footer {
+  position: relative;
   justify-content: center;
-  padding: 0 v.$padding;
-  border-top-right-radius: v.$radius;
-  background-color: rgb(v.$tn1, 0.6);
 
   @include d.flex($ali: center, $dir: row);
 
-  &-logo {
-    @include d.flex($ali: center, $dir: row);
+  &::before {
+    pointer-events: none;
+    content: '';
 
-    &__icon {
-      width: 25px;
-      height: 25px;
-      border: 2.5px solid rgb(v.$bg1);
-      border-radius: 50%;
-    }
+    position: absolute;
+    z-index: 0;
+    inset: 50%;
+    transform: translate(-50%, -50%);
 
-    p {
-      font-weight: bolder;
-      color: rgb(v.$fn1);
-      text-transform: uppercase;
+    width: 50%;
+    height: 50%;
+    border-top-right-radius: v.$radius;
+
+    opacity: 0.8;
+    background-color: rgb(v.$tn1);
+    filter: blur(60px);
+
+    @include b.browsers('firefox') {
+      opacity: 0.5;
     }
+  }
+
+  &-title {
+    font-family: v.$font3;
+  }
+
+  h5 {
+    text-decoration: line-through;
+  }
+
+  &-text {
+    color: rgb(v.$fn2);
   }
 }

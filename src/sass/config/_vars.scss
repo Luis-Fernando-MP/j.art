@@ -6,7 +6,7 @@
   // Fuentes
   --fnt-primary: 255, 255, 255;
   --fnt-secondary: 174, 174, 174;
-  --fnt-tertiary: 255, 146, 172;
+  --fnt-active: 255, 146, 172;
 
   // Principales
   --tn-primary: 157, 44, 255;
@@ -14,10 +14,10 @@
 
   // --
   --xl-font-size: 4rem;
-  --h1-font-size: 1.35rem;
-  --h2-font-size: 1.3rem;
-  --h3-font-size: 1.25rem;
-  --h4-font-size: 1.2rem;
+  --h1-font-size: 1.3rem;
+  --h2-font-size: 1.25rem;
+  --h3-font-size: 1.2rem;
+  --h4-font-size: 1.15rem;
   --h5-font-size: 1.1rem;
   --p-font-size: 1rem;
 }
@@ -35,7 +35,7 @@ $bg3: var(--bg-tertiary);
 $bgp: var(--bg-pure);
 $fn1: var(--fnt-primary);
 $fn2: var(--fnt-secondary);
-$fn3: var(--fnt-tertiary);
+$fnA: var(--fnt-active);
 $tn1: var(--tn-primary);
 $tn2: var(--tn-secondary);
 
@@ -51,10 +51,11 @@ $big-screen: 1350px;
 $radius: 8px;
 $padding: 10px;
 $icon: 17px;
-$family-size: 16px;
+$family-size: 14px;
 $fontBase: 'Segoe UI Mono', 'Roboto Mono';
-$font1: var(--font1);
-$font2: var(--font2);
+$font1: var(--family1);
+$font2: var(--family2);
+$font3: var(--familyEspecial);
 $error: rgb(228 30 56);
 $focus: rgb(66 133 244);
 

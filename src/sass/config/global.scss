@@ -123,14 +123,20 @@ body {
 
   small,
   span,
-  input,
-  textarea,
-  button,
-  select {
+  input {
     font-family: map-get(map-get($typography, 'p'), family);
     font-size: map-get(map-get($typography, 'p'), size);
     font-weight: map-get(map-get($typography, 'p'), weight);
     color: map-get(map-get($typography, 'p'), color);
+  }
+
+  textarea,
+  button,
+  select {
+    font-family: map-get(map-get($typography, 'a'), family);
+    font-size: map-get(map-get($typography, 'a'), size);
+    font-weight: map-get(map-get($typography, 'a'), weight);
+    color: map-get(map-get($typography, 'a'), color);
   }
 
   .active {

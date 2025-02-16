@@ -17,7 +17,7 @@ const ThemeController = (): JSX.Element => {
   return (
     <section className='theme'>
       <button className='theme-controller' onClick={togglePopup}>
-        {appTheme}
+        <h5 className='footer-text'>Tema: {appTheme}</h5>
       </button>
       <Popup isOpen={openThemes} onClose={togglePopup} title='Temas' className='theme-popup'>
         {Object.entries(THEMES).map(current => {
@@ -26,22 +26,27 @@ const ThemeController = (): JSX.Element => {
             <button
               key={key}
               onClick={() => handleSetTheme(key)}
-              className={`theme-action ${acl(key === appTheme)}`}
+              className={`theme-action ${acl(key === appTheme, 'selected')}`}
               style={{
-                backgroundColor: `rgb(${colors['tn-primary']})`
+                backgroundColor: `rgb(${colors['bg-primary']})`,
+                borderColor: `rgb(${colors['bg-tertiary']})`
               }}
             >
-              <p style={{ color: `rgb(${colors['fnt-primary']})`, backgroundColor: `rgb(${colors['bg-primary']})` }}>{key}</p>
               <div
-                className='theme-colors'
+                className='theme-action__circle'
                 style={{
-                  backgroundColor: `rgb(${colors['tn-primary']})`
+                  backgroundImage: `linear-gradient(45deg, rgb(${colors['tn-primary']}), rgb(${colors['tn-primary']}, 0.3), rgb(${colors['bg-primary']}) 80%)`
+                }}
+              />
+              <div className='theme-action__blur' style={{ backgroundColor: `rgb(${colors['bg-secondary']})` }} />
+              <h4
+                style={{
+                  backgroundColor: `rgb(${colors['bg-primary']}, .1)`,
+                  color: `rgb(${colors['fnt-primary']})`
                 }}
               >
-                <div style={{ backgroundColor: `rgb(${colors['bg-primary']})` }} />
-                <div style={{ backgroundColor: `rgb(${colors['fnt-primary']})` }} />
-                <div style={{ backgroundColor: `rgb(${colors['tn-secondary']})` }} />
-              </div>
+                {key}
+              </h4>
             </button>
           )
         })}
