@@ -4,6 +4,7 @@ import { JSX, memo } from 'react'
 
 import ActiveDrawsStore from '../../store/ActiveDraws.store'
 import LayerStore from '../../store/layer.store'
+import RepaintDrawingStore from '../../store/repaintDrawing.store'
 import CopyLayer from './CopyLayer'
 
 const MergeTool = dynamic(() => import('../MergeTool'), {
@@ -12,6 +13,7 @@ const MergeTool = dynamic(() => import('../MergeTool'), {
 
 const CanvasLayersActions = (): JSX.Element | null => {
   const { listOfLayers, setListOfLayers, addNewLayer, deleteLayer } = LayerStore()
+  const { setRepaint } = RepaintDrawingStore()
 
   const { actLayerId, actParentId, setActLayerId } = ActiveDrawsStore()
   const layers = listOfLayers[actParentId]
@@ -32,6 +34,7 @@ const CanvasLayersActions = (): JSX.Element | null => {
     updatedLayers[currentIndexLayer + 1] = temp
     const newList = { ...listOfLayers, [actParentId]: updatedLayers }
     setListOfLayers(newList)
+    setRepaint('frames')
   }
 
   const moveLayerUp = () => {
@@ -42,6 +45,7 @@ const CanvasLayersActions = (): JSX.Element | null => {
     updatedLayers[currentIndexLayer - 1] = temp
     const newList = { ...listOfLayers, [actParentId]: updatedLayers }
     setListOfLayers(newList)
+    setRepaint('frames')
   }
 
   const handleDelete = () => {
@@ -49,6 +53,7 @@ const CanvasLayersActions = (): JSX.Element | null => {
     const newSelectedLayer = deleteLayer({ actLayerId, parentId: actParentId })
     if (!newSelectedLayer) return
     setActLayerId(newSelectedLayer.id)
+    setRepaint('frames')
   }
 
   return (

@@ -9,7 +9,7 @@
   justify-content: space-between;
 
   padding: 5px v.$padding;
-  border: 1.5px solid transparent;
+  border: 3px solid transparent;
   border-radius: v.$radius;
 
   background-color: rgb(v.$bg2);
@@ -55,6 +55,8 @@
   }
 
   &-image {
+    cursor: pointer;
+
     width: 50px;
     min-width: 50px;
     height: 50px;
@@ -76,18 +78,6 @@
     background-color: rgb(v.$bg1);
   }
 
-  &.selected {
-    border-color: rgb(v.$tn1);
-
-    input {
-      color: rgb(v.$fn1);
-    }
-
-    svg {
-      stroke: rgb(v.$fn1);
-    }
-  }
-
   &-opacityController {
     position: absolute;
     z-index: 1;
@@ -105,6 +95,25 @@
 
     p {
       font-size: 1rem;
+    }
+  }
+
+  &.hidden {
+    border-color: rgb(v.$bg1);
+    border-style: dashed;
+    opacity: 0.7;
+    background-color: transparent;
+  }
+
+  &.selected {
+    border-color: rgb(v.$tn1);
+
+    input {
+      color: rgb(v.$fn1);
+    }
+
+    svg {
+      stroke: rgb(v.$fn1);
     }
   }
 }

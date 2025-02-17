@@ -3,7 +3,6 @@ export enum EWorkerActions {
   GENERATE_FULL_VIEW = 'generateFullView',
   CHANGE_OPACITY = 'changeOpacity'
 }
-
 export type WorkerEvent = MessageEvent<WorkerMessage>
 export interface WorkerMessage {
   imageBitmap?: ImageBitmap
@@ -19,6 +18,7 @@ self.onmessage = async (event: WorkerEvent) => {
   try {
     if (action === EWorkerActions.GENERATE_FRAME && imageBitmap) await generateImage(imageBitmap)
     if (action === EWorkerActions.GENERATE_FULL_VIEW && imagesBitmap) await generateFullImage(imagesBitmap)
+
     if (action === EWorkerActions.CHANGE_OPACITY && imageBitmap && alpha) await changeAlpha(imageBitmap, alpha)
   } catch (error) {
     self.postMessage({ error: (error as Error).message })
@@ -85,9 +85,7 @@ async function generateFullImage(imagesBitmap: ImageBitmap[]) {
   const ctx = offscreen.getContext('2d')
   if (!ctx) return self.postMessage({ error: 'Failed to get 2D context' })
 
-  imagesBitmap.forEach(image => {
-    ctx.drawImage(image, 0, 0)
-  })
+  imagesBitmap.forEach(image => ctx.drawImage(image, 0, 0))
   try {
     const blob = await offscreen.convertToBlob({ quality: 0.05 })
     const mergedBitmap = await createImageBitmap(offscreen)

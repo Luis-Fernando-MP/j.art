@@ -1,5 +1,5 @@
 import { getContext } from '@/scripts/transformCanvas'
-import { getBitmapFromCanvasList } from '@/shared/bitmap'
+import { getBitmapFromCanvas, getBitmapFromParentCanvas } from '@/shared/bitmap'
 import { EWorkerActions, WorkerMessage } from '@workers/layer-view'
 import { RefObject, useCallback, useEffect, useRef } from 'react'
 import toast from 'react-hot-toast'
@@ -55,7 +55,7 @@ const useDrawPreview = ({ $canvasRef }: IUseDrawPreviewHook) => {
   const generateFrameViewBitmap = useCallback(async () => {
     if (!frameWorkerRef.current) return
     try {
-      const imagesBitmap = await getBitmapFromCanvasList(actParentId)
+      const imagesBitmap = await getBitmapFromParentCanvas(actParentId)
       if (!imagesBitmap) throw new Error('Failed to load canvas bitmap')
       const message: WorkerMessage = { imagesBitmap, action: EWorkerActions.GENERATE_FULL_VIEW }
       frameWorkerRef.current.postMessage(message, imagesBitmap)
@@ -63,13 +63,13 @@ const useDrawPreview = ({ $canvasRef }: IUseDrawPreviewHook) => {
     } catch (error) {
       console.error('Failed to create ImageBitmap for frame view:', error)
     }
-  }, [actParentId, drawImageInFrameView])
+  }, [actParentId, drawImageInFrameView, listOfLayers])
 
   const generateLayerViewBitmap = useCallback(async () => {
     if (!layerWorkerRef.current) return
-    const { canvas } = getContext(actLayerId)
+    const imageBitmap = await getBitmapFromCanvas(actLayerId)
+    if (!imageBitmap) return
     try {
-      const imageBitmap = await createImageBitmap(canvas)
       const message: WorkerMessage = { imageBitmap, action: EWorkerActions.GENERATE_FRAME }
       layerWorkerRef.current.postMessage(message, [imageBitmap])
       handleWorkerMessage(layerWorkerRef, data => drawImageInLayerView(data.base64))

@@ -141,6 +141,10 @@ body {
     background: none;
   }
 
+  button {
+    cursor: pointer;
+  }
+
   .active {
     border: 2px solid red !important;
     color: rgb($fnA) !important;

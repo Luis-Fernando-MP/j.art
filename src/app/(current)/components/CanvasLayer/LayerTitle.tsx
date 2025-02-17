@@ -9,7 +9,8 @@ interface ILayerTitle {
 }
 
 const LayerTitle = ({ changeTitle, value, idLayer }: ILayerTitle): JSX.Element => {
-  const [localValue, setLocalValue, removeLocalValue] = useSessionStorage(idLayer, value)
+  const localId = `${idLayer}-title`
+  const [localValue, setLocalValue, removeLocalValue] = useSessionStorage(localId, value)
 
   useEffect(() => {
     if (value === localValue) {

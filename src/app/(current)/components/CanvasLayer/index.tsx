@@ -37,16 +37,23 @@ const CanvasLayer = ({ layer }: ICanvasLayer): JSX.Element => {
     })
   }
 
+  const handleOPacityChange = (opacity: number): void => {
+    updateLayer({
+      parentId,
+      layer: { id, opacity }
+    })
+  }
+
   return (
-    <section className={`canvasLayer ${acl(isActive, 'selected')}`}>
+    <section className={`canvasLayer ${acl(isActive, 'selected')} ${acl(!isWatching, 'hidden')}`}>
       <div className='canvasLayer-viewer'>
         <CanvasSeeMode className='canvasLayer-see' layerId={id} isWatching={isWatching} parentId={parentId} />
-        <div className='canvasLayer-image' role='button' tabIndex={0} onClick={handleClick}>
+        <div className='canvasLayer-image' role='button' data-button tabIndex={0} onClick={handleClick}>
           {imageUrl && <Image src={imageUrl} alt='canvas-layer' layout='fullWidth' />}
         </div>
         <LayerTitle value={title} idLayer={id} changeTitle={handleTitleChange} />
       </div>
-      <OpacityCanvasMode opacity={opacity} layerId={id} />
+      <OpacityCanvasMode opacity={opacity} layerId={id} handleOPacityChange={handleOPacityChange} />
     </section>
   )
 }

@@ -168,9 +168,7 @@ function generateFullImage(imagesBitmap) {
                     ctx = offscreen.getContext('2d');
                     if (!ctx)
                         return [2 /*return*/, self.postMessage({ error: 'Failed to get 2D context' })];
-                    imagesBitmap.forEach(function (image) {
-                        ctx.drawImage(image, 0, 0);
-                    });
+                    imagesBitmap.forEach(function (image) { return ctx.drawImage(image, 0, 0); });
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 4, , 5]);

@@ -3,6 +3,7 @@ import { type JSX, memo } from 'react'
 import toast from 'react-hot-toast'
 
 import LayerStore from '../../store/layer.store'
+import RepaintDrawingStore from '../../store/repaintDrawing.store'
 
 interface ICanvasSeeMode {
   layerId: string
@@ -13,15 +14,18 @@ interface ICanvasSeeMode {
 
 const CanvasSeeMode = ({ className, layerId, isWatching, parentId }: ICanvasSeeMode): JSX.Element => {
   const { updateLayer } = LayerStore()
+  const { setRepaint } = RepaintDrawingStore()
 
   const handleSeeMode = () => {
     const $canvas = document.getElementById(layerId)
     if (!($canvas instanceof HTMLCanvasElement)) return toast.error('😟 Lienzo no encontrado')
     $canvas.style.display = !isWatching ? 'block' : 'none'
+
     updateLayer({
       layer: { id: layerId, isWatching: !isWatching },
       parentId
     })
+    setRepaint('frames')
   }
   return (
     <button className={className} onClick={handleSeeMode}>

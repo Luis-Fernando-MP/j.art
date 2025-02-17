@@ -139,7 +139,7 @@ const ClickSpark: FC<ClickSparkProps> = ({
     const canvas = canvasRef.current
     if (!canvas) return
     const target = e.target as HTMLElement
-    if (!target.closest("button, a, img, [data-action='button']") || e.ctrlKey) return
+    if (!target.closest('button, a, img, [data-button]') || e.ctrlKey) return
     const rect = canvas.getBoundingClientRect()
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top

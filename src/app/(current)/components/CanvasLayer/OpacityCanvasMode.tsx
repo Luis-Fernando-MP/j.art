@@ -1,27 +1,30 @@
 import Range from '@/shared/components/Range'
-import { EWorkerActions, WorkerMessage } from '@workers/layer-view'
 import { BlendIcon } from 'lucide-react'
-import { type JSX, memo, useEffect, useRef, useState } from 'react'
+import { type JSX, memo, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
+import { useSessionStorage } from 'usehooks-ts'
+
+import RepaintDrawingStore from '../../store/repaintDrawing.store'
 
 interface IOpacityCanvasMode {
+  handleOPacityChange: (opacity: number) => void
   opacity: number
   layerId: string
 }
 
-const OpacityCanvasMode = ({ opacity, layerId }: IOpacityCanvasMode): JSX.Element => {
+const OpacityCanvasMode = ({ opacity, layerId, handleOPacityChange }: IOpacityCanvasMode): JSX.Element => {
   const [active, setActive] = useState(false)
-  const [rangeOpacity, setRangeOpacity] = useState(opacity)
-  const layerWorker = useRef<Worker | null>(null)
+  const localId = `${layerId}-opacity`
+  const [localOpacity, setLocalOpacity, removeLocalOpacity] = useSessionStorage(localId, opacity)
 
+  const [rangeOpacity, setRangeOpacity] = useState(localOpacity)
+
+  const { setRepaint } = RepaintDrawingStore()
   useEffect(() => {
-    if (layerWorker.current) return
-    layerWorker.current = new Worker('/workers/layer-view.js', { type: 'module' })
-    return () => {
-      layerWorker.current?.terminate()
-      layerWorker.current = null
+    if (localOpacity === opacity) {
+      removeLocalOpacity()
     }
-  }, [])
+  }, [localOpacity, opacity, removeLocalOpacity])
 
   const handleClick = (): void => {
     setActive(!active)
@@ -38,29 +41,10 @@ const OpacityCanvasMode = ({ opacity, layerId }: IOpacityCanvasMode): JSX.Elemen
 
   const handleFinalChangeRange = async (alpha: number) => {
     const $canvas = document.getElementById(layerId)
-    console.log('pass', alpha)
     if (!($canvas instanceof HTMLCanvasElement)) return toast.error('😟 Lienzo no encontrado')
-    $canvas.style.opacity = `${100}%`
-    if (!layerWorker.current) return
-    const ctx = $canvas.getContext('2d')
-    if (!ctx) return
-    try {
-      const imageBitmap = await createImageBitmap($canvas)
-      const message: WorkerMessage = { imageBitmap, action: EWorkerActions.CHANGE_OPACITY, alpha: alpha / 100 }
-
-      layerWorker.current.postMessage(message, [imageBitmap])
-      layerWorker.current.onmessage = event => {
-        const { bitmap } = event.data
-        if (!bitmap) return
-        ctx.clearRect(0, 0, $canvas.width, $canvas.height)
-        ctx.drawImage(bitmap, 0, 0)
-      }
-      layerWorker.current.onerror = error => {
-        console.error('Worker Error:', error)
-      }
-    } catch (error) {
-      console.error('Failed to create ImageBitmap:', error)
-    }
+    setLocalOpacity(alpha)
+    handleOPacityChange(alpha)
+    setRepaint('all')
   }
 
   return (
@@ -70,8 +54,9 @@ const OpacityCanvasMode = ({ opacity, layerId }: IOpacityCanvasMode): JSX.Elemen
       </button>
       {active && (
         <div className='canvasLayer-opacityController'>
-          <p>Opacidad</p>
+          <p>Opacidad {rangeOpacity}</p>
           <Range
+            step={10}
             handleChange={handleChangeRange}
             rangeValue={rangeOpacity}
             typeRange='horizontal'

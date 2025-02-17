@@ -1,15 +1,19 @@
+import { getBitmapFromCanvas } from '@/shared/bitmap'
 import { EWorkerActions, WorkerMessage } from '@workers/layer-view'
 import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 
 import ActiveDrawsStore from '../store/ActiveDraws.store'
 import LayerStore from '../store/layer.store'
+import RepaintDrawingStore from '../store/repaintDrawing.store'
 
 type UpdateSelectedLayer = { index: number; layerId: string }
 
 const useMergeTool = () => {
   const { listOfLayers, updateLayer } = LayerStore()
   const { actParentId } = ActiveDrawsStore()
+  const { setRepaint } = RepaintDrawingStore()
+  const { setActLayerId } = ActiveDrawsStore()
 
   const currentLayers = useMemo(() => listOfLayers[actParentId], [listOfLayers, actParentId])
   const [selectedLayers, setSelectedLayers] = useState<string[]>([])
@@ -39,17 +43,21 @@ const useMergeTool = () => {
   const handleMergeLayers = async () => {
     if (!mergeWorker.current || selectedLayers.length < 2) return
     const [firstLayer, secondLayer] = selectedLayers
-    console.log('from', firstLayer.slice(0, 7), 'to', secondLayer.slice(0, 7))
     const validate = currentLayers.some(layer => layer.id === firstLayer) || currentLayers.some(layer => layer.id === secondLayer)
     if (!validate || firstLayer === secondLayer) return toast.error('❗️Asegúrate de elegir bien las capas')
+
     const $firstCanvas = document.getElementById(firstLayer) as HTMLCanvasElement
-    const $secondCanvas = document.getElementById(secondLayer) as HTMLCanvasElement
-    if (!$firstCanvas || !$secondCanvas) return toast.error('❗️No se encontraron los lienzos')
+
+    if (!$firstCanvas) return toast.error('❗️No se encontraron los lienzos')
     const canvasCtx = $firstCanvas.getContext('2d')
     if (!canvasCtx) return
 
     try {
-      const imagesBitmap = await Promise.all([createImageBitmap($secondCanvas), createImageBitmap($firstCanvas)])
+      const firstBitmap = await getBitmapFromCanvas(firstLayer)
+      const secondBitmap = await getBitmapFromCanvas(secondLayer)
+      if (!firstBitmap || !secondBitmap) return toast.error('La transformación de los lienzos ha fallado')
+
+      const imagesBitmap = [secondBitmap, firstBitmap]
       const message: WorkerMessage = { imagesBitmap, action: EWorkerActions.GENERATE_FULL_VIEW }
       mergeWorker.current.postMessage(message, imagesBitmap)
 
@@ -65,6 +73,8 @@ const useMergeTool = () => {
           list: updatedLayers
         })
         toast.success('🍀 Fusionado')
+        setRepaint('frames')
+        setActLayerId(firstLayer)
       }
 
       mergeWorker.current.onerror = () => toast.error('❗️Error al procesar la fusión')
