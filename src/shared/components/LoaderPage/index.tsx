@@ -12,7 +12,7 @@ const LoaderPage = () => {
   useLayoutEffect(() => {
     setTimeout(() => {
       setLoading(false)
-    }, 200)
+    }, 500)
   }, [])
 
   if (!loading) return null

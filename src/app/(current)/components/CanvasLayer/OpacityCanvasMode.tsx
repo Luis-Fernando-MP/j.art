@@ -7,7 +7,6 @@ import toast from 'react-hot-toast'
 interface IOpacityCanvasMode {
   opacity: number
   layerId: string
-  parentId: string
 }
 
 const OpacityCanvasMode = ({ opacity, layerId }: IOpacityCanvasMode): JSX.Element => {

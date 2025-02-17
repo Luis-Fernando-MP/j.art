@@ -1,25 +1,32 @@
 import { CheckIcon } from 'lucide-react'
-import { type JSX, memo, useRef, useState } from 'react'
-import { useDebounceCallback } from 'usehooks-ts'
+import { ChangeEvent, type JSX, memo, useEffect } from 'react'
+import { useSessionStorage } from 'usehooks-ts'
 
 interface ILayerTitle {
   changeTitle: (value: string) => void
   value: string
+  idLayer: string
 }
 
-const LayerTitle = ({ changeTitle, value }: ILayerTitle): JSX.Element => {
-  const [inputValue, setInputValue] = useState(value)
-  const $inputRef = useRef<HTMLInputElement>(null)
+const LayerTitle = ({ changeTitle, value, idLayer }: ILayerTitle): JSX.Element => {
+  const [localValue, setLocalValue, removeLocalValue] = useSessionStorage(idLayer, value)
 
-  const debounced = useDebounceCallback(v => {
-    setInputValue(v)
-  }, 500)
+  useEffect(() => {
+    if (value === localValue) {
+      removeLocalValue()
+    }
+  }, [value, localValue, removeLocalValue])
+
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.value
+    setLocalValue(newValue)
+  }
 
   return (
     <div className='canvasLayer-title'>
-      <input defaultValue={inputValue} onChange={debounced} ref={$inputRef} />
-      {inputValue !== value && (
-        <button onClick={() => changeTitle(inputValue)}>
+      <input defaultValue={localValue} onChange={handleInputChange} />
+      {localValue !== value && (
+        <button onClick={() => changeTitle(localValue)}>
           <CheckIcon />
         </button>
       )}

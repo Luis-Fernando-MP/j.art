@@ -6,16 +6,13 @@ import { JSX, memo } from 'react'
 
 import ActiveDrawsStore from '../../store/ActiveDraws.store'
 import LayerStore, { Layer } from '../../store/layer.store'
-import LayerTitle from './LayerTitle'
 import './style.scss'
 
-const CanvasSeeMode = dynamic(() => import('./CanvasSeeMode'), {
+const CanvasSeeMode = dynamic(() => import('./CanvasSeeMode'), { ssr: false, loading: () => <EyeIcon /> })
+const OpacityCanvasMode = dynamic(() => import('./OpacityCanvasMode'), { ssr: false })
+const LayerTitle = dynamic(() => import('./LayerTitle'), {
   ssr: false,
-  loading: () => <EyeIcon />
-})
-
-const OpacityCanvasMode = dynamic(() => import('./OpacityCanvasMode'), {
-  ssr: false
+  loading: () => <div className='canvasLayer-title'>loading...</div>
 })
 
 interface ICanvasLayer {
@@ -47,9 +44,9 @@ const CanvasLayer = ({ layer }: ICanvasLayer): JSX.Element => {
         <div className='canvasLayer-image' role='button' tabIndex={0} onClick={handleClick}>
           {imageUrl && <Image src={imageUrl} alt='canvas-layer' layout='fullWidth' />}
         </div>
-        <LayerTitle value={title} changeTitle={handleTitleChange} />
+        <LayerTitle value={title} idLayer={id} changeTitle={handleTitleChange} />
       </div>
-      <OpacityCanvasMode opacity={opacity} layerId={id} parentId={parentId} />
+      <OpacityCanvasMode opacity={opacity} layerId={id} />
     </section>
   )
 }

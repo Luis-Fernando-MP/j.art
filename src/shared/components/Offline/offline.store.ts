@@ -1,9 +1,9 @@
 import { StateCreator, create } from 'zustand'
 
-const initialState = typeof window !== 'undefined' ? !navigator.onLine : false
+const initialState = null
 
 interface IOfflineStore {
-  isOffline: boolean
+  isOffline: boolean | null
   setIsOffline: (isOffline: boolean) => void
 }
 

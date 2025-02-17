@@ -6,6 +6,8 @@
 
   position: relative;
 
+  justify-content: space-between;
+
   padding: 5px v.$padding;
   border: 1.5px solid transparent;
   border-radius: v.$radius;
@@ -21,23 +23,34 @@
 
     pointer-events: visible;
     user-select: none;
+    align-items: stretch;
   }
 
   &-title {
     position: relative;
+    justify-content: center;
     width: 100px;
-    padding: 0;
+    height: 50px;
+
+    @include d.flex;
 
     input {
-      padding-right: 50px;
+      width: calc(100% - 30px);
+      padding-left: 3px;
       background-color: transparent;
     }
 
     button {
+      cursor: pointer;
+
       position: absolute;
       top: 50%;
       right: 5px;
       transform: translateY(-50%);
+
+      display: block;
+
+      height: 100%;
     }
   }
 
@@ -58,7 +71,7 @@
   }
 
   &-delete {
-    padding: 7px;
+    padding: v.$padding 6px;
     border-radius: v.$radius;
     background-color: rgb(v.$bg1);
   }

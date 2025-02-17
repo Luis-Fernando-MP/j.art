@@ -8,6 +8,8 @@ import OfflineStore from './offline.store'
 const Offline = () => {
   const { isOffline, setIsOffline } = OfflineStore()
 
+  console.log(isOffline)
+
   useEffect(() => {
     const updateNetworkStatus = () => setIsOffline(!navigator.onLine)
 
@@ -22,6 +24,7 @@ const Offline = () => {
 
   const showToast = useCallback(() => {
     const toastId = 'offline'
+    if (isOffline === null) return
     if (isOffline) {
       return toast.loading('😟 Te haz quedado sin internet', { id: toastId })
     }
