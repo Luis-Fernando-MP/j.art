@@ -15,10 +15,7 @@ const CanvasSeeMode = dynamic(() => import('./CanvasSeeMode'), {
 })
 
 const OpacityCanvasMode = dynamic(() => import('./OpacityCanvasMode'), {
-  ssr: false,
-  loading() {
-    return <p>loading</p>
-  }
+  ssr: false
 })
 
 interface ICanvasLayer {
@@ -50,7 +47,7 @@ const CanvasLayer = ({ layer }: ICanvasLayer): JSX.Element => {
         <div className='canvasLayer-image' role='button' tabIndex={0} onClick={handleClick}>
           {imageUrl && <Image src={imageUrl} alt='canvas-layer' layout='fullWidth' />}
         </div>
-        <LayerTitle value={title} onChange={handleTitleChange} />
+        <LayerTitle value={title} changeTitle={handleTitleChange} />
       </div>
       <OpacityCanvasMode opacity={opacity} layerId={id} parentId={parentId} />
     </section>

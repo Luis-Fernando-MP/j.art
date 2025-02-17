@@ -42,7 +42,7 @@ const BoardFrame = ({ isActive, index, parentKey, firstLayer }: IBoardFrame): JS
   const handleSelectFrame = (e: MouseEvent): void => {
     if (e.ctrlKey) return
     selectAndMoveFrame({ parentIndex: index, frameId: parentKey, layerId: firstLayer })
-    setRepaint('frames')
+    // setRepaint('frames')
   }
 
   const selectAndMoveFrame = ({ frameId, layerId, parentIndex }: ISelectAndMoveFrame) => {
@@ -64,7 +64,13 @@ const BoardFrame = ({ isActive, index, parentKey, firstLayer }: IBoardFrame): JS
   return (
     <div className={`boardFrame ${acl(isActive, 'selected')}`}>
       <button className='boardFrame-button' onClick={handleSelectFrame}>
-        <Image src={BLANK_IMAGE} alt='canvas-frame' layout='fullWidth' id={`${parentKey}-frame-view`} />
+        <Image
+          src={BLANK_IMAGE}
+          alt='canvas-frame'
+          className='boardFrame-image'
+          layout='fullWidth'
+          id={`${parentKey}-frame-view`}
+        />
       </button>
       <div className='boardFrame-controls'>
         <button className='boardFrame-control' onClick={handleRemoveLayer}>

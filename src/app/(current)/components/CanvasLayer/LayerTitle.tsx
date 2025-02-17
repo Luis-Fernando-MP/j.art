@@ -1,15 +1,30 @@
-import { type JSX } from 'react'
+import { CheckIcon } from 'lucide-react'
+import { type JSX, memo, useRef, useState } from 'react'
 import { useDebounceCallback } from 'usehooks-ts'
 
 interface ILayerTitle {
-  onChange: (value: string) => void
+  changeTitle: (value: string) => void
   value: string
 }
 
-const LayerTitle = ({ onChange, value }: ILayerTitle): JSX.Element => {
-  const debounced = useDebounceCallback(onChange, 500)
+const LayerTitle = ({ changeTitle, value }: ILayerTitle): JSX.Element => {
+  const [inputValue, setInputValue] = useState(value)
+  const $inputRef = useRef<HTMLInputElement>(null)
 
-  return <input defaultValue={value} onChange={event => debounced(event.target.value)} />
+  const debounced = useDebounceCallback(v => {
+    setInputValue(v)
+  }, 500)
+
+  return (
+    <div className='canvasLayer-title'>
+      <input defaultValue={inputValue} onChange={debounced} ref={$inputRef} />
+      {inputValue !== value && (
+        <button onClick={() => changeTitle(inputValue)}>
+          <CheckIcon />
+        </button>
+      )}
+    </div>
+  )
 }
 
-export default LayerTitle
+export default memo(LayerTitle)

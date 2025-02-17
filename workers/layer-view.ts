@@ -45,7 +45,7 @@ async function changeAlpha(imageBitmap: ImageBitmap, alpha: number) {
     const updatedBitmap = await createImageBitmap(offscreen)
 
     const blob = await offscreen.convertToBlob({
-      quality: 0.2
+      quality: 0.05
     })
     const reader = new FileReader()
 
@@ -62,11 +62,10 @@ async function generateImage(imageBitmap: ImageBitmap) {
   const offscreen = new OffscreenCanvas(imageBitmap.width, imageBitmap.height)
   const ctx = offscreen.getContext('2d')
   if (!ctx) return self.postMessage({ error: 'Failed to get 2D context' })
-  ctx.imageSmoothingEnabled = false
   ctx.drawImage(imageBitmap, 0, 0)
   try {
     const blob = await offscreen.convertToBlob({
-      quality: 0.2
+      quality: 0.05
     })
     const reader = new FileReader()
 
@@ -86,12 +85,11 @@ async function generateFullImage(imagesBitmap: ImageBitmap[]) {
   const ctx = offscreen.getContext('2d')
   if (!ctx) return self.postMessage({ error: 'Failed to get 2D context' })
 
-  ctx.imageSmoothingEnabled = false
   imagesBitmap.forEach(image => {
     ctx.drawImage(image, 0, 0)
   })
   try {
-    const blob = await offscreen.convertToBlob({ quality: 0.2 })
+    const blob = await offscreen.convertToBlob({ quality: 0.05 })
     const mergedBitmap = await createImageBitmap(offscreen)
 
     const reader = new FileReader()

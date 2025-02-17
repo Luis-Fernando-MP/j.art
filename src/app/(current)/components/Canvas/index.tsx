@@ -1,6 +1,7 @@
 import { acl } from '@/shared/acl'
 import { type JSX, memo } from 'react'
 
+import useUseDrawPreview from '../../hooks/UseDrawPreview'
 import useCanvas from '../../hooks/useCanvas'
 import CanvasStore from '../../store/canvas.store'
 import './style.scss'
@@ -15,6 +16,7 @@ const Canvas = ({ canvasId, isActive }: ICanvas): JSX.Element => {
   const { $canvasRef, handleCanvasMouseDown, handleCanvasMouseMove } = useCanvas({
     canvasId
   })
+  useUseDrawPreview({ $canvasRef })
 
   return (
     <canvas

@@ -11,9 +11,9 @@ const MergeTool = dynamic(() => import('../MergeTool'), {
 })
 
 const CanvasLayersActions = (): JSX.Element | null => {
-  const { listOfLayers, setListOfLayers, addNewLayer } = LayerStore()
+  const { listOfLayers, setListOfLayers, addNewLayer, deleteLayer } = LayerStore()
 
-  const { actLayerId, actParentId } = ActiveDrawsStore()
+  const { actLayerId, actParentId, setActLayerId } = ActiveDrawsStore()
   const layers = listOfLayers[actParentId]
 
   if (!layers) return null
@@ -25,7 +25,7 @@ const CanvasLayersActions = (): JSX.Element | null => {
   }
 
   const moveLayerDown = () => {
-    if (currentIndexLayer >= layers.length - 1) return
+    if (currentIndexLayer >= layers.length - 1 || !actLayerId) return
     const updatedLayers = structuredClone(layers)
     const temp = updatedLayers[currentIndexLayer]
     updatedLayers[currentIndexLayer] = updatedLayers[currentIndexLayer + 1]
@@ -35,7 +35,7 @@ const CanvasLayersActions = (): JSX.Element | null => {
   }
 
   const moveLayerUp = () => {
-    if (currentIndexLayer <= 0) return
+    if (currentIndexLayer <= 0 || !actLayerId) return
     const updatedLayers = structuredClone(layers)
     const temp = updatedLayers[currentIndexLayer]
     updatedLayers[currentIndexLayer] = updatedLayers[currentIndexLayer - 1]
@@ -44,8 +44,11 @@ const CanvasLayersActions = (): JSX.Element | null => {
     setListOfLayers(newList)
   }
 
-  const handleDelete = (): void => {
-    //antes-ojo deleteLayer(actLayerId)
+  const handleDelete = () => {
+    if (!actLayerId) return
+    const newSelectedLayer = deleteLayer({ actLayerId, parentId: actParentId })
+    if (!newSelectedLayer) return
+    setActLayerId(newSelectedLayer.id)
   }
 
   return (

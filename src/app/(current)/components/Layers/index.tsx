@@ -33,7 +33,7 @@ const Layers = ({ layers, isDisable, parentId, index, firstLayerId }: ILayers): 
       setActParentId(parentId)
       setActParentIndex(index)
       setActLayerId(firstLayerId)
-      setRepaint('frames')
+      // setRepaint('frames')
       moveToChild(index)
       mvHorizontalSlider(index)
     },

@@ -103,7 +103,7 @@ function changeAlpha(imageBitmap, alpha) {
                 case 2:
                     updatedBitmap_1 = _a.sent();
                     return [4 /*yield*/, offscreen.convertToBlob({
-                            quality: 0.2
+                            quality: 0.05
                         })];
                 case 3:
                     blob = _a.sent();
@@ -132,13 +132,12 @@ function generateImage(imageBitmap) {
                     ctx = offscreen.getContext('2d');
                     if (!ctx)
                         return [2 /*return*/, self.postMessage({ error: 'Failed to get 2D context' })];
-                    ctx.imageSmoothingEnabled = false;
                     ctx.drawImage(imageBitmap, 0, 0);
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 4]);
                     return [4 /*yield*/, offscreen.convertToBlob({
-                            quality: 0.2
+                            quality: 0.05
                         })];
                 case 2:
                     blob = _a.sent();
@@ -169,14 +168,13 @@ function generateFullImage(imagesBitmap) {
                     ctx = offscreen.getContext('2d');
                     if (!ctx)
                         return [2 /*return*/, self.postMessage({ error: 'Failed to get 2D context' })];
-                    ctx.imageSmoothingEnabled = false;
                     imagesBitmap.forEach(function (image) {
                         ctx.drawImage(image, 0, 0);
                     });
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 4, , 5]);
-                    return [4 /*yield*/, offscreen.convertToBlob({ quality: 0.2 })];
+                    return [4 /*yield*/, offscreen.convertToBlob({ quality: 0.05 })];
                 case 2:
                     blob = _a.sent();
                     return [4 /*yield*/, createImageBitmap(offscreen)];

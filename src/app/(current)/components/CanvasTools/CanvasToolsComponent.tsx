@@ -25,25 +25,25 @@ const CanvasToolsComponent = ({ currentLayerID }: ICanvasToolsComponent): JSX.El
   const handleHorizontalFlip = (): void => {
     const { ctx } = getContext(currentLayerID)
     flipHorizontal(ctx)
-    setRepaint()
+    // setRepaint()
   }
 
   const handleVerticalFlip = (): void => {
     const { ctx } = getContext(currentLayerID)
     flipVertical(ctx)
-    setRepaint()
+    // setRepaint()
   }
 
   const handleRotate = (): void => {
     const { ctx } = getContext(currentLayerID)
     rotateCanvas(ctx, 90)
-    setRepaint()
+    // setRepaint()
   }
 
   const handleCenterDraw = (): void => {
     const { ctx } = getContext(currentLayerID)
     centerCanvasContent(ctx)
-    setRepaint()
+    // setRepaint()
   }
 
   return (

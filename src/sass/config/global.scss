@@ -137,6 +137,8 @@ body {
     font-size: map-get(map-get($typography, 'a'), size);
     font-weight: map-get(map-get($typography, 'a'), weight);
     color: map-get(map-get($typography, 'a'), color);
+
+    background: none;
   }
 
   .active {

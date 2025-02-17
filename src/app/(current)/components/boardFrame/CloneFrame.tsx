@@ -25,7 +25,6 @@ const CloneFrame = ({ parentKey, onClone }: ICloneFrame): JSX.Element => {
     if (cloneWorker.current && !noRender) return
     cloneWorker.current = new Worker('/workers/layer-view.js', { type: 'module' })
     return () => {
-      console.log('unmount')
       cloneWorker.current = null
     }
   }, [noRender])
@@ -72,7 +71,7 @@ const CloneFrame = ({ parentKey, onClone }: ICloneFrame): JSX.Element => {
           const { ctx } = getContext(layerId)
           ctx.drawImage(mergedBitmap, 0, 0)
           onClone({ frameId, layerId, parentIndex: parentIndex + 1 })
-          setRepaint()
+          // setRepaint()
         }, 50)
         toast.success('👁️ Clonado')
       }

@@ -19,7 +19,7 @@ export interface ParentLayer {
 interface ILayerStore {
   listOfLayers: { [key: string]: Layer[] }
   setListOfLayers: (listOfLayers: ILayerStore['listOfLayers']) => void
-  deleteLayer: (p: { id: string; parentId: string; actLayerId: string }) => void
+  deleteLayer: (p: { parentId: string; actLayerId: string }) => Layer | null
   addNewLayer: (_: { parentId: string }) => void
   addNewFrame: (index?: number) => { index: number; frameKey: string; layerId: string } | null
   updateLayer: (_: { parentId: string; layer: Partial<Layer>; list?: Layer[] }) => void
@@ -42,20 +42,19 @@ const state: StateCreator<ILayerStore> = (set, get) => ({
     ]
   },
   setListOfLayers: listOfLayers => set({ listOfLayers }),
-  deleteLayer({ id, parentId, actLayerId }) {
+  deleteLayer({ parentId, actLayerId }) {
     const listOfLayers = get().listOfLayers
     const currentList = structuredClone(listOfLayers[parentId])
-    if (!currentList) return
-    if (currentList?.length <= 1) return toast.error('❗️Una cpa como mínimo', { id: 'min-layers' })
-    const updatedList = currentList.filter(f => f.id !== id)
-    const existLayer = updatedList.some(l => l.id === actLayerId)
-    console.log(existLayer)
-    // let newSelected = actLayerId
-    // if (!existLayer) newSelected = updatedList[0] ?? null
+    if (!currentList) return null
+    if (currentList?.length <= 1) {
+      toast.error('❗️Una cpa como mínimo', { id: 'min-layers' })
+      return null
+    }
+    const updatedList = currentList.filter(f => f.id !== actLayerId)
     set({
       listOfLayers: { ...listOfLayers, [parentId]: updatedList }
-      // activeLayer: newSelected
     })
+    return updatedList[0]
   },
   addNewLayer({ parentId }) {
     const listOfLayers = get().listOfLayers
