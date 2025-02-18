@@ -5,10 +5,12 @@ import toast from 'react-hot-toast'
 
 import ActiveDrawsStore from '../../store/ActiveDraws.store'
 import LayerStore from '../../store/layer.store'
+import RepaintDrawingStore from '../../store/repaintDrawing.store'
 
 const CopyLayer = (): JSX.Element => {
   const { listOfLayers, setListOfLayers } = LayerStore()
   const { actLayerId, actParentId } = ActiveDrawsStore()
+  const { setRepaint } = RepaintDrawingStore()
 
   const handleClick = () => {
     if (!actLayerId) return toast.error('❗️No hay capa activa seleccionada')
@@ -27,9 +29,12 @@ const CopyLayer = (): JSX.Element => {
       id: newLayerKey,
       title: `copia-${selectedLayer.title}`
     }
+
+    console.log('newLayer', newLayer)
     const updatedLayers = [...layers]
     updatedLayers.splice(currentLayerIndex + 1, 0, newLayer)
     setListOfLayers({ ...listOfLayers, [actParentId]: [...updatedLayers] })
+
     const timeout = setTimeout(() => {
       const $clonCanvas = document.getElementById(newLayerKey)
       if (!($clonCanvas instanceof HTMLCanvasElement)) return toast.error('❗️No se pudo clonar el lienzo')
@@ -37,6 +42,7 @@ const CopyLayer = (): JSX.Element => {
       if (!ctx) return
       ctx.drawImage($currentCanvas, 0, 0)
       clearTimeout(timeout)
+      $clonCanvas.style.opacity = `${newLayer.opacity}%`
       toast.success('🔱 Todo listo')
     }, 100)
   }

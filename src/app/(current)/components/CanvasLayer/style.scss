@@ -72,7 +72,7 @@
     }
   }
 
-  &-delete {
+  &-alpha {
     padding: v.$padding 6px;
     border-radius: v.$radius;
     background-color: rgb(v.$bg1);
@@ -84,17 +84,19 @@
     top: calc(100% + v.$padding);
     left: 0;
 
+    @include d.flex;
+
     width: 100%;
     height: 100%;
     padding: 5px v.$padding;
-    border: 2px dashed rgb(v.$bg3);
+    border: 3px solid rgb(v.$bg3);
     border-radius: v.$radius;
 
-    background-color: rgb(v.$bg1, 0.5);
+    background-color: rgb(v.$bg1);
     backdrop-filter: blur(5px);
 
-    p {
-      font-size: 1rem;
+    b {
+      color: rgb(v.$fn1);
     }
   }
 

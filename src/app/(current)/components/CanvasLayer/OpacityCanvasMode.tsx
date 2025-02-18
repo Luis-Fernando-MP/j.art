@@ -1,60 +1,65 @@
 import Range from '@/shared/components/Range'
 import { BlendIcon } from 'lucide-react'
-import { type JSX, memo, useEffect, useState } from 'react'
+import { type JSX, memo, useCallback, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useSessionStorage } from 'usehooks-ts'
 
 import RepaintDrawingStore from '../../store/repaintDrawing.store'
 
 interface IOpacityCanvasMode {
-  handleOPacityChange: (opacity: number) => void
-  opacity: number
   layerId: string
+  opacity: number
+  opacityChange: (alpha: number) => void
 }
 
-const OpacityCanvasMode = ({ opacity, layerId, handleOPacityChange }: IOpacityCanvasMode): JSX.Element => {
+const OpacityCanvasMode = ({ layerId, opacity, opacityChange }: IOpacityCanvasMode): JSX.Element => {
   const [active, setActive] = useState(false)
   const localId = `${layerId}-opacity`
   const [localOpacity, setLocalOpacity, removeLocalOpacity] = useSessionStorage(localId, opacity)
-
   const [rangeOpacity, setRangeOpacity] = useState(localOpacity)
-
   const { setRepaint } = RepaintDrawingStore()
+
   useEffect(() => {
     if (localOpacity === opacity) {
       removeLocalOpacity()
     }
-  }, [localOpacity, opacity, removeLocalOpacity])
+  }, [localOpacity, removeLocalOpacity])
 
-  const handleClick = (): void => {
-    setActive(!active)
-  }
+  const handleClick = useCallback(() => {
+    setActive(prevActive => !prevActive)
+  }, [])
 
-  const handleChangeRange = (range: number) => {
-    const $canvas = document.getElementById(layerId)
-    if (!($canvas instanceof HTMLCanvasElement)) {
-      return toast.error('😟 Lienzo no encontrado')
-    }
-    setRangeOpacity(range)
-    $canvas.style.opacity = `${range}%`
-  }
+  const handleChangeRange = useCallback(
+    (range: number) => {
+      const $canvas = document.getElementById(layerId)
+      if (!($canvas instanceof HTMLCanvasElement)) return toast.error('😟 Lienzo no encontrado')
+      setRangeOpacity(range)
+      $canvas.style.opacity = `${range}%`
+    },
+    [layerId]
+  )
 
-  const handleFinalChangeRange = async (alpha: number) => {
-    const $canvas = document.getElementById(layerId)
-    if (!($canvas instanceof HTMLCanvasElement)) return toast.error('😟 Lienzo no encontrado')
-    setLocalOpacity(alpha)
-    handleOPacityChange(alpha)
-    setRepaint('all')
-  }
+  const handleFinalChangeRange = useCallback(
+    (alpha: number) => {
+      const $canvas = document.getElementById(layerId)
+      if (!($canvas instanceof HTMLCanvasElement)) return toast.error('😟 Lienzo no encontrado')
+      setRepaint('all')
+      setLocalOpacity(alpha)
+      opacityChange(alpha)
+    },
+    [layerId, setLocalOpacity, setRepaint]
+  )
 
   return (
     <>
-      <button className='canvasLayer-delete' onClick={handleClick}>
+      <button className='canvasLayer-alpha' onClick={handleClick}>
         <BlendIcon />
       </button>
       {active && (
         <div className='canvasLayer-opacityController'>
-          <p>Opacidad {rangeOpacity}</p>
+          <p>
+            <b>{rangeOpacity}%</b> de Opacidad
+          </p>
           <Range
             step={10}
             handleChange={handleChangeRange}

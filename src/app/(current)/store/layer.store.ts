@@ -1,3 +1,5 @@
+'use client'
+
 import { newKey } from '@/shared/key'
 import toast from 'react-hot-toast'
 import { StateCreator, create } from 'zustand'

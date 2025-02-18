@@ -1,33 +1,26 @@
 import { acl } from '@/shared/acl'
 import { Image } from '@unpic/react'
-import { EyeIcon } from 'lucide-react'
-import dynamic from 'next/dynamic'
 import { JSX, memo } from 'react'
 
-import ActiveDrawsStore from '../../store/ActiveDraws.store'
 import LayerStore, { Layer } from '../../store/layer.store'
+import CanvasSeeMode from './CanvasSeeMode'
+import LayerTitle from './LayerTitle'
+import OpacityCanvasMode from './OpacityCanvasMode'
 import './style.scss'
-
-const CanvasSeeMode = dynamic(() => import('./CanvasSeeMode'), { ssr: false, loading: () => <EyeIcon /> })
-const OpacityCanvasMode = dynamic(() => import('./OpacityCanvasMode'), { ssr: false })
-const LayerTitle = dynamic(() => import('./LayerTitle'), {
-  ssr: false,
-  loading: () => <div className='canvasLayer-title'>loading...</div>
-})
 
 interface ICanvasLayer {
   layer: Layer
+  isActive: boolean
+  handleActive: (id: string) => void
 }
 
-const CanvasLayer = ({ layer }: ICanvasLayer): JSX.Element => {
-  const { updateLayer } = LayerStore()
-  const { actLayerId, setActLayerId, setActParentId } = ActiveDrawsStore()
+const CanvasLayer = ({ layer, isActive, handleActive }: ICanvasLayer): JSX.Element => {
   const { imageUrl, title, id, parentId, isWatching, opacity } = layer
-  const isActive = layer.id === actLayerId
+  const { updateLayer } = LayerStore()
+
   const handleClick = (): void => {
     if (isActive) return
-    setActLayerId(id)
-    setActParentId(parentId)
+    handleActive(id)
   }
 
   const handleTitleChange = (value: string): void => {
@@ -37,10 +30,10 @@ const CanvasLayer = ({ layer }: ICanvasLayer): JSX.Element => {
     })
   }
 
-  const handleOPacityChange = (opacity: number): void => {
+  const handleOpacityChange = (alpha: number): void => {
     updateLayer({
       parentId,
-      layer: { id, opacity }
+      layer: { id, opacity: alpha }
     })
   }
 
@@ -48,12 +41,12 @@ const CanvasLayer = ({ layer }: ICanvasLayer): JSX.Element => {
     <section className={`canvasLayer ${acl(isActive, 'selected')} ${acl(!isWatching, 'hidden')}`}>
       <div className='canvasLayer-viewer'>
         <CanvasSeeMode className='canvasLayer-see' layerId={id} isWatching={isWatching} parentId={parentId} />
-        <div className='canvasLayer-image' role='button' data-button tabIndex={0} onClick={handleClick}>
+        <button className='canvasLayer-image' onClick={handleClick}>
           {imageUrl && <Image src={imageUrl} alt='canvas-layer' layout='fullWidth' />}
-        </div>
+        </button>
         <LayerTitle value={title} idLayer={id} changeTitle={handleTitleChange} />
       </div>
-      <OpacityCanvasMode opacity={opacity} layerId={id} handleOPacityChange={handleOPacityChange} />
+      <OpacityCanvasMode layerId={id} opacity={opacity} opacityChange={handleOpacityChange} />
     </section>
   )
 }
