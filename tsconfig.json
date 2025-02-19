@@ -28,6 +28,6 @@
       "@workers/*": ["./workers/*"]
     }
   },
-  "include": ["next-env.d.ts", "./config.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "workers/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": ["next-env.d.ts", "./config.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules", "workers"]
 }

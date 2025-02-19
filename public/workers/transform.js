@@ -80,3 +80,4 @@ function handleCenterImage(bitmap, pixelSize) {
         }
     });
 }
+//# sourceMappingURL=transform.js.map

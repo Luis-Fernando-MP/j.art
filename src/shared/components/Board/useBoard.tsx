@@ -1,4 +1,5 @@
 import { TPositions } from '@/app/(current)/store/canvas.store'
+import ToolsStore from '@/app/(current)/store/tools.store'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import boardStore, { MAX_SCALE, MIN_SCALE } from './board.store'
@@ -15,6 +16,7 @@ export interface BoardRef {
 }
 
 const useBoard = ({ isCenter }: IUseBoardHook) => {
+  const tool = ToolsStore(s => s.selectedTool)
   const { offset, scale, setOffset, setScale, setPrevChild, setNextChild, setMoveToChild, enableScroll } = boardStore()
   const $containerRef = useRef<HTMLDivElement>(null)
   const $childrenRef = useRef<HTMLDivElement>(null)
@@ -86,7 +88,7 @@ const useBoard = ({ isCenter }: IUseBoardHook) => {
 
   const handleBoardDown = (e: React.MouseEvent) => {
     e.preventDefault()
-    if (e.ctrlKey) {
+    if (e.ctrlKey || tool === 'Cursor') {
       setIsMoving(true)
       setLastMousePosition({ x: e.clientX, y: e.clientY })
     }

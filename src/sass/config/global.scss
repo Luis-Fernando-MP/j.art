@@ -52,7 +52,9 @@ body {
   background-color: rgb($bg1);
 
   canvas {
+    image-rendering: -webkit-crisp-edges;
     image-rendering: pixelated;
+    image-rendering: crisp-edges;
   }
 
   .icon,

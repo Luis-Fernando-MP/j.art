@@ -61,20 +61,44 @@ export function interpolateDrawing(props: TInterpolateDrawing) {
   return points
 }
 
+export function handleRevertDrawPixel({ pixelColor, ctx, pixelOpacity, pixelSize, x, xMirror, y, yMirror }: THandleDrawPixel) {
+  // const { width, height } = ctx.canvas
+  // const mirroredX = width - x - pixelSize
+  // const mirroredY = height - y - pixelSize
+
+  const alignedX = Math.floor(x)
+  const alignedY = Math.floor(y)
+
+  ctx.beginPath()
+  ctx.imageSmoothingEnabled = false
+  ctx.globalAlpha = pixelOpacity
+  ctx.fillStyle = 'red'
+  ctx.fillRect(alignedX, alignedY, pixelSize, pixelSize)
+
+  // if (xMirror) ctx.fillRect(mirroredX, y, pixelSize, pixelSize)
+  // if (yMirror) ctx.fillRect(x, mirroredY, pixelSize, pixelSize)
+  // if (xMirror && yMirror) ctx.fillRect(mirroredX, mirroredY, pixelSize, pixelSize)
+
+  ctx.closePath()
+}
+
 export function handleDrawPixel({ pixelColor, ctx, pixelOpacity, pixelSize, x, xMirror, y, yMirror }: THandleDrawPixel) {
-  const { width, height } = ctx.canvas
-  const mirroredX = width - x - pixelSize
-  const mirroredY = height - y - pixelSize
+  // const { width, height } = ctx.canvas
+  // const mirroredX = width - x - pixelSize
+  // const mirroredY = height - y - pixelSize
+
+  const alignedX = Math.floor(x)
+  const alignedY = Math.floor(y)
 
   ctx.beginPath()
   ctx.imageSmoothingEnabled = false
   ctx.globalAlpha = pixelOpacity
   ctx.fillStyle = pixelColor
-  ctx.fillRect(x, y, pixelSize, pixelSize)
+  ctx.fillRect(alignedX, alignedY, pixelSize, pixelSize)
 
-  if (xMirror) ctx.fillRect(mirroredX, y, pixelSize, pixelSize)
-  if (yMirror) ctx.fillRect(x, mirroredY, pixelSize, pixelSize)
-  if (xMirror && yMirror) ctx.fillRect(mirroredX, mirroredY, pixelSize, pixelSize)
+  // if (xMirror) ctx.fillRect(mirroredX, y, pixelSize, pixelSize)
+  // if (yMirror) ctx.fillRect(x, mirroredY, pixelSize, pixelSize)
+  // if (xMirror && yMirror) ctx.fillRect(mirroredX, mirroredY, pixelSize, pixelSize)
 
   ctx.closePath()
 }

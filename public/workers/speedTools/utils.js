@@ -29,7 +29,7 @@ export function handlePaintBucket(ctx, startX, startY, fillColor) {
     const bgaColor = toIterableColor(fillColor);
     // Si el color inicial es igual al color de relleno
     if (iterable.every((v, i) => v === bgaColor[i]))
-        return;
+        return new Error('❗️Sin cambios');
     const getIndex = (x, y) => (y * width + x) * 4;
     const isInsideCanvas = (x, y) => x >= 0 && x < width && y >= 0 && y < height;
     const isSameColor = (i) => pixelData[i] === iterable[0] &&
@@ -57,3 +57,4 @@ export function handlePaintBucket(ctx, startX, startY, fillColor) {
     }
     ctx.putImageData(imageData, 0, 0);
 }
+//# sourceMappingURL=utils.js.map

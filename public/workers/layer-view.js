@@ -104,3 +104,4 @@ function generateFullImage(imagesBitmap) {
         }
     });
 }
+//# sourceMappingURL=layer-view.js.map
