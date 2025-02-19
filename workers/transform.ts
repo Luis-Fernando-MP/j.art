@@ -1,12 +1,12 @@
 export enum TransformWorker {
   CENTER = 'center'
 }
-export type WorkerEvent = MessageEvent<TransformWorkerMessage>
 export interface TransformWorkerMessage {
   bitmap?: ImageBitmap
   action?: TransformWorker
   pixelSize?: number
 }
+export type WorkerEvent = MessageEvent<TransformWorkerMessage>
 
 self.onmessage = async (event: WorkerEvent) => {
   const { bitmap, action, pixelSize } = event.data

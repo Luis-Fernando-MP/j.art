@@ -10,7 +10,7 @@ interface IColor {
 
 const Color = ({ className = '', rgbColor }: IColor): JSX.Element => {
   const { pixelColor, setPixelColor } = PixelStore()
-  const isSelectedColor = pixelColor.replaceAll(' ', '').includes(rgbColor)
+  const isSelectedColor = pixelColor === rgbColor
 
   const handleClick = (e: MouseEvent): void => {
     if (e.ctrlKey || isSelectedColor) return

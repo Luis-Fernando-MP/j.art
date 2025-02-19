@@ -19,8 +19,8 @@ const useDrawPreview = ({ $canvasRef }: IUseDrawPreviewHook) => {
   const { repaint, setRepaint } = RepaintDrawingStore()
   const { listOfLayers, setListOfLayers } = LayerStore()
 
-  const frameWorkerRef = useRef<Worker | null>(null)
-  const layerWorkerRef = useRef<Worker | null>(null)
+  const frameWorker = useRef<Worker | null>(null)
+  const layerWorker = useRef<Worker | null>(null)
 
   const drawImageInLayerView = useCallback(
     (image: string | null) => {
@@ -54,26 +54,26 @@ const useDrawPreview = ({ $canvasRef }: IUseDrawPreviewHook) => {
   )
 
   const generateFrameViewBitmap = useCallback(async () => {
-    if (!frameWorkerRef.current) return
+    if (!frameWorker.current) return
     try {
       const imagesBitmap = await getBitmapFromParentCanvas(actParentId)
       if (!imagesBitmap) throw new Error('Failed to load canvas bitmap')
       const message: WorkerMessage = { imagesBitmap, action: EWorkerActions.GENERATE_FULL_VIEW }
-      frameWorkerRef.current.postMessage(message, imagesBitmap)
-      handleWorkerMessage(frameWorkerRef.current, data => drawImageInFrameView(data.base64))
+      frameWorker.current.postMessage(message, imagesBitmap)
+      handleWorkerMessage(frameWorker.current, data => drawImageInFrameView(data.base64))
     } catch (error) {
       console.error('Failed to create ImageBitmap for frame view:', error)
     }
   }, [actParentId, drawImageInFrameView, listOfLayers])
 
   const generateLayerViewBitmap = useCallback(async () => {
-    if (!layerWorkerRef.current) return
+    if (!layerWorker.current) return
     const imageBitmap = await getBitmapFromCanvas(actLayerId)
     if (!imageBitmap) return
     try {
       const message: WorkerMessage = { imageBitmap, action: EWorkerActions.GENERATE_FRAME }
-      layerWorkerRef.current.postMessage(message, [imageBitmap])
-      handleWorkerMessage(layerWorkerRef.current, data => drawImageInLayerView(data.base64))
+      layerWorker.current.postMessage(message, [imageBitmap])
+      handleWorkerMessage(layerWorker.current, data => drawImageInLayerView(data.base64))
     } catch (error) {
       console.error('Failed to create ImageBitmap for layer view:', error)
     }
@@ -93,12 +93,12 @@ const useDrawPreview = ({ $canvasRef }: IUseDrawPreviewHook) => {
 
   useEffect(() => {
     if (!$canvasRef.current) return
-    frameWorkerRef.current = new Worker('/workers/layer-view.js', { type: 'module' })
-    layerWorkerRef.current = new Worker('/workers/layer-view.js', { type: 'module' })
+    frameWorker.current = new Worker('/workers/layer-view.js', { type: 'module' })
+    layerWorker.current = new Worker('/workers/layer-view.js', { type: 'module' })
 
     return () => {
-      frameWorkerRef.current?.terminate()
-      layerWorkerRef.current?.terminate()
+      frameWorker.current?.terminate()
+      layerWorker.current?.terminate()
     }
   }, [$canvasRef])
 }

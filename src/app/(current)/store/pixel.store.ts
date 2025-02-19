@@ -1,5 +1,7 @@
 import { StateCreator, create } from 'zustand'
 
+import { basicColorsRGBA } from '../components/BoardColors/colors.'
+
 interface IPixelStore {
   pixelSize: number
   pixelColor: string
@@ -13,7 +15,7 @@ interface IPixelStore {
 const state: StateCreator<IPixelStore> = set => ({
   pixelSize: 15,
   pixelOpacity: 1,
-  pixelColor: 'rgb(255, 255, 255, 255)',
+  pixelColor: basicColorsRGBA[0],
   setPixelSize: pixelSize => set({ pixelSize }),
   setPixelColor: pixelColor => set({ pixelColor }),
   setPixelOpacity: pixelOpacity => set({ pixelOpacity })

@@ -15,7 +15,7 @@ interface IToolsStore {
   setVerticalFlip: (verticalFlip: boolean) => void
   setXMirror: (xMirror: boolean) => void
   setYMirror: (yMirror: boolean) => void
-  setSelectedTool: (selectedTool: string) => void
+  setSelectedTool: (selectedTool: Tools) => void
 }
 
 const state: StateCreator<IToolsStore> = set => ({

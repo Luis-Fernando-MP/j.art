@@ -2,6 +2,7 @@
 
 import { MouseEvent } from 'react'
 
+import { alignCord } from './bresenham'
 import { getContext } from './transformCanvas'
 
 export const getCanvasCoordinates = (e: MouseEvent, canvasId: string = 'canvas') => {
@@ -28,77 +29,33 @@ type TMirrorTool = {
   xMirror: boolean
   yMirror: boolean
 }
-type Position = { x: number; y: number }
 type THandleDrawPixel = THandleTool &
   TMirrorTool & {
     pixelColor: string
     pixelOpacity: number
   }
 
-export function interpolatePoints(props: any): Position[] {
-  let { x0, y0, x1, y1, pixelSize } = { ...props }
-
-  const points: Position[] = []
-
-  const dx = Math.abs(x1 - x0)
-  const dy = Math.abs(y1 - y0)
-
-  const sx = x0 < x1 ? pixelSize : -pixelSize
-  const sy = y0 < y1 ? pixelSize : -pixelSize
-
-  let err = dx - dy
-
-  let x = x0
-  let y = y0
-
-  while (true) {
-    points.push({ x, y })
-
-    if (x === x1 && y === y1) break
-
-    const e2 = 2 * err
-    if (e2 > -dy) {
-      err -= dy
-      x += sx
-    }
-    if (e2 < dx) {
-      err += dx
-      y += sy
-    }
-  }
-
-  return points
+type TInterpolateDrawing = {
+  startX: number
+  startY: number
+  endX: number
+  endY: number
+  pixelSize: number
 }
+export function interpolateDrawing(props: TInterpolateDrawing) {
+  const { startX, startY, endX, endY, pixelSize } = props
 
-export function interpolateBresenham(props: any) {
-  let { x0, y0, x1, y1, pixelSize } = { ...props }
+  const dx = Math.abs(endX - startX) / pixelSize
+  const dy = Math.abs(endY - startY) / pixelSize
+  let steps = Math.max(dx, dy)
+  if (startX === endX && startY === endY) steps = 1
 
   const points = []
 
-  const dx = Math.abs(x1 - x0)
-  const dy = Math.abs(y1 - y0)
-
-  let sx = x1 > x0 ? pixelSize : -pixelSize
-  let sy = y1 > y0 ? pixelSize : -pixelSize
-
-  let err = dx - dy
-
-  let x = x0
-  let y = y0
-
-  while (true) {
-    points.push([x0, y0])
-
-    if (x0 === x1 && y0 === y1) break
-    const e2 = err * 2
-    if (e2 > -dy) {
-      err -= dy
-      x0 += sx
-    }
-    if (e2 < dx) {
-      err += dx
-      y0 += sy
-    }
+  for (let i = 0; i <= steps; i++) {
+    const px = startX + (endX - startX) * (i / steps)
+    const py = startY + (endY - startY) * (i / steps)
+    points[i] = { x: alignCord(px, pixelSize), y: alignCord(py, pixelSize) }
   }
 
   return points
@@ -122,25 +79,6 @@ export function handleDrawPixel({ pixelColor, ctx, pixelOpacity, pixelSize, x, x
   ctx.closePath()
 }
 
-// export function handleDrawPixel({ pixelColor, ctx, pixelOpacity, pixelSize, x, xMirror, y, yMirror }: THandleDrawPixel) {
-//   // const { width, height } = ctx.canvas
-//   // const mirroredX = width - x - pixelSize
-//   // const mirroredY = height - y - pixelSize
-
-//   ctx.beginPath()
-
-//   // ctx.imageSmoothingEnabled = false
-//   // ctx.globalAlpha = pixelOpacity
-//   ctx.fillStyle = pixelColor
-//   ctx.fillRect(x, y, pixelSize, pixelSize)
-
-//   // if (xMirror) ctx.fillRect(mirroredX, y, pixelSize, pixelSize)
-//   // if (yMirror) ctx.fillRect(x, mirroredY, pixelSize, pixelSize)
-//   // if (xMirror && yMirror) ctx.fillRect(mirroredX, mirroredY, pixelSize, pixelSize)
-
-//   ctx.closePath()
-// }
-
 export function HandleDeletePixel({ ctx, pixelSize, x, y, xMirror, yMirror }: THandleTool & TMirrorTool) {
   const { width, height } = ctx.canvas
   const mirroredX = width - x - pixelSize
@@ -155,6 +93,7 @@ export function HandleDeletePixel({ ctx, pixelSize, x, y, xMirror, yMirror }: TH
 export function getPixelColor(imageData: ImageData, alignedX: number, alignedY: number, width: number) {
   const index = (alignedY * width + alignedX) * 4
   const pixelData = imageData.data
+
   return [
     pixelData[index], // Red
     pixelData[index + 1], // Green
@@ -167,21 +106,26 @@ export function handlePipetteColor(ctx: CanvasRenderingContext2D, x: number, y: 
   const { width, height } = ctx.canvas
   const imageData = ctx.getImageData(0, 0, width, height)
   const [r, g, b, a] = getPixelColor(imageData, Math.floor(x), Math.floor(y), width)
-  const color = `rgba(${r}, ${g}, ${b}, ${a})`
+  let alpha = a
+  if (alpha <= 0) alpha = 255
+  const color = `rgba(${r}, ${g}, ${b}, ${alpha})`
   return { rgba: color, iterable: [r, g, b, a], imageData }
+}
+
+const toIterableColor = (color: string) => {
+  const newString = color.replace('rgba(', '').replace(')', '')
+  return newString.split(',').map(Number)
 }
 
 export function handlePaintBucket(ctx: CanvasRenderingContext2D, startX: number, startY: number, fillColor: string) {
   const { width, height } = ctx.canvas
   const { iterable, imageData } = handlePipetteColor(ctx, startX, startY)
   const pixelData = imageData.data
-  const toIterableColor = (color: string) => {
-    const newString = color.replace('rgba(', '').replace(')', '')
-    return newString.split(',').map(Number)
-  }
-  const bgColor = toIterableColor(fillColor)
+
+  const bgaColor = toIterableColor(fillColor)
+
   // Si el color inicial es igual al color de relleno
-  if (iterable.every((v, i) => v === bgColor[i])) return
+  if (iterable.every((v, i) => v === bgaColor[i])) return
 
   const getIndex = (x: number, y: number) => (y * width + x) * 4
   const isInsideCanvas = (x: number, y: number) => x >= 0 && x < width && y >= 0 && y < height
@@ -199,10 +143,10 @@ export function handlePaintBucket(ctx: CanvasRenderingContext2D, startX: number,
     const current = getIndex(currentX, currentY)
     if (!isSameColor(current)) continue
     // Pintar el píxel actual
-    pixelData[current] = bgColor[0]
-    pixelData[current + 1] = bgColor[1]
-    pixelData[current + 2] = bgColor[2]
-    pixelData[current + 3] = bgColor[3]
+    pixelData[current] = bgaColor[0]
+    pixelData[current + 1] = bgaColor[1]
+    pixelData[current + 2] = bgaColor[2]
+    pixelData[current + 3] = bgaColor[3]
 
     // Añadir píxeles vecinos a la pila
     stack.push([currentX - 1, currentY]) // Izquierda

@@ -3,7 +3,12 @@
   "compilerOptions": {
     "outDir": "./public/workers",
     "module": "ES6",
-    "noEmit": false
+    "moduleResolution": "node",
+    "target": "ES6",
+    "lib": ["ES6", "DOM"],
+    "noEmit": false,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
   },
   "include": ["workers/**/*.ts"]
 }

@@ -5,7 +5,7 @@ import { BabyIcon, FlameIcon, LeafyGreenIcon, PaletteIcon } from 'lucide-react'
 import type { JSX } from 'react'
 
 import Color from './Color'
-import { basicColors } from './colors.'
+import { basicColorsRGBA } from './colors.'
 import './style.scss'
 
 interface IBoardColors {
@@ -21,11 +21,9 @@ const BoardColors = ({ className = '' }: IBoardColors): JSX.Element => {
         </button>
       </div>
       <HorizontalSlider className='colorsTools-colors'>
-        {basicColors.map(color => {
-          const key = `${color.join()}-basic-color`
-          const [r, g, b, a] = color
-          const rgbColor = `rgb(${r},${g},${b},${a})`
-          return <Color key={key} rgbColor={rgbColor} className='colorsTools-color' />
+        {basicColorsRGBA.map(color => {
+          const key = `${color}-basic-color`
+          return <Color key={key} rgbColor={color} className='colorsTools-color' />
         })}
       </HorizontalSlider>
       <div className='colorsTools-section'>
