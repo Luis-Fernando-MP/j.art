@@ -1,7 +1,7 @@
 import { BLANK_IMAGE } from '@/shared/constants'
 import { StateCreator, create } from 'zustand'
 
-export type Repaint = 'all' | 'layers' | 'frames' | null
+export type Repaint = 'all' | 'layers' | 'frames' | 'zoom' | 'slider' | null
 interface IRepaintDrawingStore {
   repaint: Repaint
   setRepaint: (repaint?: Repaint) => void

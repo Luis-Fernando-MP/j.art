@@ -1,0 +1,51 @@
+@use '@sass/config/vars' as v;
+@use '@sass/utils/defs' as d;
+
+.bgStyle {
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+
+  @include d.flex($dir: row, $ali: center);
+
+  &-box {
+    @include d.flex($dir: row, $ali: center, $gap: 5px);
+
+    button {
+      padding: 5px v.$padding * 1.5;
+      border-radius: v.$radius;
+      font-size: 1rem;
+      background-color: rgb(v.$bg1);
+    }
+
+    div {
+      position: relative;
+
+      width: 15px;
+      height: 15px;
+      border: 2.5px dashed rgb(v.$bg1);
+      border-radius: 50%;
+
+      &::after {
+        content: '';
+
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+    }
+
+    &.selected div {
+      border-color: rgb(v.$tn2);
+
+      &::after {
+        background-color: rgb(v.$tn2);
+      }
+    }
+  }
+}

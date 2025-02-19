@@ -41,7 +41,7 @@
     position: absolute;
     inset: 0;
 
-    // display: none;
+    display: none;
 
     width: 100%;
     height: 100%;
@@ -50,7 +50,8 @@
 
   &-background {
     opacity: 0.8;
-    background: conic-gradient(rgb(v.$bg2) 25%, rgb(v.$bg3) 25% 50%, rgb(v.$bg2) 50% 75%, rgb(v.$bg3) 75%),
+    background:
+      conic-gradient(rgb(v.$bg2) 25%, rgb(v.$bg3) 25% 50%, rgb(v.$bg2) 50% 75%, rgb(v.$bg3) 75%),
       conic-gradient(from 45deg, rgb(v.$bg2) 25%, rgb(v.$bg3) 25% 50%, rgb(v.$bg2) 50% 75%, rgb(v.$bg3) 75%);
     background-color: rgb(v.$bg1);
     background-position: 0 0;
@@ -59,7 +60,8 @@
 
   &-grid {
     z-index: 1;
-    background-image: linear-gradient(to right, rgb(v.$fn2, 0.1) 1px, transparent 0),
+    background-image:
+      linear-gradient(to right, rgb(v.$fn2, 0.1) 1px, transparent 0),
       linear-gradient(to bottom, rgb(v.$fn2, 0.1) 1px, transparent 0);
     background-position: -0.5px -0.5px;
     background-size: var(--s-grid) var(--s-grid);
@@ -69,7 +71,8 @@
     --s-grid: 15px;
 
     z-index: 1;
-    background-image: linear-gradient(
+    background-image:
+      linear-gradient(
         to right,
         transparent calc(50% - 1px),
         rgb(v.$fn2, 0.05) calc(50% - 1px),
@@ -88,9 +91,20 @@
   }
 }
 
-body.active- {
-  &-background &-grid,
-  &-cross {
+body {
+  &.active-background .layers-background {
     display: block;
+  }
+
+  &.active-grid .layers-grid {
+    display: block;
+  }
+
+  &.active-cross .layers-cross {
+    display: block;
+  }
+
+  &.active-transparent .layers {
+    background-color: transparent;
   }
 }

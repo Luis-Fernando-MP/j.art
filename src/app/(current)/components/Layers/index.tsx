@@ -33,9 +33,9 @@ const Layers = ({ layers, isDisable, parentId, index, firstLayerId }: ILayers): 
       setActParentId(parentId)
       setActParentIndex(index)
       setActLayerId(firstLayerId)
-      // setRepaint('frames')
       moveToChild(index)
       mvHorizontalSlider(index)
+      setRepaint('zoom')
     },
     [index, mvHorizontalSlider, setActParentId, setActParentIndex, parentId, isDisable, moveToChild]
   )

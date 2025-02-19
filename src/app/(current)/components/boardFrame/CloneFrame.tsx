@@ -68,7 +68,9 @@ const CloneFrame = ({ parentKey, onClone }: ICloneFrame): JSX.Element => {
         const { mergedBitmap } = event.data
         if (!mergedBitmap) return toast.error('😟 Algo a salido mal')
         setTimeout(() => {
-          const { ctx } = getContext(layerId)
+          const currentCanvas = getContext(layerId)
+          if (!currentCanvas) return
+          const { ctx } = currentCanvas
           ctx.drawImage(mergedBitmap, 0, 0)
           onClone({ frameId, layerId, parentIndex: parentIndex + 1 })
           // setRepaint()

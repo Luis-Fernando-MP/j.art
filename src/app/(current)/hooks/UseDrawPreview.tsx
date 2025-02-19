@@ -1,16 +1,18 @@
-import { getContext } from '@/scripts/transformCanvas'
 import { getBitmapFromCanvas, getBitmapFromParentCanvas } from '@/shared/bitmap'
+import { handleWorkerMessage } from '@/shared/handleWorkerMessage'
 import { EWorkerActions, WorkerMessage } from '@workers/layer-view'
 import { RefObject, useCallback, useEffect, useRef } from 'react'
 import toast from 'react-hot-toast'
 
 import ActiveDrawsStore from '../store/ActiveDraws.store'
 import LayerStore from '../store/layer.store'
-import RepaintDrawingStore from '../store/repaintDrawing.store'
+import RepaintDrawingStore, { Repaint } from '../store/repaintDrawing.store'
 
 interface IUseDrawPreviewHook {
   $canvasRef: RefObject<HTMLCanvasElement | null>
 }
+
+let temporalRepaintValue: Repaint | null
 
 const useDrawPreview = ({ $canvasRef }: IUseDrawPreviewHook) => {
   const { actParentId, actLayerId } = ActiveDrawsStore()
@@ -39,18 +41,17 @@ const useDrawPreview = ({ $canvasRef }: IUseDrawPreviewHook) => {
       const frameID = `${actParentId}-frame-view`
       const $imageFrame = document.getElementById(frameID)
       const $viewerFrame = document.getElementById('viewer-frame')
-      if (!image) return
-      if ($imageFrame instanceof HTMLImageElement) $imageFrame.src = image
-      if ($viewerFrame instanceof HTMLImageElement) $viewerFrame.src = image
+      if (!image || !temporalRepaintValue) return
+
+      if ($imageFrame instanceof HTMLImageElement && ['slider', 'frames', 'all'].includes(temporalRepaintValue))
+        $imageFrame.src = image
+      if ($viewerFrame instanceof HTMLImageElement && ['zoom', 'frames', 'all'].includes(temporalRepaintValue))
+        $viewerFrame.src = image
+
+      temporalRepaintValue = null
     },
     [actParentId]
   )
-
-  const handleWorkerMessage = (workerRef: RefObject<Worker | null>, callback: (data: any) => void) => {
-    if (!workerRef.current) return
-    workerRef.current.onmessage = event => callback(event.data)
-    workerRef.current.onerror = error => console.error('Worker Error:', error)
-  }
 
   const generateFrameViewBitmap = useCallback(async () => {
     if (!frameWorkerRef.current) return
@@ -59,7 +60,7 @@ const useDrawPreview = ({ $canvasRef }: IUseDrawPreviewHook) => {
       if (!imagesBitmap) throw new Error('Failed to load canvas bitmap')
       const message: WorkerMessage = { imagesBitmap, action: EWorkerActions.GENERATE_FULL_VIEW }
       frameWorkerRef.current.postMessage(message, imagesBitmap)
-      handleWorkerMessage(frameWorkerRef, data => drawImageInFrameView(data.base64))
+      handleWorkerMessage(frameWorkerRef.current, data => drawImageInFrameView(data.base64))
     } catch (error) {
       console.error('Failed to create ImageBitmap for frame view:', error)
     }
@@ -72,7 +73,7 @@ const useDrawPreview = ({ $canvasRef }: IUseDrawPreviewHook) => {
     try {
       const message: WorkerMessage = { imageBitmap, action: EWorkerActions.GENERATE_FRAME }
       layerWorkerRef.current.postMessage(message, [imageBitmap])
-      handleWorkerMessage(layerWorkerRef, data => drawImageInLayerView(data.base64))
+      handleWorkerMessage(layerWorkerRef.current, data => drawImageInLayerView(data.base64))
     } catch (error) {
       console.error('Failed to create ImageBitmap for layer view:', error)
     }
@@ -81,7 +82,8 @@ const useDrawPreview = ({ $canvasRef }: IUseDrawPreviewHook) => {
   useEffect(() => {
     if (!repaint || !$canvasRef.current) return
     const handleRepaint = async () => {
-      if (repaint === 'frames') await generateFrameViewBitmap()
+      temporalRepaintValue = repaint
+      if (['frames', 'zoom', 'slider'].includes(repaint)) await generateFrameViewBitmap()
       if (repaint === 'layers') await generateLayerViewBitmap()
       if (repaint === 'all') await Promise.all([generateFrameViewBitmap(), generateLayerViewBitmap()])
       setRepaint(null)

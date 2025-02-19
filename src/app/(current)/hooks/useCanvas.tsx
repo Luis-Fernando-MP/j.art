@@ -70,9 +70,10 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
     e.preventDefault()
     setIsDrawing(true)
 
-    const { x, y } = getCanvasCoordinates(e, canvasId)
-    startPos.current = { x, y }
-    handleDrawing(x, y)
+    const coordinates = getCanvasCoordinates(e, canvasId)
+    if (!coordinates) return
+    startPos.current = coordinates
+    handleDrawing(coordinates.x, coordinates.y)
     // if (!(selectedTool in shapeTools) || canvasSnapshot.current) return
     // const { ctx } = getContext(canvasId)
     // canvasSnapshot.current = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height)
@@ -98,7 +99,9 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
 
   const handleDrawing = (x: number, y: number) => {
     if (!startPos.current) return
-    const { ctx } = getContext(canvasId)
+    const canvas = getContext(canvasId)
+    if (!canvas) return
+    const { ctx } = canvas
     const { x: stX, y: stY } = startPos.current
 
     const startX = alignCord(stX, pixelSize)

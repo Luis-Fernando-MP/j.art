@@ -46,11 +46,11 @@ self.onmessage = function (event) { return __awaiter(void 0, void 0, void 0, fun
         switch (_b.label) {
             case 0:
                 _a = event.data, imageBitmap = _a.imageBitmap, action = _a.action, imagesBitmap = _a.imagesBitmap, alpha = _a.alpha;
-                if (!action)
-                    return [2 /*return*/, self.postMessage({ error: 'No action' })];
                 _b.label = 1;
             case 1:
                 _b.trys.push([1, 8, , 9]);
+                if (!action)
+                    throw new Error('No action provided');
                 if (!(action === EWorkerActions.GENERATE_FRAME && imageBitmap)) return [3 /*break*/, 3];
                 return [4 /*yield*/, generateImage(imageBitmap)];
             case 2:
@@ -87,8 +87,7 @@ function changeAlpha(imageBitmap, alpha) {
                     offscreen = new OffscreenCanvas(width, height);
                     ctx = offscreen.getContext('2d');
                     if (!ctx)
-                        return [2 /*return*/, self.postMessage({ error: 'Failed to get 2D context' })];
-                    ctx.imageSmoothingEnabled = false;
+                        throw new Error('Failed to get 2D context');
                     ctx.drawImage(imageBitmap, 0, 0);
                     imageData = ctx.getImageData(0, 0, width, height);
                     data = imageData.data;
@@ -115,8 +114,7 @@ function changeAlpha(imageBitmap, alpha) {
                     return [3 /*break*/, 5];
                 case 4:
                     error_2 = _a.sent();
-                    self.postMessage({ error: error_2.message });
-                    return [3 /*break*/, 5];
+                    throw new Error(error_2 === null || error_2 === void 0 ? void 0 : error_2.message);
                 case 5: return [2 /*return*/];
             }
         });
@@ -131,7 +129,7 @@ function generateImage(imageBitmap) {
                     offscreen = new OffscreenCanvas(imageBitmap.width, imageBitmap.height);
                     ctx = offscreen.getContext('2d');
                     if (!ctx)
-                        return [2 /*return*/, self.postMessage({ error: 'Failed to get 2D context' })];
+                        throw new Error('Failed to get 2D context');
                     ctx.drawImage(imageBitmap, 0, 0);
                     _a.label = 1;
                 case 1:
@@ -147,8 +145,7 @@ function generateImage(imageBitmap) {
                     return [3 /*break*/, 4];
                 case 3:
                     error_3 = _a.sent();
-                    self.postMessage({ error: error_3.message });
-                    return [3 /*break*/, 4];
+                    throw new Error(error_3 === null || error_3 === void 0 ? void 0 : error_3.message);
                 case 4: return [2 /*return*/];
             }
         });
@@ -161,13 +158,13 @@ function generateFullImage(imagesBitmap) {
             switch (_a.label) {
                 case 0:
                     if (imagesBitmap.length === 0)
-                        return [2 /*return*/, self.postMessage({ error: 'No images provided' })];
+                        throw new Error('No images provided');
                     maxWidth = Math.max.apply(Math, imagesBitmap.map(function (img) { return img.width; }));
                     maxHeight = Math.max.apply(Math, imagesBitmap.map(function (img) { return img.height; }));
                     offscreen = new OffscreenCanvas(maxWidth, maxHeight);
                     ctx = offscreen.getContext('2d');
                     if (!ctx)
-                        return [2 /*return*/, self.postMessage({ error: 'Failed to get 2D context' })];
+                        throw new Error('Failed to get 2D context');
                     imagesBitmap.forEach(function (image) { return ctx.drawImage(image, 0, 0); });
                     _a.label = 1;
                 case 1:
@@ -186,8 +183,7 @@ function generateFullImage(imagesBitmap) {
                     return [3 /*break*/, 5];
                 case 4:
                     error_4 = _a.sent();
-                    self.postMessage({ error: error_4.message });
-                    return [3 /*break*/, 5];
+                    throw new Error(error_4 === null || error_4 === void 0 ? void 0 : error_4.message);
                 case 5: return [2 /*return*/];
             }
         });

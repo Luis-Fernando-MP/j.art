@@ -8,8 +8,6 @@ import OfflineStore from './offline.store'
 const Offline = () => {
   const { isOffline, setIsOffline } = OfflineStore()
 
-  console.log(isOffline)
-
   useEffect(() => {
     const updateNetworkStatus = () => setIsOffline(!navigator.onLine)
 

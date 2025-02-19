@@ -5,7 +5,9 @@ import { MouseEvent } from 'react'
 import { getContext } from './transformCanvas'
 
 export const getCanvasCoordinates = (e: MouseEvent, canvasId: string = 'canvas') => {
-  const { canvas, ctx } = getContext(canvasId)
+  const currentCanvas = getContext(canvasId)
+  if (!currentCanvas) return
+  const { ctx, canvas } = currentCanvas
   const canvasRect = canvas.getBoundingClientRect()
   const scaleX = canvas.width / canvasRect.width
   const scaleY = canvas.height / canvasRect.height
