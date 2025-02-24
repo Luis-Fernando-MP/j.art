@@ -1,3 +1,4 @@
+import Hydration from '@/shared/components/Hydration'
 import LoaderPage from '@/shared/components/LoaderPage/'
 import Offline from '@/shared/components/Offline'
 import { bodyFonts } from '@/shared/fonts'
@@ -20,7 +21,9 @@ const RootLayout = async ({ children }: IRootLayout): Promise<JSX.Element> => {
     <html lang='es'>
       <body className={`${bodyFonts}`}>
         <NextTopLoader color='rgb(var(--tn-primary))' showSpinner={false} />
-        <Providers>{children}</Providers>
+        <Providers>
+          <Hydration>{children}</Hydration>
+        </Providers>
         <Offline />
         <LoaderPage />
         <Toaster

@@ -3,7 +3,7 @@ import {
   BrushIcon,
   CircleDashedIcon,
   CircleIcon,
-  Component,
+  DicesIcon,
   EraserIcon,
   HeartIcon,
   HexagonIcon,
@@ -47,7 +47,7 @@ export const drawTools = {
   Brush: BrushIcon,
   PerfectPixel: PenToolIcon,
   InvertBrush: PenOffIcon,
-  Dithering: Component
+  Dithering: DicesIcon
 }
 
 export const selectTools = {

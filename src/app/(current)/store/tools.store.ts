@@ -24,7 +24,7 @@ const state: StateCreator<IToolsStore> = set => ({
   verticalFlip: false,
   xMirror: false,
   yMirror: false,
-  selectedTool: 'InvertBrush',
+  selectedTool: 'Brush',
 
   setFileName: fileName => set({ fileName }),
   setHorizontalFlip: horizontalFlip => set({ horizontalFlip }),

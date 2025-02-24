@@ -1,11 +1,11 @@
 import { alignCord } from '@/scripts/bresenham'
 import {
   HandleDeletePixel,
+  handleDither,
   handleDrawPixel,
-  handlePaintBucket,
-  handlePipetteColor,
-  handleRevertDrawPixel,
-  interpolateDrawing
+  handleInvertDrawPixel,
+  interpolateDrawing,
+  moveAllDraw
 } from '@/scripts/toolsCanvas'
 import { handleWorkerMessage } from '@/shared/handleWorkerMessage'
 import { EToolsWorker, ToolsWorkerMessage } from '@workers/speedTools/speedTools.types'
@@ -56,23 +56,47 @@ const useTools = () => {
     width = ctx.canvas.width
     height = ctx.canvas.height
 
-    if (selectedTool in handleMessageUtilTools) {
+    if (selectedTool in utilTools) {
       return await handleUtilityTools()
     }
 
-    if (selectedTool in handleMessageDrawTools) {
+    if (selectedTool in selectTools) {
+      return await handleSelectTools()
+    }
+
+    if (selectedTool in drawTools) {
       return await handleUDrawTools()
+    }
+  }
+
+  const handleSelectTools = (): void => {
+    const tool = selectedTool as keyof typeof selectTools
+
+    if (tool === 'Move') {
+      moveAllDraw(ctx, endX - startX, endY - startY)
     }
   }
 
   const handleUDrawTools = async () => {
     if (!toolWorker.current) return
-    const tool = selectedTool as keyof typeof handleMessageDrawTools
-    const handleTool = handleMessageDrawTools[tool]
+    const tool = selectedTool as keyof typeof drawTools
 
     const points = interpolateDrawing({ startX, startY, endX, endY, pixelSize })
 
     for (const point of points) {
+      if (tool === 'Dithering') {
+        handleDither({
+          ctx,
+          x: point.x,
+          y: point.y,
+          pixelColor,
+          pixelSize: pixelSize,
+          pixelOpacity,
+          xMirror,
+          yMirror
+        })
+      }
+
       if (tool === 'Brush') {
         handleDrawPixel({
           ctx,
@@ -87,7 +111,7 @@ const useTools = () => {
       }
 
       if (tool === 'InvertBrush') {
-        handleRevertDrawPixel({
+        handleInvertDrawPixel({
           ctx,
           x: point.x,
           y: point.y,
@@ -114,8 +138,8 @@ const useTools = () => {
 
   const handleUtilityTools = async () => {
     if (!toolWorker.current) return
-    const tool = selectedTool as keyof typeof handleMessageUtilTools
-    const handleTool = handleMessageUtilTools[tool]
+    const tool = selectedTool as keyof typeof utilTools
+    const handleTool = utilTools[tool]
 
     try {
       const bitmap = await createImageBitmap(ctx.canvas)
@@ -140,12 +164,16 @@ const useTools = () => {
     })
   }
 
-  const handleMessageUtilTools = {
+  const selectTools = {
+    Move: () => {}
+  }
+
+  const utilTools = {
     Bucket: (bitmap: ImageBitmap) => ({ action: EToolsWorker.BUCKET, bitmap, startX, startY, fillColor: pixelColor }),
     Pipette: (bitmap: ImageBitmap) => ({ action: EToolsWorker.PIPETTE, bitmap, startX, startY })
   }
 
-  const handleMessageDrawTools = {
+  const drawTools = {
     Brush: (bitmap: ImageBitmap) => ({ action: EToolsWorker.BUCKET, bitmap, startX, startY, fillColor: pixelColor }),
     PerfectPixel: (bitmap: ImageBitmap) => ({ action: EToolsWorker.PIPETTE, bitmap, startX, startY }),
     InvertBrush: (bitmap: ImageBitmap) => ({ action: EToolsWorker.PIPETTE, bitmap, startX, startY }),
