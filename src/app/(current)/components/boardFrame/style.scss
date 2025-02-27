@@ -90,6 +90,10 @@ $actionWidth: 70px;
       transition-delay: 0.3s;
     }
 
+    .boardFrame-control svg {
+      stroke: rgb(v.$tn1);
+    }
+
     .boardFrame-button {
       transform: rotateZ(15deg);
       border-color: rgb(v.$tn1);

@@ -20,6 +20,10 @@
 
   &-section {
     @include d.flex;
+
+    > h5 {
+      text-transform: uppercase;
+    }
   }
 
   &-wrapper {

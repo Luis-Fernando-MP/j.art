@@ -1,5 +1,5 @@
 import { getContext } from '@/scripts/transformCanvas'
-import { getBitmapFromCanvasList } from '@/shared/bitmap'
+import { getBitmapFromParentCanvas } from '@/shared/bitmap'
 import { newKey } from '@/shared/key'
 import { EWorkerActions, WorkerMessage } from '@workers/layer-view'
 import { Layers2Icon } from 'lucide-react'
@@ -47,7 +47,7 @@ const CloneFrame = ({ parentKey, onClone }: ICloneFrame): JSX.Element => {
     setListOfLayers(Object.fromEntries(updatedList))
 
     try {
-      const listOfBitmaps = await getBitmapFromCanvasList(parentKey)
+      const listOfBitmaps = await getBitmapFromParentCanvas(parentKey)
       if (!listOfBitmaps) throw new Error('fail to load canvas bitmap')
       const message: WorkerMessage = { imagesBitmap: listOfBitmaps, action: EWorkerActions.GENERATE_FULL_VIEW }
 
@@ -61,6 +61,7 @@ const CloneFrame = ({ parentKey, onClone }: ICloneFrame): JSX.Element => {
           const { ctx } = currentCanvas
           ctx.drawImage(mergedBitmap, 0, 0)
           onClone({ frameId, layerId, parentIndex: parentIndex + 1 })
+          setRepaint('all')
         }, 50)
         toast.success('👁️ Clonado')
       }

@@ -3,7 +3,6 @@
 import dynamic from 'next/dynamic'
 import { type JSX } from 'react'
 
-import BoardCanvas from '../BoardCanvas'
 import BoardColors from '../BoardColors'
 import BoardFrames from '../BoardFrames'
 import './style.scss'
@@ -12,9 +11,9 @@ interface IAppDraw {
   className?: string
 }
 
-// const BoardCanvas = dynamic(() => import('../BoardCanvas'), {
-//   ssr: false
-// })
+const BoardCanvas = dynamic(() => import('../BoardCanvas'), {
+  ssr: false
+})
 
 const AppDraw = ({ className = '' }: IAppDraw): JSX.Element => {
   return (

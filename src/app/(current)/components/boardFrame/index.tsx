@@ -35,14 +35,15 @@ const CloneFrame = dynamic(() => import('./CloneFrame'), {
 const BoardFrame = ({ isActive, index, parentKey, firstLayer }: IBoardFrame): JSX.Element => {
   const { moveToChild } = boardStore()
   const { listOfLayers, setListOfLayers } = LayerStore()
-  const { setActLayerId, setActParentIndex, setActParentId } = ActiveDrawsStore()
+  const { setActLayerId, setActParentIndex, setActParentId, actLayerId, actParentId } = ActiveDrawsStore()
   const { setRepaint } = RepaintDrawingStore()
   const { moveToChild: horizontalMvChild } = StoreHorizontalSlider()
 
   const handleSelectFrame = (e: MouseEvent): void => {
     if (e.ctrlKey) return
+
     selectAndMoveFrame({ parentIndex: index, frameId: parentKey, layerId: firstLayer })
-    // setRepaint('frames')
+    setRepaint('zoom')
   }
 
   const selectAndMoveFrame = ({ frameId, layerId, parentIndex }: ISelectAndMoveFrame) => {
@@ -55,10 +56,34 @@ const BoardFrame = ({ isActive, index, parentKey, firstLayer }: IBoardFrame): JS
 
   const handleRemoveLayer = (e: MouseEvent): void => {
     if (e.ctrlKey) return
+
     const cloneLayers = structuredClone(listOfLayers)
-    toast.success('❌ Bye!! Bye!!')
+    toast.success('👋 Bye!! Bye!!')
     delete cloneLayers[parentKey]
+    const parentKeys = Object.entries(cloneLayers)
     setListOfLayers(cloneLayers)
+
+    if (actParentId in cloneLayers) {
+      const actIndex = parentKeys.findIndex(([p]) => p === actParentId)
+      moveToChild(actIndex)
+      return
+    }
+
+    if (parentKeys.length < 1) return cleanFrameZoom()
+
+    const [frameId, layers] = parentKeys[0]
+    const layerId = layers[0].id
+    if (frameId === actParentId && layerId === actLayerId) return
+
+    selectAndMoveFrame({ parentIndex: 0, frameId, layerId })
+    setRepaint('zoom')
+  }
+
+  function cleanFrameZoom() {
+    const $viewerFrame = document.getElementById('viewer-frame')
+    if (!($viewerFrame instanceof HTMLImageElement)) return
+
+    $viewerFrame.src = BLANK_IMAGE
   }
 
   return (
