@@ -15,7 +15,7 @@ interface ICanvasLayer {
 }
 
 const CanvasLayer = ({ layer, isActive, handleActive }: ICanvasLayer): JSX.Element => {
-  const { imageUrl, title, id, parentId, isWatching, opacity } = layer
+  const { imageUrl, title, id, parentId, isWatching, opacity, hue } = layer
   const { updateLayer } = LayerStore()
 
   const handleClick = (): void => {
@@ -39,6 +39,7 @@ const CanvasLayer = ({ layer, isActive, handleActive }: ICanvasLayer): JSX.Eleme
 
   return (
     <section className={`canvasLayer ${acl(isActive, 'selected')} ${acl(!isWatching, 'hidden')}`}>
+      {hue > 0 && hue < 360 && <p className='canvasLayer-hue'>Hue {hue}</p>}
       <div className='canvasLayer-viewer'>
         <CanvasSeeMode className='canvasLayer-see' layerId={id} isWatching={isWatching} parentId={parentId} />
         <button className='canvasLayer-image' onClick={handleClick}>

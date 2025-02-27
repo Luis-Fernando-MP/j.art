@@ -25,15 +25,15 @@ type THandleTool = {
   pixelSize: number
 }
 
-type TMirrorTool = {
+type HandleMirrorTool = THandleTool & {
   xMirror: boolean
   yMirror: boolean
 }
-type THandleDrawPixel = THandleTool &
-  TMirrorTool & {
-    pixelColor: string
-    pixelOpacity: number
-  }
+
+type THandleDraw = HandleMirrorTool & {
+  pixelColor: string
+  pixelOpacity: number
+}
 
 type TInterpolateDrawing = {
   startX: number
@@ -42,6 +42,7 @@ type TInterpolateDrawing = {
   endY: number
   pixelSize: number
 }
+
 export function interpolateDrawing(props: TInterpolateDrawing) {
   const { startX, startY, endX, endY, pixelSize } = props
 
@@ -60,40 +61,61 @@ export function interpolateDrawing(props: TInterpolateDrawing) {
 
   return points
 }
-
 let lastX = -1
 let lastY = -1
-export function handleInvertDrawPixel({ pixelColor, ctx, pixelOpacity, pixelSize, x, y }: THandleDrawPixel) {
-  if (x === lastX && y === lastY) return
 
-  const imageData = ctx.getImageData(x, y, pixelSize, pixelSize)
+const transparentSection = (props: Partial<THandleDraw>) => {
+  const { ctx, pixelSize, x, y } = props
+
+  const imageData = ctx!.getImageData(x!, y!, pixelSize!, pixelSize!)
   const data = imageData.data
   let isTransparent = true
 
-  for (let i = 0; i < data.length; i += 4) {
-    if (data[i + 3] !== 0) {
+  for (let i = 3; i < data.length; i += 4) {
+    if (data[i] !== 0) {
       isTransparent = false
       break
     }
   }
 
+  return isTransparent
+}
+
+export function handleInvertDrawPixel(props: THandleDraw) {
+  const { pixelColor, ctx, pixelOpacity, pixelSize, x, xMirror, y, yMirror } = props
+  const { width, height } = ctx.canvas
+  const mirroredX = width - x - pixelSize
+  const mirroredY = height - y - pixelSize
+  if (x === lastX && y === lastY) return
   lastX = x
   lastY = y
 
-  if (!isTransparent) return ctx.clearRect(x, y, pixelSize, pixelSize)
+  const isTransparent = transparentSection(props)
+
+  if (!isTransparent) {
+    if (xMirror) ctx.clearRect(mirroredX, y, pixelSize, pixelSize)
+    if (yMirror) ctx.clearRect(x, mirroredY, pixelSize, pixelSize)
+    if (xMirror && yMirror) ctx.clearRect(mirroredX, mirroredY, pixelSize, pixelSize)
+    return ctx.clearRect(x, y, pixelSize, pixelSize)
+  }
 
   ctx.beginPath()
   ctx.imageSmoothingEnabled = false
   ctx.globalAlpha = pixelOpacity
   ctx.fillStyle = pixelColor
+
   ctx.fillRect(x, y, pixelSize, pixelSize)
+  if (xMirror) ctx.fillRect(mirroredX, y, pixelSize, pixelSize)
+  if (yMirror) ctx.fillRect(x, mirroredY, pixelSize, pixelSize)
+  if (xMirror && yMirror) ctx.fillRect(mirroredX, mirroredY, pixelSize, pixelSize)
   ctx.closePath()
 }
 
-export function handleDrawPixel({ pixelColor, ctx, pixelOpacity, pixelSize, x, xMirror, y, yMirror }: THandleDrawPixel) {
-  // const { width, height } = ctx.canvas
-  // const mirroredX = width - x - pixelSize
-  // const mirroredY = height - y - pixelSize
+export function handleDrawPixel(props: THandleDraw) {
+  const { pixelColor, ctx, pixelOpacity, pixelSize, x, xMirror, y, yMirror } = props
+  const { width, height } = ctx.canvas
+  const mirroredX = width - x - pixelSize
+  const mirroredY = height - y - pixelSize
 
   const alignedX = Math.floor(x)
   const alignedY = Math.floor(y)
@@ -103,19 +125,16 @@ export function handleDrawPixel({ pixelColor, ctx, pixelOpacity, pixelSize, x, x
   ctx.globalAlpha = pixelOpacity
   ctx.fillStyle = pixelColor
   ctx.fillRect(alignedX, alignedY, pixelSize, pixelSize)
-
-  // if (xMirror) ctx.fillRect(mirroredX, y, pixelSize, pixelSize)
-  // if (yMirror) ctx.fillRect(x, mirroredY, pixelSize, pixelSize)
-  // if (xMirror && yMirror) ctx.fillRect(mirroredX, mirroredY, pixelSize, pixelSize)
-
+  if (xMirror) ctx.fillRect(mirroredX, y, pixelSize, pixelSize)
+  if (yMirror) ctx.fillRect(x, mirroredY, pixelSize, pixelSize)
+  if (xMirror && yMirror) ctx.fillRect(mirroredX, mirroredY, pixelSize, pixelSize)
   ctx.closePath()
 }
 
-export function HandleDeletePixel({ ctx, pixelSize, x, y, xMirror, yMirror }: THandleTool & TMirrorTool) {
+export function HandleDeletePixel({ ctx, pixelSize, x, y, xMirror, yMirror }: HandleMirrorTool) {
   const { width, height } = ctx.canvas
   const mirroredX = width - x - pixelSize
   const mirroredY = height - y - pixelSize
-
   ctx.clearRect(x, y, pixelSize, pixelSize)
   if (xMirror) ctx.clearRect(mirroredX, y, pixelSize, pixelSize)
   if (yMirror) ctx.clearRect(x, mirroredY, pixelSize, pixelSize)
@@ -127,8 +146,12 @@ export const handleClearCanvas = (ctx: CanvasRenderingContext2D) => {
   ctx.clearRect(0, 0, width, height)
 }
 
-export function handleDither({ ctx, x, y, pixelSize }: THandleDrawPixel) {
+export function handleDither({ ctx, x, y, pixelSize, xMirror, yMirror }: THandleDraw) {
   const imageData = ctx.getImageData(x, y, pixelSize, pixelSize)
+  const { width, height } = ctx.canvas
+  const mirroredX = width - x - pixelSize
+  const mirroredY = height - y - pixelSize
+
   const factor = 1 / 16
   const matrix = [
     [0, 8, 2, 10],
@@ -174,6 +197,16 @@ export function handleDither({ ctx, x, y, pixelSize }: THandleDrawPixel) {
   }
 
   ctx.putImageData(imageData, x, y)
+
+  if (xMirror) {
+    ctx.putImageData(imageData, mirroredX, y)
+  }
+  if (yMirror) {
+    ctx.putImageData(imageData, x, mirroredY)
+  }
+  if (xMirror && yMirror) {
+    ctx.putImageData(imageData, mirroredX, mirroredY)
+  }
 }
 
 export function moveAllDraw(ctx: CanvasRenderingContext2D, dx: number, dy: number) {

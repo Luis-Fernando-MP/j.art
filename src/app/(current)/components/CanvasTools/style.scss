@@ -1,88 +1,53 @@
 @use '@sass/config/vars' as v;
 @use '@sass/utils/defs' as d;
+@use '@sass/utils/pointActive' as po;
 
 .canvasTools {
-  &-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 160px;
-  }
+  display: grid;
+  grid-template-columns: 1fr 160px;
+}
 
-  &-verticalOptions {
-    flex-wrap: wrap;
+.utilityTools {
+  flex-wrap: wrap;
 
-    @include d.flex($dir: row);
+  @include d.flex($dir: row);
 
-    justify-content: center;
+  align-content: flex-start;
+  justify-content: center;
 
-    &__container {
-      @include d.flex($ali: center);
+  &-container {
+    @include d.flex($ali: center);
 
-      p {
-        transform: rotateZ(180deg);
+    width: 30px;
+    height: fit-content;
 
-        height: 55px;
-        border-radius: 5px;
-
-        writing-mode: vertical-rl;
-        font-size: 1rem;
-        text-align: center;
-
-        background-color: rgb(v.$bg1);
-      }
-    }
-
-    &__action {
-      padding-bottom: v.$padding;
-
-      @include d.flex($ali: center);
-
-      button {
-        padding: 5px;
-      }
-    }
-  }
-
-  &-range {
-    justify-content: center;
-
-    height: min-content;
-    padding: v.$padding;
-    border-radius: v.$radius;
-
-    background-color: rgb(v.$bg1);
-
-    @include d.flex($dir: row, $ali: center);
-
-    &__paragraph {
-      position: absolute;
-      top: 30%;
-      left: 0;
+    p {
       transform: rotateZ(180deg);
 
+      height: 70px;
+      padding: 8px;
+      border-radius: 5px;
+
       writing-mode: vertical-rl;
-      font-size: 1rem;
+      text-align: center;
 
-      b {
-        color: rgb(v.$fn1);
-      }
+      background-color: rgb(v.$bg1);
     }
+  }
 
-    &__container {
-      position: relative;
-      justify-content: center;
-      width: 45px;
-      max-height: 270px;
+  &-actions {
+    @include d.flex($ali: center, $gap: 5px);
 
-      @include d.flex($ali: flex-end);
-
-      button {
-        display: block;
-        padding: 5px;
-      }
+    button {
+      padding: 5px;
     }
+  }
 
-    &__controller {
-      // background-color: aliceblue !important;
+  &-mirror {
+    @include po.pointActive {
+      svg {
+        stroke: rgb(v.$tn1);
+      }
     }
   }
 }

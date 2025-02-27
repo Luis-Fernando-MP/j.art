@@ -14,6 +14,19 @@
 
   background-color: rgb(v.$bg2);
 
+  &-hue {
+    position: absolute;
+    top: -5px;
+    left: -10px;
+    transform: rotateZ(-10deg);
+
+    padding: 3px 10px;
+    border: 2px solid rgb(v.$bg1);
+    border-radius: 5px;
+
+    background-color: rgb(v.$bg3);
+  }
+
   &-see {
     padding: v.$padding 0;
   }
@@ -116,6 +129,11 @@
 
     svg {
       stroke: rgb(v.$fn1);
+    }
+
+    .canvasLayer-hue {
+      color: rgb(v.$fnA);
+      background-color: rgb(v.$tn1);
     }
   }
 }

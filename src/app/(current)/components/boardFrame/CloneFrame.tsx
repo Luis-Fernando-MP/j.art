@@ -7,7 +7,7 @@ import { type JSX, type MouseEvent, useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 
 import { ISelectAndMoveFrame } from '.'
-import LayerStore, { Layer, MAX_LAYERS } from '../../store/layer.store'
+import LayerStore, { Layer, MAX_LAYERS, setLayer } from '../../store/layer.store'
 import RepaintDrawingStore from '../../store/repaintDrawing.store'
 
 interface ICloneFrame {
@@ -42,19 +42,7 @@ const CloneFrame = ({ parentKey, onClone }: ICloneFrame): JSX.Element => {
     const updatedList = Object.entries(cloneLayers)
     const parentIndex = updatedList.findIndex(([p]) => p === parentKey)
 
-    const newFrame: [string, Layer[]] = [
-      frameId,
-      [
-        {
-          id: layerId,
-          parentId: frameId,
-          imageUrl: null,
-          title: `Capa 01`,
-          isWatching: true,
-          opacity: 100
-        }
-      ]
-    ]
+    const newFrame: [string, Layer[]] = [frameId, [setLayer({ id: layerId, parentId: frameId })]]
     updatedList.splice(parentIndex + 1, 0, newFrame)
     setListOfLayers(Object.fromEntries(updatedList))
 
@@ -73,7 +61,6 @@ const CloneFrame = ({ parentKey, onClone }: ICloneFrame): JSX.Element => {
           const { ctx } = currentCanvas
           ctx.drawImage(mergedBitmap, 0, 0)
           onClone({ frameId, layerId, parentIndex: parentIndex + 1 })
-          // setRepaint()
         }, 50)
         toast.success('👁️ Clonado')
       }

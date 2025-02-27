@@ -1,4 +1,3 @@
-import { newKey } from '@/shared/key'
 import dynamic from 'next/dynamic'
 import { type JSX } from 'react'
 
@@ -22,8 +21,7 @@ const CanvasListLayers = (): JSX.Element | null => {
   return (
     <div className='canvasLayers-list'>
       {layers.map(layer => {
-        const key = newKey()
-        return <CanvasLayer layer={layer} key={key} isActive={layer.id === actLayerId} handleActive={handleSelectedLayer} />
+        return <CanvasLayer layer={layer} key={layer.id} isActive={layer.id === actLayerId} handleActive={handleSelectedLayer} />
       })}
     </div>
   )

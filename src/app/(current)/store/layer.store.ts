@@ -11,15 +11,12 @@ export interface Layer {
   imageUrl: string | null
   isWatching: boolean
   opacity: number
-}
-
-export interface ParentLayer {
-  index: number
-  id: string
+  hue: number
 }
 
 interface ILayerStore {
   listOfLayers: { [key: string]: Layer[] }
+
   setListOfLayers: (listOfLayers: ILayerStore['listOfLayers']) => void
   deleteLayer: (p: { parentId: string; actLayerId: string }) => Layer | null
   addNewLayer: (_: { parentId: string }) => void
@@ -33,15 +30,8 @@ export const MAX_FRAMES = 20
 export const MAX_LAYERS = 15
 
 const state: StateCreator<ILayerStore> = (set, get) => ({
-  idParentLayer: {
-    index: 0,
-    id: DEFAULT_PARENT_ID
-  },
-  activeLayer: { id: DEFAULT_LAYER_ID, parentId: DEFAULT_PARENT_ID },
   listOfLayers: {
-    [DEFAULT_PARENT_ID]: [
-      { id: DEFAULT_LAYER_ID, title: 'Capa 01', parentId: DEFAULT_PARENT_ID, imageUrl: null, isWatching: true, opacity: 100 }
-    ]
+    [DEFAULT_PARENT_ID]: [setLayer({ id: DEFAULT_LAYER_ID, parentId: DEFAULT_PARENT_ID })]
   },
   setListOfLayers: listOfLayers => set({ listOfLayers }),
   deleteLayer({ parentId, actLayerId }) {
@@ -67,15 +57,7 @@ const state: StateCreator<ILayerStore> = (set, get) => ({
     }
     const layerName = String(currentList.length + 1).padStart(2, '0')
     const newLayerId = newKey(`${parentId}-layer-${layerName}`)
-    const newLayer = {
-      id: newLayerId,
-      title: `capa-${layerName}`,
-      parentId: parentId,
-      imageUrl: null,
-      isActive: false,
-      isWatching: true,
-      opacity: 100
-    }
+    const newLayer = setLayer({ id: newLayerId, title: `capa-${layerName}`, parentId })
     const updatedLayers = [...currentList, newLayer]
     set({ listOfLayers: { ...listOfLayers, [parentId]: updatedLayers } })
   },
@@ -85,16 +67,8 @@ const state: StateCreator<ILayerStore> = (set, get) => ({
     const layerId = newKey()
     const newList = structuredClone(listOfLayers)
     const index = selectIndex ?? Object.keys(listOfLayers).length
-    newList[frameKey] = [
-      {
-        id: layerId,
-        parentId: frameKey,
-        imageUrl: null,
-        title: `Capa 01`,
-        isWatching: true,
-        opacity: 100
-      }
-    ]
+    newList[frameKey] = [setLayer({ id: layerId, parentId: frameKey })]
+
     if (Object.keys(newList).length > MAX_LAYERS) {
       toast.error('🔥 hay muchos canvas')
       return null
@@ -118,4 +92,18 @@ const state: StateCreator<ILayerStore> = (set, get) => ({
 })
 
 const LayerStore = create(state)
+
 export default LayerStore
+
+export function setLayer(layer: Partial<Layer>): Layer {
+  const basicLayer: Layer = {
+    id: layer.id ?? newKey(),
+    title: 'capa 01',
+    parentId: layer.parentId ?? newKey(),
+    imageUrl: null,
+    isWatching: true,
+    opacity: 100,
+    hue: 0
+  }
+  return { ...basicLayer, ...layer }
+}

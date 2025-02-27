@@ -54,7 +54,6 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
     startPos.current = null
     canvasSnapshot.current = null
     activatePerfectShape(false)
-    console.log('repaint')
     setRepaint('all')
   }
 

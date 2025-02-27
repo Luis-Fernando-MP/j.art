@@ -1,5 +1,6 @@
 @use '@sass/config/vars' as v;
 @use '@sass/utils/defs' as d;
+@use '@sass/utils/scrollbar' as *;
 
 .canvasLayers {
   h5 {
@@ -17,6 +18,11 @@
   }
 
   &-list {
+    @extend %scroll-hidden;
+
+    overflow-y: scroll;
+    max-height: 300px;
+
     @include d.flex($gap: v.$padding * 0.5);
   }
 }

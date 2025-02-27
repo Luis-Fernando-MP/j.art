@@ -20,6 +20,7 @@
   --h4-font-size: 1.15rem;
   --h5-font-size: 1.1rem;
   --p-font-size: 1rem;
+  --s-grid: 15px;
 }
 
 $fXl: var(--xl-font-size);
@@ -60,7 +61,7 @@ $error: rgb(228 30 56);
 $focus: rgb(66 133 244);
 
 // app
-$pixelSize: 15px;
+$pixelSize: 30px;
 
 // bezier
 $bezier: cubic-bezier(0.68, -0.55, 0.27, 1.55);

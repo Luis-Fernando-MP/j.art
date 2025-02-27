@@ -1,19 +1,27 @@
 import toast from 'react-hot-toast'
 
+const tmpCanvas = new OffscreenCanvas(0, 0)
+const tmpCtx = tmpCanvas.getContext('2d')!
+
 export const getBitmapFromCanvas = async (canvasId: string) => {
   const canvas = document.getElementById(canvasId) as HTMLCanvasElement
   if (!canvas) {
     toast.error('❌ El lienzo actual no existe')
     return
   }
+
   const computedStyle = window.getComputedStyle(canvas)
-  let opacity = Number(computedStyle.opacity) || 1
-  const offscreen = new OffscreenCanvas(canvas.width, canvas.height)
-  const ctx = offscreen.getContext('2d')
-  if (!ctx) return
-  ctx.globalAlpha = opacity
-  ctx.drawImage(canvas, 0, 0)
-  return createImageBitmap(offscreen)
+  const { opacity, filter } = computedStyle
+  let canvasOpacity = Number(opacity) || 1
+
+  tmpCanvas.width = canvas.width
+  tmpCanvas.height = canvas.height
+
+  tmpCtx.globalAlpha = canvasOpacity
+  tmpCtx.filter = filter
+
+  tmpCtx.drawImage(canvas, 0, 0)
+  return createImageBitmap(tmpCanvas)
 }
 
 export const getBitmapFromParentCanvas = async (elementId: string) => {
@@ -27,15 +35,19 @@ export const getBitmapFromParentCanvas = async (elementId: string) => {
 
   for (const canvas of listOfCanvas) {
     const computedStyle = window.getComputedStyle(canvas)
-    const display = computedStyle.display
-    let opacity = Number(computedStyle.opacity) || 1
-    if (display === 'none') opacity = 0
-    const offscreen = new OffscreenCanvas(canvas.width, canvas.height)
-    const ctx = offscreen.getContext('2d')
-    if (!ctx) continue
-    ctx.globalAlpha = opacity
-    ctx.drawImage(canvas, 0, 0)
-    const bitmapPromise = createImageBitmap(offscreen)
+    const { opacity, display, filter } = computedStyle
+
+    let canvasOpacity = Number(opacity) || 1
+    if (display === 'none') canvasOpacity = 0
+
+    tmpCanvas.width = canvas.width
+    tmpCanvas.height = canvas.height
+
+    tmpCtx.globalAlpha = canvasOpacity
+    tmpCtx.filter = filter
+
+    tmpCtx.drawImage(canvas, 0, 0)
+    const bitmapPromise = createImageBitmap(tmpCanvas)
     imageBitmaps.push(bitmapPromise)
   }
 

@@ -12,7 +12,7 @@
     @include d.flex($dir: row, $ali: center, $gap: 5px);
 
     button {
-      padding: 5px v.$padding * 1.5;
+      padding: v.$padding v.$padding * 2;
       border-radius: v.$radius;
       font-size: 1rem;
       background-color: rgb(v.$bg1);

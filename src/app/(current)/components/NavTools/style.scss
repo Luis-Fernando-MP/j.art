@@ -10,17 +10,13 @@
     transform: rotateZ(180deg);
 
     width: fit-content;
-    padding: v.$padding 2px;
-    border-radius: v.$radius;
+    padding: v.$padding 5px;
+    border-radius: 5px;
 
     writing-mode: vertical-rl;
-    font-weight: 400;
     color: rgb(v.$fn2);
+    text-decoration: none;
 
     background-color: rgb(v.$bg2);
-
-    &.active {
-      text-transform: uppercase;
-    }
   }
 }

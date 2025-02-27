@@ -31,7 +31,7 @@ const state: StateCreator<IToolsStore> = set => ({
   setVerticalFlip: verticalFlip => set({ verticalFlip }),
   setXMirror: xMirror => set({ xMirror }),
   setYMirror: yMirror => set({ yMirror }),
-  setSelectedTool: selectedTool => set({ selectedTool: selectedTool as Tools })
+  setSelectedTool: selectedTool => set({ selectedTool })
 })
 
 const ToolsStore = create(state)

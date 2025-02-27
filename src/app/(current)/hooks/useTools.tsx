@@ -61,7 +61,7 @@ const useTools = () => {
     }
 
     if (selectedTool in selectTools) {
-      return await handleSelectTools()
+      return handleSelectTools()
     }
 
     if (selectedTool in drawTools) {
@@ -69,7 +69,7 @@ const useTools = () => {
     }
   }
 
-  const handleSelectTools = (): void => {
+  const handleSelectTools = () => {
     const tool = selectedTool as keyof typeof selectTools
 
     if (tool === 'Move') {

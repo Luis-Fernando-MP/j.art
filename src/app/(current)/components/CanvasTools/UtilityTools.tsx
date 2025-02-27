@@ -1,20 +1,13 @@
 import { flipHorizontal, flipVertical, getContext, rotateCanvas } from '@/scripts/transformCanvas'
 import { handleWorkerMessage } from '@/shared/handleWorkerMessage'
 import { TransformWorker, TransformWorkerMessage } from '@workers/transform'
-import {
-  AlignCenterVerticalIcon,
-  CropIcon,
-  FlipHorizontal2Icon,
-  FlipHorizontalIcon,
-  FlipVertical2Icon,
-  FlipVerticalIcon,
-  Rotate3DIcon
-} from 'lucide-react'
+import { AlignCenterVerticalIcon, CropIcon, FlipHorizontalIcon, FlipVerticalIcon, Rotate3DIcon } from 'lucide-react'
 import { type JSX, useEffect, useRef } from 'react'
 
 import ActiveDrawsStore from '../../store/ActiveDraws.store'
 import PixelStore from '../../store/pixel.store'
 import RepaintDrawingStore from '../../store/repaintDrawing.store'
+import MirrorTools from './MirrorTools'
 
 const UtilityTools = (): JSX.Element | null => {
   const { pixelSize } = PixelStore()
@@ -25,7 +18,6 @@ const UtilityTools = (): JSX.Element | null => {
 
   useEffect(() => {
     transformWorkerRef.current = new Worker('/workers/transform.js', { type: 'module' })
-
     return () => {
       transformWorkerRef.current?.terminate()
     }
@@ -33,7 +25,6 @@ const UtilityTools = (): JSX.Element | null => {
 
   const handleHorizontalFlip = () => {
     const currentCanvas = getContext(actLayerId)
-    console.log('worker', transformWorkerRef.current)
     if (!currentCanvas) return
     flipHorizontal(currentCanvas.ctx)
     setRepaint('all')
@@ -79,10 +70,10 @@ const UtilityTools = (): JSX.Element | null => {
   }
 
   return (
-    <section className='canvasTools-verticalOptions'>
-      <div className='canvasTools-verticalOptions__container'>
+    <section className='utilityTools'>
+      <div className='utilityTools-container'>
         <p>Flips</p>
-        <div className='canvasTools-verticalOptions__action'>
+        <div className='utilityTools-actions'>
           <button onClick={handleHorizontalFlip}>
             <FlipHorizontalIcon />
           </button>
@@ -92,9 +83,9 @@ const UtilityTools = (): JSX.Element | null => {
         </div>
       </div>
 
-      <div className='canvasTools-verticalOptions__container'>
+      <div className='utilityTools-container'>
         <p>Rotar</p>
-        <div className='canvasTools-verticalOptions__action'>
+        <div className='utilityTools-actions'>
           <button onClick={handleRotate}>
             <Rotate3DIcon />
           </button>
@@ -104,21 +95,14 @@ const UtilityTools = (): JSX.Element | null => {
         </div>
       </div>
 
-      <div className='canvasTools-verticalOptions__container'>
+      <div className='utilityTools-container'>
         <p>Mirror</p>
-        <div className='canvasTools-verticalOptions__action'>
-          <button>
-            <FlipHorizontal2Icon />
-          </button>
-          <button>
-            <FlipVertical2Icon />
-          </button>
-        </div>
+        <MirrorTools />
       </div>
 
-      <div className='canvasTools-verticalOptions__container'>
+      <div className='utilityTools-container'>
         <p>Crop</p>
-        <div className='canvasTools-verticalOptions__action'>
+        <div className='utilityTools-actions'>
           <button>
             <CropIcon />
           </button>
