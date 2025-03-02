@@ -18,7 +18,7 @@ interface IBoardStore {
   setOffset: (offset: TPositions) => void
 }
 
-export const MIN_SCALE = 0.5
+export const MIN_SCALE = 0.4
 export const MAX_SCALE = 20
 export const INITIAL_SCALE = 1
 

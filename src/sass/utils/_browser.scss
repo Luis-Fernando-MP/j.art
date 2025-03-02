@@ -1,4 +1,6 @@
 /* stylelint-disable at-rule-prelude-no-invalid */
+@use 'sass:map';
+
 $browser-support-map: (
   firefox: '(-moz-appearance: none)',
   safari: '(-webkit-appearance: none) and (not all)',
@@ -8,7 +10,7 @@ $browser-support-map: (
 
 @mixin browsers($browsers) {
   @each $browser in $browsers {
-    $support-rule: map-get($browser-support-map, $browser);
+    $support-rule: map.get($browser-support-map, $browser);
 
     @if $support-rule {
       @supports #{$support-rule} {

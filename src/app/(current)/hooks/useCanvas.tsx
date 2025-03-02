@@ -4,7 +4,7 @@ import { getCanvasCoordinates } from '@scripts/toolsCanvas'
 import { getContext } from '@scripts/transformCanvas'
 import { MouseEvent, useEffect, useRef, useState } from 'react'
 
-import { TPositions } from '../store/canvas.store'
+import CanvasStore, { TPositions } from '../store/canvas.store'
 import RepaintDrawingStore from '../store/repaintDrawing.store'
 import useTools from './useTools'
 
@@ -12,6 +12,7 @@ type TUseCanvas = { canvasId: string }
 
 const useCanvas = ({ canvasId }: TUseCanvas) => {
   // const { scale } = boardStore()
+  const { dimensions } = CanvasStore()
   const $canvasRef = useRef<HTMLCanvasElement>(null)
   const $perfectShape = useRef(false)
 
@@ -73,6 +74,21 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
       document.removeEventListener('mouseup', handleCanvasMouseUp)
     }
   }, [])
+
+  useEffect(() => {
+    if (!($canvasRef.current instanceof HTMLCanvasElement)) return
+    const canvas = $canvasRef.current
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    const tmpDraw = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    $canvasRef.current.width = dimensions.width
+    $canvasRef.current.height = dimensions.height
+
+    ctx.putImageData(tmpDraw, 0, 0)
+    setRepaint('all')
+    return () => {}
+  }, [dimensions, setRepaint])
 
   return {
     $canvasRef,

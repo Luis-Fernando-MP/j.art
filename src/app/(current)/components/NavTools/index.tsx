@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import type { JSX } from 'react'
 
+import CanvasFile from '../CanvasFile'
 import './style.scss'
 
 interface INavTools {
@@ -18,8 +19,7 @@ const NavTools = ({ className = '' }: INavTools): JSX.Element => {
     { href: '#zoomController', label: 'zoom' },
     { href: '#layers', label: 'Capas' },
     { href: '#filters', label: 'Filtros' },
-    { href: '#tools', label: 'Herramientas' },
-    { href: '#file', label: 'Archivo' }
+    { href: '#tools', label: 'Herramientas' }
   ]
 
   useEffect(() => {
@@ -43,6 +43,7 @@ const NavTools = ({ className = '' }: INavTools): JSX.Element => {
           {label}
         </Link>
       ))}
+      <CanvasFile />
     </nav>
   )
 }

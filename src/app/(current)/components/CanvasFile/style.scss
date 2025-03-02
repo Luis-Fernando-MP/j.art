@@ -1,68 +1,145 @@
 @use '@sass/config/vars' as v;
 @use '@sass/utils/defs' as d;
 
-.canvasFile {
+.cnFile {
   content-visibility: auto;
 
-  &-new {
-    @include d.flex;
+  &-popup {
+    @include d.flex($gap: v.$padding * 2);
 
+    width: 510px;
+    padding: v.$padding * 2 !important;
+  }
+
+  &-title {
+    h2,
+    h3 {
+      text-transform: uppercase;
+    }
+
+    h2 {
+      color: rgb(v.$tn1);
+    }
+  }
+
+  &-form {
+    flex-wrap: wrap;
     width: 100%;
 
-    &__wrapper {
-      @include d.flex($dir: row, $ali: center);
+    @include d.flex;
 
-      justify-content: center;
+    &__wrapper {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: v.$padding;
     }
+  }
+
+  &-info {
+    @include d.flex;
 
     &__field {
-      @include d.flex($gap: 5px);
+      position: relative;
 
-      input {
+      &::after {
+        content: 'PX';
+
+        position: absolute;
+        right: 5px;
+        bottom: 5px;
+
         padding: 2px v.$padding;
-        border-radius: v.$radius;
-        background-color: rgb(v.$bg1);
-
-        &[type='text'] {
-          width: 100px;
-        }
-      }
-    }
-
-    &__sizes {
-      @include d.flex($dir: row, $gap: 5px);
-
-      flex-wrap: wrap;
-      justify-content: center;
-
-      button {
-        transform: rotateZ(180deg);
-
-        padding: v.$padding 3px;
-        border: 1.5px dashed transparent;
+        border: 1px solid rgb(v.$bg2);
         border-radius: 5px;
 
-        writing-mode: vertical-rl;
+        background-color: rgb(v.$bg1);
+      }
+
+      &.title::after {
+        display: none;
+      }
+
+      input {
+        width: 100%;
+        padding: v.$padding;
+        border-radius: v.$radius * 0.5;
+
+        font-weight: lighter;
 
         background-color: rgb(v.$bg2);
-
-        &.active {
-          border-color: rgb(v.$tn1);
-        }
       }
+
+      @include d.flex($gap: v.$padding * 0.5);
+    }
+  }
+
+  &-dimensions__wrapper {
+    flex-wrap: wrap;
+    padding: v.$padding;
+    border-radius: v.$radius;
+    background-color: rgb(v.$bg2);
+
+    @include d.flex($dir: row);
+  }
+
+  &-option {
+    padding: v.$padding * 0.5 v.$padding * 1.5;
+    border: 2px dashed transparent;
+    border-radius: v.$radius * 0.5;
+    background-color: rgb(v.$bg1);
+
+    @include d.flex($gap: 5px);
+
+    span {
+      font-size: 0.8rem;
     }
 
-    &__submit {
-      width: 100%;
-      padding: 5px 0;
-      border-radius: v.$radius;
+    &.selected {
+      border-color: rgb(v.$tn1);
+    }
+  }
 
-      font-size: v.$fH3;
-      font-weight: bold;
-      color: rgb(v.$bg1);
-      text-align: center;
+  &-actions {
+    flex-wrap: wrap;
+    width: 100%;
 
-      background-color: rgb(v.$tn1);
+    @include d.flex($dir: row);
+  }
+
+  &-action {
+    @include d.flex($dir: row, $gap: v.$padding * 0.5, $ali: center);
+
+    padding: v.$padding v.$padding * 2;
+    border-radius: v.$radius * 0.5;
+
+    font-family: v.$font1;
+    font-size: v.$fP;
+    text-transform: uppercase;
+
+    background-color: rgb(v.$bg2);
+
+    span {
+      padding: 3px v.$padding;
+      border-radius: 3px;
+      background-color: rgb(v.$bg1);
+    }
+  }
+
+  &-scale {
+    @include d.flex;
+  }
+
+  &-range {
+    @include d.flex($dir: row, $gap: v.$padding * 0.5);
+
+    width: 300px;
+  }
+
+  &-finalInfo {
+    @include d.flex($gap: v.$padding * 0.5);
+
+    h5 {
+      padding-left: v.$padding;
     }
   }
 }

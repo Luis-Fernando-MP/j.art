@@ -6,6 +6,7 @@
 @use '@sass/utils/scrollbar' as *;
 @use '@sass/utils/tooltip' as tol;
 @use '@sass/utils/boxLoader' as loader;
+@use 'sass:map';
 
 *,
 ::before,
@@ -36,6 +37,8 @@ html {
 
 body {
   @extend %scroll-hidden;
+
+  user-select: none;
 
   position: relative;
 
@@ -72,14 +75,12 @@ body {
 
   .loading {
     pointer-events: none;
-    user-select: none;
 
     @include loader.boxLoader;
   }
 
   .error {
     pointer-events: none;
-    user-select: none;
     position: relative;
     outline: 2px solid $error;
 
@@ -102,10 +103,10 @@ body {
 
   @each $tag, $props in $typography {
     #{$tag} {
-      font-family: map-get($props, family);
-      font-size: map-get($props, size);
-      font-weight: map-get($props, weight);
-      color: map-get($props, color);
+      font-family: map.get($props, family);
+      font-size: map.get($props, size);
+      font-weight: map.get($props, weight);
+      color: map.get($props, color);
     }
   }
 
@@ -126,19 +127,19 @@ body {
   small,
   span,
   input {
-    font-family: map-get(map-get($typography, 'p'), family);
-    font-size: map-get(map-get($typography, 'p'), size);
-    font-weight: map-get(map-get($typography, 'p'), weight);
-    color: map-get(map-get($typography, 'p'), color);
+    font-family: map.get(map.get($typography, 'p'), family);
+    font-size: map.get(map.get($typography, 'p'), size);
+    font-weight: map.get(map.get($typography, 'p'), weight);
+    color: map.get(map.get($typography, 'p'), color);
   }
 
   textarea,
   button,
   select {
-    font-family: map-get(map-get($typography, 'a'), family);
-    font-size: map-get(map-get($typography, 'a'), size);
-    font-weight: map-get(map-get($typography, 'a'), weight);
-    color: map-get(map-get($typography, 'a'), color);
+    font-family: map.get(map.get($typography, 'a'), family);
+    font-size: map.get(map.get($typography, 'a'), size);
+    font-weight: map.get(map.get($typography, 'a'), weight);
+    color: map.get(map.get($typography, 'a'), color);
 
     background: none;
   }

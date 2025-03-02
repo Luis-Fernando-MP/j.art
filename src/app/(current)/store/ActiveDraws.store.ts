@@ -9,6 +9,7 @@ interface IActiveDrawsStore {
   setActParentId: (actParentId: string) => void
   setActLayerId: (actLayerId: string) => void
   setActParentIndex: (actParentIndex: number) => void
+  resetActiveStore: () => void
 }
 
 const state: StateCreator<IActiveDrawsStore> = set => ({
@@ -17,7 +18,10 @@ const state: StateCreator<IActiveDrawsStore> = set => ({
   actParentIndex: 0,
   setActParentId: actParentId => set({ actParentId }),
   setActLayerId: actLayerId => set({ actLayerId }),
-  setActParentIndex: actParentIndex => set({ actParentIndex })
+  setActParentIndex: actParentIndex => set({ actParentIndex }),
+  resetActiveStore() {
+    set({ actLayerId: DEFAULT_LAYER_ID, actParentId: DEFAULT_PARENT_ID })
+  }
 })
 
 const ActiveDrawsStore = create(state)

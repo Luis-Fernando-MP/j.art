@@ -16,6 +16,7 @@ export const getBitmapFromCanvas = async (canvasId: string) => {
 
   tmpCanvas.width = canvas.width
   tmpCanvas.height = canvas.height
+  tmpCtx.imageSmoothingEnabled = false
 
   tmpCtx.globalAlpha = canvasOpacity
   tmpCtx.filter = filter
@@ -24,7 +25,7 @@ export const getBitmapFromCanvas = async (canvasId: string) => {
   return createImageBitmap(tmpCanvas)
 }
 
-export const getBitmapFromParentCanvas = async (elementId: string) => {
+export const getBitmapFromParentCanvas = async (elementId: string, scale: number = 1, w?: number, h?: number) => {
   const container = document.getElementById(elementId)
   if (!container) {
     toast.error('❌ El contenedor padre no existe')
@@ -37,16 +38,20 @@ export const getBitmapFromParentCanvas = async (elementId: string) => {
     const computedStyle = window.getComputedStyle(canvas)
     const { opacity, display, filter } = computedStyle
 
+    const width = w ?? canvas.width
+    const height = h ?? canvas.height
+
     let canvasOpacity = Number(opacity) || 1
     if (display === 'none') canvasOpacity = 0
 
-    tmpCanvas.width = canvas.width
-    tmpCanvas.height = canvas.height
+    tmpCanvas.width = width * scale
+    tmpCanvas.height = height * scale
 
+    tmpCtx.imageSmoothingEnabled = false
     tmpCtx.globalAlpha = canvasOpacity
     tmpCtx.filter = filter
 
-    tmpCtx.drawImage(canvas, 0, 0)
+    tmpCtx.drawImage(canvas, 0, 0, width * scale, height * scale)
     const bitmapPromise = createImageBitmap(tmpCanvas)
     imageBitmaps.push(bitmapPromise)
   }

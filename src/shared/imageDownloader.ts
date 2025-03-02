@@ -1,52 +1,172 @@
-import { toPng } from 'html-to-image'
+import { Layer } from '@/app/(current)/store/layer.store'
+import { EDowImageWk } from '@workers/downloadImage'
+// @ts-ignore
+import GIF from 'gif.js.optimized'
 import toast from 'react-hot-toast'
 
-interface IDownloadImageBase {
-  element: HTMLElement
+import { getBitmapFromParentCanvas } from './bitmap'
+import { handleWorkerMessage } from './handleWorkerMessage'
+
+interface IDownload {
+  frameId: string
+  width: number
+  height: number
+  title: string
   scale?: number
+  worker: Worker
 }
 
-interface IDownloadImageToPng extends IDownloadImageBase {
-  fileName: string
-}
+export const frameToPng = async ({ frameId, width, height, title, scale = 1, worker }: IDownload) => {
+  const toastId = 'gifDownload'
+  toast.loading('🍀 Procesando', { id: toastId })
+  const imagesBitmap = await getBitmapFromParentCanvas(frameId, scale, width, height)
+  if (!imagesBitmap) return toast.dismiss(toastId)
 
-type ICopyImageToClipboard = Omit<IDownloadImageToPng, 'fileName'>
-
-const captureElementToPng = async (element: HTMLElement, scale: number): Promise<string> => {
-  element.classList.add('taking-screenshot')
   try {
-    return await toPng(element, { quality: 1, pixelRatio: scale })
-  } finally {
-    element.classList.remove('taking-screenshot')
-  }
-}
+    const message = { imagesBitmap, action: EDowImageWk.TO_PNG }
+    worker.postMessage(message, imagesBitmap)
+    handleWorkerMessage(worker, data => {
+      const { blob } = data
+      if (!blob) return toast.error('❌ Algo ha salido mal', { id: toastId })
 
-export const downloadImageToPng = async ({ element, fileName, scale = 3 }: IDownloadImageToPng) => {
-  const toastId = toast.loading('Capturando...')
-  try {
-    const dataUrl = await captureElementToPng(element, scale)
-    const link = document.createElement('a')
-    link.href = dataUrl
-    link.download = `${fileName}.png`
-    link.click()
-    toast.success('Hecho!!', { id: toastId })
+      toast.success('🚀 Listo!!', { id: toastId })
+      const downloadLink = document.createElement('a')
+      downloadLink.href = URL.createObjectURL(blob)
+      downloadLink.download = `${title}.png`
+      downloadLink.click()
+    })
   } catch (error) {
-    console.error('Error al descargar la imagen:', error)
-    toast.error('Error al capturar la imagen', { id: toastId })
+    toast.dismiss(toastId)
+    console.error('Failed to create ImageBitmap for layer view:', error)
   }
 }
 
-export const copyImageToClipboard = async ({ element, scale = 3 }: ICopyImageToClipboard) => {
-  const toastId = toast.loading('Capturando...')
-  try {
-    const dataUrl = await captureElementToPng(element, scale)
-    const response = await fetch(dataUrl)
-    const blob = await response.blob()
-    const clipboardItem = new ClipboardItem({ 'image/png': blob })
-    await navigator.clipboard.write([clipboardItem])
-    toast.success('Imagen copiada al portapapeles!', { id: toastId })
-  } catch (error) {
-    console.error('Error al copiar la imagen:', error)
-    toast.error('Error al capturar la imagen', { id: toastId })
+interface IDrawToGif {
+  width: number
+  height: number
+  title: string
+  scale?: number
+  listOfLayers: {
+    [key: string]: Layer[]
   }
+}
+
+export const drawToGif = (props: IDrawToGif) => {
+  const { width, height, title, scale = 1, listOfLayers } = props
+  const toastId = 'gifDownload'
+  toast.loading('🍀 Procesando', { id: toastId })
+
+  const gif = new GIF({
+    workers: 3,
+    quality: 10,
+    transparent: true,
+    workerScript: '/workers/gif/gif.worker.js'
+  })
+
+  const frames = Object.keys(listOfLayers).map(frameKey => {
+    const $canvas = document.createElement('canvas')
+    $canvas.width = width * scale
+    $canvas.height = height * scale
+    const ctx = $canvas.getContext('2d')
+    if (!ctx) return
+
+    listOfLayers[frameKey].toReversed().forEach(layer => {
+      const canvas = document.getElementById(layer.id) as HTMLCanvasElement
+      if (!canvas) return
+
+      const computedStyle = window.getComputedStyle(canvas)
+      const { opacity, filter } = computedStyle
+
+      ctx.globalAlpha = Number(opacity) || 1
+      ctx.filter = filter
+
+      ctx.drawImage(canvas, 0, 0, width * scale, height * scale)
+    })
+    return $canvas
+  })
+
+  frames.forEach(frame => {
+    if (frame) {
+      gif.addFrame(frame, { delay: 200 })
+    }
+  })
+
+  gif.on('finished', (blob: Blob) => {
+    const downloadLink = document.createElement('a')
+    downloadLink.href = URL.createObjectURL(blob)
+    downloadLink.download = `${title}.gif`
+    downloadLink.click()
+
+    toast.success('🚀 Listo!!', { id: toastId })
+  })
+
+  gif.render()
+}
+
+interface IFileArtObject {
+  listOfLayers: {
+    [key: string]: Layer[]
+  }
+  frameId: string
+  width: number
+  height: number
+  title: string
+  actFrameId: string
+  actFrameIndex: number
+  actLayerId: string
+}
+
+export const toFileArt = (props: IFileArtObject) => {
+  const { frameId, listOfLayers, width, height, title, actFrameId, actFrameIndex, actLayerId } = props
+  const $parentElement = document.getElementById(frameId)
+  if (!$parentElement) return
+
+  const $layers = $parentElement.querySelectorAll('canvas')
+
+  const parentEntries = Object.entries(listOfLayers)
+
+  const frames = parentEntries.map(item => {
+    const [frameKey, layers] = item
+
+    const layersObj = layers.map(layer => ({
+      id: layer.id,
+      title: layer.title,
+      parentId: layer.parentId,
+      imageUrl: layer.imageUrl,
+      isWatching: layer.isWatching,
+      filters: {
+        opacity: layer.opacity,
+        hue: layer.hue
+      }
+    }))
+
+    return {
+      speed: 100,
+      id: frameKey,
+      layers: layersObj
+    }
+  })
+
+  const artFile = {
+    website: 'j-art.vercel.app',
+    extension: '.art',
+    author: 'shuli dev',
+    contact: 'luigfmp@gmail.com',
+    width: width,
+    height: height,
+    title: title,
+    preview: $layers[0]?.toDataURL('image/png') || '',
+    created_at: Date.now(),
+    updated_at: Date.now(),
+    actFrameId,
+    actFrameIndex,
+    actLayerId,
+    frames
+  }
+
+  const jsonBlob = new Blob([JSON.stringify(artFile, null, 2)], { type: 'application/json' })
+  const downloadLink = document.createElement('a')
+  downloadLink.href = URL.createObjectURL(jsonBlob)
+  downloadLink.download = `${title}.art`
+  downloadLink.click()
 }

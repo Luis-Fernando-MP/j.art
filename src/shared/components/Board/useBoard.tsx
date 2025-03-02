@@ -77,14 +77,21 @@ const useBoard = ({ isCenter }: IUseBoardHook) => {
     [setOffset]
   )
 
-  const centerWithSpacing = useCallback(() => {
-    if (!$containerRef.current || !$childrenRef.current) return
+  const setDynamicScale = useCallback(() => {
+    if (!$containerRef.current || !$childrenRef.current) return null
+
     const paRect = $containerRef.current.getBoundingClientRect()
     const childrenRect = $childrenRef.current.getBoundingClientRect()
     const { maxScale } = getDynamicScale(paRect, childrenRect)
     setScale(maxScale)
-    moveToChild(0, maxScale)
-  }, [moveToChild, setScale])
+    return maxScale
+  }, [setScale])
+
+  const centerWithSpacing = useCallback(() => {
+    const scale = setDynamicScale()
+    if (!scale) return
+    moveToChild(0, scale)
+  }, [moveToChild])
 
   const handleBoardDown = (e: React.MouseEvent) => {
     e.preventDefault()

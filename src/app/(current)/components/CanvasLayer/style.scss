@@ -35,7 +35,6 @@
     @include d.flex($dir: row, $ali: center);
 
     pointer-events: visible;
-    user-select: none;
     align-items: stretch;
   }
 

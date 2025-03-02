@@ -34,7 +34,6 @@
   &-grid,
   &-cross {
     pointer-events: none;
-    user-select: none;
 
     position: absolute;
     inset: 0;
@@ -61,7 +60,7 @@
     background-image:
       linear-gradient(to right, rgb(v.$fn2, 0.3) 0.25px, transparent 0),
       linear-gradient(to bottom, rgb(v.$fn2, 0.3) 0.25px, transparent 0);
-    background-position: 0 0;
+    background-position: -0.1px -0.1px;
     background-size: var(--s-grid) var(--s-grid);
   }
 

@@ -9,6 +9,8 @@
   overflow: auto;
   padding: v.$padding;
 
+  @include d.flex;
+
   &-container {
     height: fit-content;
     padding: v.$padding;
@@ -33,6 +35,4 @@
     border-radius: v.$radius;
     background-color: rgb(v.$bg3);
   }
-
-  @include d.flex;
 }

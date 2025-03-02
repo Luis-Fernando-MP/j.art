@@ -6,8 +6,8 @@ import { StateCreator, create } from 'zustand'
 
 export interface Layer {
   id: string
-  parentId: string
   title: string
+  parentId: string
   imageUrl: string | null
   isWatching: boolean
   opacity: number
@@ -22,16 +22,28 @@ interface ILayerStore {
   addNewLayer: (_: { parentId: string }) => void
   addNewFrame: (index?: number) => { index: number; frameKey: string; layerId: string } | null
   updateLayer: (_: { parentId: string; layer: Partial<Layer>; list?: Layer[] }) => void
+  reset: () => void
 }
 
-export const DEFAULT_PARENT_ID = 'default-canvas'
-export const DEFAULT_LAYER_ID = `${DEFAULT_PARENT_ID}-layer1`
+export const DEFAULT_PARENT_ID = newKey('default-canvas')
+export const DEFAULT_LAYER_ID = newKey('layer1')
 export const MAX_FRAMES = 20
 export const MAX_LAYERS = 15
 
+const DEFAULT_LIST = {
+  [DEFAULT_PARENT_ID]: [setLayer({ id: DEFAULT_LAYER_ID, parentId: DEFAULT_PARENT_ID })]
+}
+
 const state: StateCreator<ILayerStore> = (set, get) => ({
-  listOfLayers: {
-    [DEFAULT_PARENT_ID]: [setLayer({ id: DEFAULT_LAYER_ID, parentId: DEFAULT_PARENT_ID })]
+  listOfLayers: DEFAULT_LIST,
+  reset: () => {
+    const canvas = document.getElementById(DEFAULT_LAYER_ID)
+    if (canvas instanceof HTMLCanvasElement) {
+      canvas.removeAttribute('style')
+      const ctx = canvas.getContext('2d')!
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+    }
+    set({ listOfLayers: DEFAULT_LIST })
   },
   setListOfLayers: listOfLayers => set({ listOfLayers }),
   deleteLayer({ parentId, actLayerId }) {
@@ -79,6 +91,8 @@ const state: StateCreator<ILayerStore> = (set, get) => ({
   },
   updateLayer({ parentId, layer, list }) {
     const listOfLayers = get().listOfLayers
+
+    console.log('lista', listOfLayers, parentId, listOfLayers[parentId])
     const currentList = list ?? [...listOfLayers[parentId]]
     if (!currentList) return
     const updatedList = currentList.map(f => {

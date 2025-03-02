@@ -21,17 +21,18 @@
   background-color: rgb(v.$bg1);
 
   &-header {
-    user-select: none;
-
     position: relative;
-
     padding: v.$padding 0;
-
     writing-mode: vertical-rl;
-
     background-color: rgb(v.$bg2);
 
     @include d.flex($dir: row, $ali: center);
+
+    p {
+      font-family: v.$font1;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
   }
 
   &-closeButton {
@@ -48,7 +49,6 @@
     top: 0;
 
     overflow-y: auto;
-    justify-content: center;
 
     min-width: 100%;
     min-height: 100px;

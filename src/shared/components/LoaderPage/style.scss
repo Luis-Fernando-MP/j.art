@@ -3,8 +3,6 @@
 @use '@sass/utils/glitch' as g;
 
 .loaderApp {
-  user-select: none;
-
   position: fixed;
   z-index: 10;
   top: 0;

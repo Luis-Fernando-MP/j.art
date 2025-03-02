@@ -23,12 +23,15 @@ importers:
       '@unpic/react':
         specifier: 1.0.0
         version: 1.0.0(next@15.1.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      gif.js:
+        specifier: ^0.2.0
+        version: 0.2.0
+      gif.js.optimized:
+        specifier: ^1.0.1
+        version: 1.0.1
       howler:
         specifier: 2.2.4
         version: 2.2.4
-      html-to-image:
-        specifier: 1.11.13
-        version: 1.11.13
       lucide-react:
         specifier: 0.475.0
         version: 0.475.0(react@19.0.0)
@@ -1298,6 +1301,12 @@ packages:
   get-tsconfig@4.10.0:
     resolution: {integrity: sha512-kGzZ3LWWQcGIAmg6iWvXn0ei6WDtV26wzHRMwDSzmAbcXrTEXxHy6IehI6/4eT6VRKyMP1eF1VqwrVUmE/LR7A==}
 
+  gif.js.optimized@1.0.1:
+    resolution: {integrity: sha512-IS0F42Xken6lp/iR4irgG4r52tvxRkEKsXGZmlUHUOb00SWNMezJOJwkVaJk2MLW53rqzMbPnnBtEhs9hcMJ9w==}
+
+  gif.js@0.2.0:
+    resolution: {integrity: sha512-bYxCoT8OZKmbxY8RN4qDiYuj4nrQDTzgLRcFVovyona1PTWNePzI4nzOmotnlOFIzTk/ZxAHtv+TfVLiBWj/hw==}
+
   glob-parent@5.1.2:
     resolution: {integrity: sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==}
     engines: {node: '>= 6'}
@@ -1389,9 +1398,6 @@ packages:
   html-tags@3.3.1:
     resolution: {integrity: sha512-ztqyC3kLto0e9WbNp0aeP+M3kTt+nbaIveGmUxAtZa+8iFgKLUOD4YKM5j+f3QD89bra7UeumolZHKuOXnTmeQ==}
     engines: {node: '>=8'}
-
-  html-to-image@1.11.13:
-    resolution: {integrity: sha512-cuOPoI7WApyhBElTTb9oqsawRvZ0rHhaHwghRLlTuffoD1B2aDemlCruLeZrUIIdvG7gs9xeELEPm6PhuASqrg==}
 
   ieee754@1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
@@ -3753,6 +3759,10 @@ snapshots:
     dependencies:
       resolve-pkg-maps: 1.0.0
 
+  gif.js.optimized@1.0.1: {}
+
+  gif.js@0.2.0: {}
+
   glob-parent@5.1.2:
     dependencies:
       is-glob: 4.0.3
@@ -3837,8 +3847,6 @@ snapshots:
   howler@2.2.4: {}
 
   html-tags@3.3.1: {}
-
-  html-to-image@1.11.13: {}
 
   ieee754@1.2.1: {}
 
