@@ -8,9 +8,10 @@ import './style.scss'
 interface ICanvas {
   canvasId: string
   isActive: boolean
+  isWatching: boolean
 }
 
-const Canvas = ({ canvasId, isActive }: ICanvas): JSX.Element => {
+const Canvas = ({ canvasId, isActive, isWatching }: ICanvas): JSX.Element => {
   const { $canvasRef, handleCanvasMouseDown, handleCanvasMouseMove } = useCanvas({
     canvasId
   })
@@ -19,6 +20,7 @@ const Canvas = ({ canvasId, isActive }: ICanvas): JSX.Element => {
   return (
     <canvas
       className={`canvasDraw ${acl(isActive, 'selected')}`}
+      style={{ display: isWatching ? 'block' : 'none' }}
       id={canvasId}
       ref={$canvasRef}
       onMouseDown={handleCanvasMouseDown}

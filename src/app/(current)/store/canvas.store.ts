@@ -1,6 +1,6 @@
 import { StateCreator, create } from 'zustand'
 
-import { getSize } from '../components/CanvasFile/FilePopup'
+import { getSize } from '../hooks/useFileOptions'
 
 type TDimensionPosition = {
   width: number

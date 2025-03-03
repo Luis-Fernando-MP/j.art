@@ -1,3 +1,4 @@
+import { Frame, LayerFile } from '@/app/(current)/components/CanvasFile/artFile.type'
 import { Layer } from '@/app/(current)/store/layer.store'
 import { EDowImageWk } from '@workers/downloadImage'
 // @ts-ignore
@@ -50,7 +51,6 @@ interface IDrawToGif {
     [key: string]: Layer[]
   }
 }
-
 export const drawToGif = (props: IDrawToGif) => {
   const { width, height, title, scale = 1, listOfLayers } = props
   const toastId = 'gifDownload'
@@ -59,7 +59,6 @@ export const drawToGif = (props: IDrawToGif) => {
   const gif = new GIF({
     workers: 3,
     quality: 10,
-    transparent: true,
     workerScript: '/workers/gif/gif.worker.js'
   })
 
@@ -70,6 +69,8 @@ export const drawToGif = (props: IDrawToGif) => {
     const ctx = $canvas.getContext('2d')
     if (!ctx) return
 
+    ctx.clearRect(0, 0, $canvas.width, $canvas.height)
+
     listOfLayers[frameKey].toReversed().forEach(layer => {
       const canvas = document.getElementById(layer.id) as HTMLCanvasElement
       if (!canvas) return
@@ -78,7 +79,9 @@ export const drawToGif = (props: IDrawToGif) => {
       const { opacity, filter } = computedStyle
 
       ctx.globalAlpha = Number(opacity) || 1
-      ctx.filter = filter
+      if (filter !== 'none') {
+        ctx.filter = filter
+      }
 
       ctx.drawImage(canvas, 0, 0, width * scale, height * scale)
     })
@@ -107,7 +110,6 @@ interface IFileArtObject {
   listOfLayers: {
     [key: string]: Layer[]
   }
-  frameId: string
   width: number
   height: number
   title: string
@@ -117,34 +119,42 @@ interface IFileArtObject {
 }
 
 export const toFileArt = (props: IFileArtObject) => {
-  const { frameId, listOfLayers, width, height, title, actFrameId, actFrameIndex, actLayerId } = props
-  const $parentElement = document.getElementById(frameId)
-  if (!$parentElement) return
-
-  const $layers = $parentElement.querySelectorAll('canvas')
+  const { listOfLayers, width, height, title, actFrameId, actFrameIndex, actLayerId } = props
 
   const parentEntries = Object.entries(listOfLayers)
 
-  const frames = parentEntries.map(item => {
+  let frames: Frame[] = []
+
+  parentEntries.forEach(item => {
     const [frameKey, layers] = item
+    const $frameElement = document.getElementById(frameKey)
+    if (!$frameElement) return
 
-    const layersObj = layers.map(layer => ({
-      id: layer.id,
-      title: layer.title,
-      parentId: layer.parentId,
-      imageUrl: layer.imageUrl,
-      isWatching: layer.isWatching,
-      filters: {
-        opacity: layer.opacity,
-        hue: layer.hue
-      }
-    }))
+    let layersObj: LayerFile[] = []
 
-    return {
+    for (const layer of layers) {
+      const $layerElement = document.getElementById(layer.id)
+      if (!($layerElement instanceof HTMLCanvasElement)) continue
+
+      layersObj.push({
+        id: layer.id,
+        title: layer.title,
+        parentId: layer.parentId,
+        imageUrl: layer.imageUrl,
+        canvasUrl: $layerElement.toDataURL('image/png'),
+        isWatching: layer.isWatching,
+        filters: {
+          opacity: layer.opacity,
+          hue: layer.hue
+        }
+      })
+    }
+
+    frames.push({
       speed: 100,
       id: frameKey,
       layers: layersObj
-    }
+    })
   })
 
   const artFile = {
@@ -155,7 +165,6 @@ export const toFileArt = (props: IFileArtObject) => {
     width: width,
     height: height,
     title: title,
-    preview: $layers[0]?.toDataURL('image/png') || '',
     created_at: Date.now(),
     updated_at: Date.now(),
     actFrameId,
@@ -164,7 +173,7 @@ export const toFileArt = (props: IFileArtObject) => {
     frames
   }
 
-  const jsonBlob = new Blob([JSON.stringify(artFile, null, 2)], { type: 'application/json' })
+  const jsonBlob = new Blob([JSON.stringify(artFile)], { type: 'application/json' })
   const downloadLink = document.createElement('a')
   downloadLink.href = URL.createObjectURL(jsonBlob)
   downloadLink.download = `${title}.art`

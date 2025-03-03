@@ -1,7 +1,7 @@
 import { acl } from '@/shared/acl'
 import { defaultSizes } from '@/shared/constants'
 
-import { getSize } from './FilePopup'
+import { getSize } from '../../hooks/useFileOptions'
 
 interface IDimensionsSection {
   tmpDimensions: { width: number; height: number }

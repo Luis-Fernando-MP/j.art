@@ -33,7 +33,7 @@ export function handlePaintBucket(ctx: OffscreenCanvasRenderingContext2D, startX
   const bgaColor = toIterableColor(fillColor)
 
   // Si el color inicial es igual al color de relleno
-  if (iterable.every((v, i) => v === bgaColor[i])) return new Error('❗️Sin cambios')
+  if (iterable.every((v, i) => v === bgaColor[i])) return
 
   const getIndex = (x: number, y: number) => (y * width + x) * 4
   const isInsideCanvas = (x: number, y: number) => x >= 0 && x < width && y >= 0 && y < height

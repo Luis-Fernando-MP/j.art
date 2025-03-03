@@ -6,16 +6,16 @@ import './style.scss'
 const CanvasFile = (): JSX.Element => {
   const [open, setOpen] = useState(false)
 
-  const handleToggleOpen = (): void => {
-    setOpen(!open)
+  const handleOpenPopup = (isOpen: boolean = !open): void => {
+    setOpen(isOpen)
   }
 
   return (
     <>
-      <button className='navTools-link' onClick={() => handleToggleOpen()}>
+      <button className='navTools-link' onClick={() => handleOpenPopup()}>
         Archivo
       </button>
-      <FilePopup isOpen={open} toggleOpen={handleToggleOpen} />
+      <FilePopup isOpen={open} setOpen={handleOpenPopup} />
     </>
   )
 }

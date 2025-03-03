@@ -72,7 +72,7 @@ const BoardFrame = ({ isActive, index, parentKey, firstLayer }: IBoardFrame): JS
     if (parentKeys.length < 1) return cleanFrameZoom()
 
     const [frameId, layers] = parentKeys[0]
-    const layerId = layers[0].id
+    const layerId = layers[0]?.id
     if (frameId === actParentId && layerId === actLayerId) return
 
     selectAndMoveFrame({ parentIndex: 0, frameId, layerId })

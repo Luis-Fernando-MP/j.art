@@ -30,20 +30,24 @@ export const DEFAULT_LAYER_ID = newKey('layer1')
 export const MAX_FRAMES = 20
 export const MAX_LAYERS = 15
 
-const DEFAULT_LIST = {
+export const DEFAULT_LIST = {
   [DEFAULT_PARENT_ID]: [setLayer({ id: DEFAULT_LAYER_ID, parentId: DEFAULT_PARENT_ID })]
 }
 
 const state: StateCreator<ILayerStore> = (set, get) => ({
   listOfLayers: DEFAULT_LIST,
   reset: () => {
-    const canvas = document.getElementById(DEFAULT_LAYER_ID)
-    if (canvas instanceof HTMLCanvasElement) {
-      canvas.removeAttribute('style')
-      const ctx = canvas.getContext('2d')!
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
+    try {
+      const canvas = document.getElementById(DEFAULT_LAYER_ID)
+      if (canvas instanceof HTMLCanvasElement) {
+        canvas.removeAttribute('style')
+        const ctx = canvas.getContext('2d')!
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+      }
+      set({ listOfLayers: DEFAULT_LIST })
+    } catch (error) {
+      console.log(error)
     }
-    set({ listOfLayers: DEFAULT_LIST })
   },
   setListOfLayers: listOfLayers => set({ listOfLayers }),
   deleteLayer({ parentId, actLayerId }) {
@@ -91,8 +95,9 @@ const state: StateCreator<ILayerStore> = (set, get) => ({
   },
   updateLayer({ parentId, layer, list }) {
     const listOfLayers = get().listOfLayers
+    if (!(parentId in listOfLayers))
+      return toast.error('Ha sucedido un error, el lienzo no se encuentra ligado a un frame. Clona el lienzo o contactos')
 
-    console.log('lista', listOfLayers, parentId, listOfLayers[parentId])
     const currentList = list ?? [...listOfLayers[parentId]]
     if (!currentList) return
     const updatedList = currentList.map(f => {

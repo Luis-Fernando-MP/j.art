@@ -62,7 +62,7 @@ const useDrawPreview = ({ $canvasRef }: IUseDrawPreviewHook) => {
       frameWorker.current.postMessage(message, imagesBitmap)
       handleWorkerMessage(frameWorker.current, data => drawImageInFrameView(data.base64))
     } catch (error) {
-      console.error('Failed to create ImageBitmap for frame view:', error)
+      console.log('Failed to create ImageBitmap for frame view:', error)
     }
   }, [actParentId, drawImageInFrameView, listOfLayers])
 

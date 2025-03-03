@@ -11,7 +11,7 @@ const CanvasList = (): JSX.Element => {
     <>
       {Object.entries(listOfLayers).map((layer, index) => {
         const [parentId, layers] = layer
-        const firstLayerId = layers[0].id
+        const firstLayerId = layers[0]?.id
         return (
           <Layers
             key={parentId}

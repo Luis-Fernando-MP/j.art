@@ -58,3 +58,37 @@ export const getBitmapFromParentCanvas = async (elementId: string, scale: number
 
   return await Promise.all(imageBitmaps)
 }
+
+export const getOnlyBitmapFromParent = async (elementId: string, scale: number = 1, w?: number, h?: number) => {
+  const container = document.getElementById(elementId)
+  if (!container) {
+    toast.error('❌ El contenedor padre no existe')
+    return
+  }
+  const listOfCanvas = Array.from(container.querySelectorAll('canvas'))
+  const imageBitmaps: Promise<ImageBitmap>[] = []
+
+  for (const canvas of listOfCanvas) {
+    // const computedStyle = window.getComputedStyle(canvas)
+    // const { opacity, display, filter } = computedStyle
+
+    const width = w ?? canvas.width
+    const height = h ?? canvas.height
+
+    // let canvasOpacity = Number(opacity) || 1
+    // if (display === 'none') canvasOpacity = 0
+
+    tmpCanvas.width = width * scale
+    tmpCanvas.height = height * scale
+
+    tmpCtx.imageSmoothingEnabled = false
+    tmpCtx.globalAlpha = 1
+    tmpCtx.filter = 'none'
+
+    tmpCtx.drawImage(canvas, 0, 0, width * scale, height * scale)
+    const bitmapPromise = createImageBitmap(tmpCanvas)
+    imageBitmaps.push(bitmapPromise)
+  }
+
+  return await Promise.all(imageBitmaps)
+}

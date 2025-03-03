@@ -10,9 +10,8 @@ import NavTools from './components/NavTools'
 import RightTools from './components/RightTools'
 import './style.scss'
 
-const ClickSpark = dynamic(() => import('@/shared/components/ClickSpark'), {
-  ssr: false
-})
+const ClickSpark = dynamic(() => import('@/shared/components/ClickSpark'), { ssr: false })
+const ConfirmExit = dynamic(() => import('@/shared/components/ConfirmExit'), { ssr: false })
 
 const Page = (): JSX.Element => {
   return (
@@ -23,6 +22,7 @@ const Page = (): JSX.Element => {
       <NavTools className='app-navTools' />
       <Footer className='app-footer' />
       <ClickSpark sparkColor='rgb(var(--tn-primary))' sparkSize={10} sparkRadius={15} sparkCount={8} duration={200} />
+      <ConfirmExit />
     </div>
   )
 }

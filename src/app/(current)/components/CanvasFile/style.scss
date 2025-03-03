@@ -8,6 +8,7 @@
     @include d.flex($gap: v.$padding * 2);
 
     width: 510px;
+    max-height: 650px;
     padding: v.$padding * 2 !important;
   }
 
@@ -33,6 +34,12 @@
       grid-template-columns: 200px 1fr;
       gap: v.$padding;
     }
+  }
+
+  &-resetForm {
+    padding: 8px v.$padding;
+    text-decoration: line-through;
+    background-color: rgb(v.$bg2);
   }
 
   &-info {
@@ -117,12 +124,16 @@
     text-transform: uppercase;
 
     background-color: rgb(v.$bg2);
+  }
 
-    span {
-      padding: 3px v.$padding;
-      border-radius: 3px;
-      background-color: rgb(v.$bg1);
-    }
+  &-extension {
+    padding: 3px v.$padding;
+    border: 2px solid rgb(v.$bg2);
+    border-radius: 3px;
+
+    text-transform: uppercase;
+
+    background-color: rgb(v.$bg1);
   }
 
   &-scale {

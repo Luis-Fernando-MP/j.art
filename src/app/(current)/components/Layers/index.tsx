@@ -32,7 +32,7 @@ const Layers = ({ layers, isDisable, parentId, index, firstLayerId }: ILayers): 
       if (e.ctrlKey || !isDisable) return
       setActParentId(parentId)
       setActParentIndex(index)
-      setActLayerId(firstLayerId)
+      if (firstLayerId) setActLayerId(firstLayerId)
       moveToChild(index)
       mvHorizontalSlider(index)
       setRepaint('zoom')
@@ -51,8 +51,8 @@ const Layers = ({ layers, isDisable, parentId, index, firstLayerId }: ILayers): 
     >
       <div className='layers-background' />
       {layers.toReversed().map(layer => {
-        const { id } = layer
-        return <Canvas canvasId={id} key={id} isActive={id === actLayerId} />
+        const { id, isWatching } = layer
+        return <Canvas canvasId={id} key={id} isActive={id === actLayerId} isWatching={isWatching} />
       })}
       <div className='layers-grid' />
       <div className='layers-cross' />
