@@ -1,18 +1,23 @@
 export enum TransformWorker {
-  CENTER = 'center'
+  CENTER = 'center',
+  CROP = 'crop',
+  FULL_CROP = 'fullCrop'
 }
 export interface TransformWorkerMessage {
   bitmap?: ImageBitmap
+  bitmaps?: ImageBitmap[]
   action?: TransformWorker
   pixelSize?: number
 }
 export type WorkerEvent = MessageEvent<TransformWorkerMessage>
 
 self.onmessage = async (event: WorkerEvent) => {
-  const { bitmap, action, pixelSize } = event.data
+  const { bitmap, action, pixelSize, bitmaps } = event.data
   try {
     if (!action) throw new Error('No action provided')
     if (action === TransformWorker.CENTER && bitmap && pixelSize) await handleCenterImage(bitmap, pixelSize)
+    if (action === TransformWorker.CROP && bitmap) await handleCropImage(bitmap)
+    if (action === TransformWorker.FULL_CROP && bitmaps) await handleFullCropImage(bitmaps)
   } catch (error) {
     self.postMessage({ error: (error as Error)?.message })
   }
@@ -79,4 +84,102 @@ async function handleCenterImage(bitmap: ImageBitmap, pixelSize: number) {
   } catch (error) {
     throw new Error((error as Error)?.message)
   }
+}
+
+function cropImageFromBitmap(bitmap: ImageBitmap, ctx: OffscreenCanvasRenderingContext2D) {
+  const { height, width } = bitmap
+  const imageData = ctx.getImageData(0, 0, width, height)
+  const data = imageData.data
+
+  let left = width
+  let right = 0
+  let top = height
+  let bottom = 0
+
+  try {
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const index = (y * width + x) * 4
+        // Pixel is not transparent
+        if (data[index + 3] > 0) {
+          if (x < left) left = x
+          if (x > right) right = x
+          if (y < top) top = y
+          if (y > bottom) bottom = y
+        }
+      }
+    }
+
+    const newWidth = right - left + 1
+    const newHeight = bottom - top + 1
+
+    return { width: newWidth, height: newHeight, left, top, right, bottom }
+  } catch (error) {
+    return null
+  }
+}
+
+async function handleCropImage(bitmap: ImageBitmap) {
+  const { height, width } = bitmap
+  const offscreen = new OffscreenCanvas(width, height)
+  const ctx = offscreen.getContext('2d')
+  if (!ctx) throw new Error('Failed to get 2D context')
+
+  ctx.drawImage(bitmap, 0, 0)
+  const imageData = ctx.getImageData(0, 0, width, height)
+  const data = imageData.data
+
+  let left = width
+  let right = 0
+  let top = height
+  let bottom = 0
+
+  try {
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const index = (y * width + x) * 4
+        // Pixel is not transparent
+        if (data[index + 3] > 0) {
+          if (x < left) left = x
+          if (x > right) right = x
+          if (y < top) top = y
+          if (y > bottom) bottom = y
+        }
+      }
+    }
+
+    const newWidth = right - left + 1
+    const newHeight = bottom - top + 1
+
+    const finalOffscreen = new OffscreenCanvas(newWidth, newHeight)
+    const finalCtx = finalOffscreen.getContext('2d')
+    if (!finalCtx) throw new Error('Failed to get 2D context for final offscreen canvas')
+
+    finalCtx.drawImage(offscreen, left, top, newWidth, newHeight, 0, 0, newWidth, newHeight)
+
+    const updatedBitmap = await createImageBitmap(finalOffscreen)
+    self.postMessage({ bitmap: updatedBitmap, width: newWidth, height: newHeight })
+  } catch (error) {
+    console.error('Error during image cropping:', error)
+    throw new Error((error as Error)?.message || 'Unknown error during image cropping')
+  }
+}
+
+async function handleFullCropImage(bitmaps: ImageBitmap[]) {
+  if (bitmaps.length === 0) throw new Error('No images provided')
+  const maxWidth = Math.max(...bitmaps.map(img => img.width))
+  const maxHeight = Math.max(...bitmaps.map(img => img.height))
+
+  const offscreen = new OffscreenCanvas(maxWidth, maxHeight)
+  const ctx = offscreen.getContext('2d')
+  if (!ctx) throw new Error('Failed to get 2D context')
+
+  bitmaps.forEach(bitmap => ctx.drawImage(bitmap, 0, 0))
+
+  const bitmap = await createImageBitmap(offscreen)
+
+  const isCropped = cropImageFromBitmap(bitmap, ctx)
+  if (!isCropped) throw new Error('No content provided')
+
+  self.postMessage(isCropped)
 }

@@ -1,12 +1,12 @@
 import { getBitmapFromCanvas, getBitmapFromParentCanvas } from '@/shared/bitmap'
 import { handleWorkerMessage } from '@/shared/handleWorkerMessage'
 import { EWorkerActions, WorkerMessage } from '@workers/layer-view'
-import { RefObject, useCallback, useEffect, useRef } from 'react'
+import { RefObject, useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import toast from 'react-hot-toast'
 
 import ActiveDrawsStore from '../store/ActiveDraws.store'
 import LayerStore from '../store/layer.store'
-import RepaintDrawingStore, { Repaint } from '../store/repaintDrawing.store'
+import RepaintDrawingStore, { FullRepaintCallback, Repaint } from '../store/repaintDrawing.store'
 
 interface IUseDrawPreviewHook {
   $canvasRef: RefObject<HTMLCanvasElement | null>
@@ -16,11 +16,23 @@ let temporalRepaintValue: Repaint | null
 
 const useDrawPreview = ({ $canvasRef }: IUseDrawPreviewHook) => {
   const { actParentId, actLayerId } = ActiveDrawsStore()
-  const { repaint, setRepaint } = RepaintDrawingStore()
+  const { repaint, setRepaint, setFullRepaint } = RepaintDrawingStore()
   const { listOfLayers, setListOfLayers } = LayerStore()
 
   const frameWorker = useRef<Worker | null>(null)
   const layerWorker = useRef<Worker | null>(null)
+
+  const fullRepaint = useCallback(
+    (callback: (layer: FullRepaintCallback) => void) => {
+      Object.values(listOfLayers).forEach(layer => {
+        layer.forEach(l => {
+          const $canvas = document.getElementById(l.id) as HTMLCanvasElement | null
+          callback({ ...l, $canvas })
+        })
+      })
+    },
+    [listOfLayers]
+  )
 
   const drawImageInLayerView = useCallback(
     (image: string | null) => {
@@ -78,6 +90,10 @@ const useDrawPreview = ({ $canvasRef }: IUseDrawPreviewHook) => {
       console.error('Failed to create ImageBitmap for layer view:', error)
     }
   }, [actLayerId, drawImageInLayerView])
+
+  useLayoutEffect(() => {
+    setFullRepaint(fullRepaint)
+  }, [setFullRepaint, fullRepaint])
 
   useEffect(() => {
     if (!repaint || !$canvasRef.current) return

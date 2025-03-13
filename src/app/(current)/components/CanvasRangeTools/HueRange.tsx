@@ -21,8 +21,6 @@ const HueRange = (): JSX.Element => {
     setHue(currentLayer.hue)
   }, [actLayerId, listOfLayers, setHue, actParentId])
 
-  console.log('hue', hue)
-
   const handleChangeHue = (angle: number): void => {
     const canvas = document.getElementById(actLayerId)
     if (!(canvas instanceof HTMLCanvasElement)) return

@@ -28,7 +28,7 @@ const paintBucketCanvas = async (bitmap: ImageBitmap, startX: number, startY: nu
     if (!ctx) throw new Error('Failed to get 2D context')
     ctx.drawImage(bitmap, 0, 0)
     const warning = handlePaintBucket(ctx, startX, startY, fillColor)
-    if (warning) return self.postMessage({ warning: warning.message })
+    if (warning) return self.postMessage({ warning: (warning as Error).message })
     const updatedBitmap = await createImageBitmap(offscreen)
     self.postMessage({ bitmap: updatedBitmap })
   } catch (error) {
