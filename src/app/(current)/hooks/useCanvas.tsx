@@ -21,7 +21,7 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
   const canvasSnapshot = useRef<ImageData | null>(null)
   const { setRepaint } = RepaintDrawingStore()
 
-  const { executeTools } = useTools()
+  const { executeTools, handleDown, handleToolUp } = useTools()
 
   const activatePerfectShape = (isActive: boolean) => {
     $perfectShape.current = isActive
@@ -33,6 +33,7 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
     if (!coordinates) return
     setIsDrawing(true)
     startPos.current = coordinates
+    handleDown({ ctx: coordinates.ctx, x: coordinates.x, y: coordinates.y })
     await handleDrawing(coordinates.x, coordinates.y)
     // if (!(selectedTool in shapeTools) || canvasSnapshot.current) return
     // const { ctx } = getContext(canvasId)
@@ -56,6 +57,7 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
     canvasSnapshot.current = null
     activatePerfectShape(false)
     setRepaint('all')
+    handleToolUp()
   }, [setRepaint])
 
   const handleDrawing = async (x: number, y: number) => {

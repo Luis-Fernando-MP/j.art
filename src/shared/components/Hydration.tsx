@@ -2,6 +2,8 @@
 
 import { type JSX, type ReactNode, useEffect, useState } from 'react'
 
+import LoaderPage from './LoaderPage'
+
 interface IHydration {
   children?: Readonly<ReactNode[]> | null | Readonly<ReactNode>
 }
@@ -13,7 +15,7 @@ const Hydration = ({ children }: IHydration): JSX.Element => {
     setIsHydrated(true)
   }, [])
 
-  return <>{isHydrated && children}</>
+  return <>{isHydrated ? children : <LoaderPage />}</>
 }
 
 export default Hydration

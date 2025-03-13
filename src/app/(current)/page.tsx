@@ -8,6 +8,7 @@ import Footer from './components/Footer'
 import LeftTools from './components/LeftTools'
 import NavTools from './components/NavTools'
 import RightTools from './components/RightTools'
+import SelectionLayout from './components/SelectionLayout'
 import './style.scss'
 
 const ConfirmExit = dynamic(() => import('@/shared/components/ConfirmExit'), { ssr: false })
@@ -21,6 +22,8 @@ const Page = (): JSX.Element => {
       <NavTools className='app-navTools' />
       <Footer className='app-footer' />
       <ConfirmExit />
+      <SelectionLayout />
+      <div id='select-square' />
     </div>
   )
 }

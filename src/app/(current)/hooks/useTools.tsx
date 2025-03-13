@@ -10,9 +10,10 @@ import {
 } from '@/scripts/toolsCanvas'
 import { handleWorkerMessage } from '@/shared/handleWorkerMessage'
 import { EToolsWorker, ToolsWorkerMessage } from '@workers/speedTools/speedTools.types'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import ActiveDrawsStore from '../store/ActiveDraws.store'
+import { TPositions } from '../store/canvas.store'
 import PixelStore from '../store/pixel.store'
 import RepaintDrawingStore from '../store/repaintDrawing.store'
 import ToolsStore from '../store/tools.store'
@@ -23,6 +24,12 @@ type THandleExecuteTools = {
   startY: number
   endX: number
   endY: number
+}
+
+type THandleDown = {
+  ctx: CanvasRenderingContext2D
+  x: number
+  y: number
 }
 
 let ctx: CanvasRenderingContext2D
@@ -39,6 +46,9 @@ const useTools = () => {
   const { setRepaint } = RepaintDrawingStore()
   const { actParentId } = ActiveDrawsStore()
 
+  const mvSelection = useRef<TPositions | null>(null)
+  const isDrawingSelectSquare = useRef(false)
+
   const toolWorker = useRef<Worker | null>(null)
 
   useEffect(() => {
@@ -48,6 +58,51 @@ const useTools = () => {
 
   // Eraser: (ctx: CanvasRenderingContext2D, x: number, y: number) =>
   // HandleDeletePixel({ ctx, x, y, pixelSize, xMirror, yMirror }),
+  const handleDown = (props: THandleDown) => {
+    if (selectedTool !== 'SelectSquare') return
+    const currentFrame = document.getElementById(actParentId)
+    if (!currentFrame) return
+
+    const { x, y } = props
+    const startX = alignCord(x, pixelSize)
+    const startY = alignCord(y, pixelSize)
+
+    let $selectSquare = document.getElementById('select-square')
+    if (!$selectSquare) return
+
+    $selectSquare.style.minWidth = `${pixelSize}px`
+    $selectSquare.style.minHeight = `${pixelSize}px`
+    $selectSquare.style.width = `${pixelSize}px`
+    $selectSquare.style.height = `${pixelSize}px`
+
+    $selectSquare.style.left = `${startX}px`
+    $selectSquare.style.top = `${startY}px`
+
+    mvSelection.current = { x: startX, y: startY }
+    isDrawingSelectSquare.current = true
+  }
+
+  const handleSelectSquare = (props: THandleExecuteTools) => {
+    const $selectSquare = document.getElementById('selection')
+    if (!$selectSquare || !isDrawingSelectSquare.current || !mvSelection.current) return
+
+    const { endX, endY } = props
+
+    const width = Math.abs(endX - mvSelection.current.x) + pixelSize
+    const height = Math.abs(endY - mvSelection.current.y) + pixelSize
+    const left = Math.min(mvSelection.current.x, endX)
+    const top = Math.min(mvSelection.current.y, endY)
+
+    $selectSquare.style.left = `${left}px`
+    $selectSquare.style.top = `${top}px`
+    $selectSquare.style.width = `${width}px`
+    $selectSquare.style.height = `${height}px`
+  }
+
+  const handleToolUp = () => {
+    isDrawingSelectSquare.current = false
+    mvSelection.current = null
+  }
 
   const executeTools = async (props: THandleExecuteTools) => {
     if (selectedTool === 'Cursor') return
@@ -69,6 +124,10 @@ const useTools = () => {
 
     if (selectedTool in drawTools) {
       return await handleUDrawTools()
+    }
+
+    if (selectedTool === 'SelectSquare') {
+      return handleSelectSquare({ ctx, startX, startY, endX, endY })
     }
   }
 
@@ -189,7 +248,7 @@ const useTools = () => {
     Eraser: (bitmap: ImageBitmap) => ({ action: EToolsWorker.PIPETTE, bitmap, startX, startY })
   }
 
-  return { executeTools }
+  return { executeTools, handleDown, handleToolUp }
 }
 
 export default useTools

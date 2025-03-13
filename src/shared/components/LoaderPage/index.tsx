@@ -1,7 +1,7 @@
 'use client'
 
 import Logo from '@/shared/assets/Logo'
-import React, { useLayoutEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import './style.scss'
 
@@ -9,10 +9,8 @@ const LoaderPage = () => {
   const [loading, setLoading] = useState(true)
   const $loaderRef = useRef<HTMLElement>(null)
 
-  useLayoutEffect(() => {
-    setTimeout(() => {
-      setLoading(false)
-    }, 500)
+  useEffect(() => {
+    setLoading(false)
   }, [])
 
   if (!loading) return null
