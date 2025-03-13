@@ -5,12 +5,14 @@ import {
   handleDrawPixel,
   handleInvertDrawPixel,
   interpolateDrawing,
-  moveAllDraw
+  moveDraw,
+  moveFrameDraw
 } from '@/scripts/toolsCanvas'
 import { handleWorkerMessage } from '@/shared/handleWorkerMessage'
 import { EToolsWorker, ToolsWorkerMessage } from '@workers/speedTools/speedTools.types'
 import { useEffect, useRef } from 'react'
 
+import ActiveDrawsStore from '../store/ActiveDraws.store'
 import PixelStore from '../store/pixel.store'
 import RepaintDrawingStore from '../store/repaintDrawing.store'
 import ToolsStore from '../store/tools.store'
@@ -35,11 +37,12 @@ const useTools = () => {
   const { selectedTool, xMirror, yMirror, setSelectedTool } = ToolsStore()
   const { pixelColor, pixelOpacity, pixelSize, setPixelColor } = PixelStore()
   const { setRepaint } = RepaintDrawingStore()
+  const { actParentId } = ActiveDrawsStore()
 
   const toolWorker = useRef<Worker | null>(null)
 
   useEffect(() => {
-    toolWorker.current = new Worker('/workers/speedTools/index.js', { type: 'module' })
+    toolWorker.current = new Worker(/* turbopackIgnore: true */ '/workers/speedTools/index.js', { type: 'module' })
     return () => toolWorker.current?.terminate()
   }, [])
 
@@ -73,7 +76,11 @@ const useTools = () => {
     const tool = selectedTool as keyof typeof selectTools
 
     if (tool === 'Move') {
-      moveAllDraw(ctx, endX - startX, endY - startY)
+      moveDraw(ctx, endX - startX, endY - startY)
+    }
+
+    if (tool === 'Hand') {
+      moveFrameDraw(actParentId, endX - startX, endY - startY)
     }
   }
 
@@ -165,7 +172,8 @@ const useTools = () => {
   }
 
   const selectTools = {
-    Move: () => {}
+    Move: () => {},
+    Hand: () => {}
   }
 
   const utilTools = {

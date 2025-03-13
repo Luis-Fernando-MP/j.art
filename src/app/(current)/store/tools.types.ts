@@ -5,6 +5,7 @@ import {
   CircleIcon,
   DicesIcon,
   EraserIcon,
+  HandIcon,
   HeartIcon,
   HexagonIcon,
   HouseIcon,
@@ -52,6 +53,7 @@ export const drawTools = {
 
 export const selectTools = {
   Move: MoveIcon,
+  Hand: HandIcon,
   SelectSquare: SquareDashed,
   SelectCircle: CircleDashedIcon,
   SelectWand: WandIcon

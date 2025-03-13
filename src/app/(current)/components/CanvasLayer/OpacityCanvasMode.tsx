@@ -23,7 +23,7 @@ const OpacityCanvasMode = ({ layerId, opacity, opacityChange }: IOpacityCanvasMo
     if (localOpacity === opacity) {
       removeLocalOpacity()
     }
-  }, [localOpacity, removeLocalOpacity])
+  }, [localOpacity, removeLocalOpacity, opacity])
 
   const handleClick = useCallback(() => {
     setActive(prevActive => !prevActive)
@@ -47,7 +47,7 @@ const OpacityCanvasMode = ({ layerId, opacity, opacityChange }: IOpacityCanvasMo
       setLocalOpacity(alpha)
       opacityChange(alpha)
     },
-    [layerId, setLocalOpacity, setRepaint]
+    [layerId, opacityChange, setLocalOpacity, setRepaint]
   )
 
   return (

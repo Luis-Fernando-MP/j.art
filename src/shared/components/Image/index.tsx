@@ -1,8 +1,8 @@
+import { XIcon } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 import './styles/Image.css'
-import { XIcon } from 'lucide-react'
 
 const Image = ({
   img = '',

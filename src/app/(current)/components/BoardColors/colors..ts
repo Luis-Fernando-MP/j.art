@@ -19,7 +19,7 @@ export const basicColorsRGBA = [
   'rgba(250, 54, 86, 255)'
 ]
 
-const piel = [
+export const piel = [
   // 🌕 Tonos Claros y Marfil
   'rgb(245, 228, 200)',
   'rgb(240, 225, 200)',
@@ -219,7 +219,7 @@ export const gamer = [
   'rgb(218, 56, 232, 255)' // Magenta original
 ]
 
-const natural = [
+export const natural = [
   // VERDES CLAROS Y PASTELES
   'rgb(235, 245, 235)',
   'rgb(220, 240, 220)',

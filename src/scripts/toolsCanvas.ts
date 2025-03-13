@@ -209,9 +209,41 @@ export function handleDither({ ctx, x, y, pixelSize, xMirror, yMirror }: THandle
   }
 }
 
-export function moveAllDraw(ctx: CanvasRenderingContext2D, dx: number, dy: number) {
+export function moveDraw(ctx: CanvasRenderingContext2D, dx: number, dy: number) {
   const { width, height } = ctx.canvas
   const imageData = ctx.getImageData(0, 0, width, height)
   ctx.clearRect(0, 0, width, height)
   ctx.putImageData(imageData, dx, dy)
+}
+
+const offscreenCanvas = new OffscreenCanvas(0, 0)
+const offscreenCtx = offscreenCanvas.getContext('2d')!
+
+export function moveDraw2(ctx: CanvasRenderingContext2D, dx: number, dy: number) {
+  const { width, height } = ctx.canvas
+
+  offscreenCanvas.width = width * 2
+  offscreenCanvas.height = height * 2
+
+  offscreenCtx.clearRect(0, 0, offscreenCanvas.width, offscreenCanvas.height)
+  ctx.clearRect(0, 0, width, height)
+
+  offscreenCtx.drawImage(ctx.canvas, (width * 2) / 2 - width / 2, (width * 2) / 2 - width / 2)
+
+  const imageData = offscreenCtx.getImageData(0, 0, (width * 2) / 2 - width / 2, (width * 2) / 2 - width / 2)
+  offscreenCtx.putImageData(imageData, dx, dy)
+
+  ctx.drawImage(offscreenCanvas, dx, dy, width, height, 0, 0, width, height)
+}
+
+export function moveFrameDraw(layerId: string, dx: number, dy: number) {
+  const $frameElement = document.getElementById(layerId)
+  if (!($frameElement instanceof HTMLElement)) return
+  const $layers = $frameElement.querySelectorAll('canvas')
+
+  $layers.forEach($layer => {
+    const ctx = $layer.getContext('2d', { willReadFrequently: true })
+    if (!ctx) return
+    moveDraw(ctx, dx, dy)
+  })
 }

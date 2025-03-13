@@ -23,7 +23,7 @@ const CloneFrame = ({ parentKey, onClone }: ICloneFrame): JSX.Element => {
 
   useEffect(() => {
     if (cloneWorker.current && !noRender) return
-    cloneWorker.current = new Worker('/workers/layer-view.js', { type: 'module' })
+    cloneWorker.current = new Worker(/* turbopackIgnore: true */ '/workers/layer-view.js', { type: 'module' })
     return () => {
       cloneWorker.current = null
     }

@@ -16,7 +16,7 @@ import './style.scss'
 const BoardFrames = (): JSX.Element => {
   const { moveToChild } = boardStore()
   const { moveToChild: horizontalMvChild } = StoreHorizontalSlider()
-  const { setListOfLayers, addNewFrame } = LayerStore()
+  const { addNewFrame } = LayerStore()
 
   const { setActParentId, setActParentIndex, setActLayerId } = ActiveDrawsStore()
 
@@ -39,7 +39,7 @@ const BoardFrames = (): JSX.Element => {
       horizontalMvChild(index)
       toast.success('🎨 Estamos listos!!')
     },
-    [setListOfLayers, horizontalMvChild, moveToChild, setActParentId, setActParentIndex, setActLayerId]
+    [horizontalMvChild, moveToChild, setActParentId, setActParentIndex, setActLayerId, addNewFrame, cleanViewerFrame]
   )
 
   return (

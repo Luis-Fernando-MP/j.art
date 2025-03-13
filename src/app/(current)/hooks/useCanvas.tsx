@@ -2,7 +2,7 @@
 
 import { getCanvasCoordinates } from '@scripts/toolsCanvas'
 import { getContext } from '@scripts/transformCanvas'
-import { MouseEvent, useEffect, useRef, useState } from 'react'
+import { MouseEvent, useCallback, useEffect, useRef, useState } from 'react'
 
 import CanvasStore, { TPositions } from '../store/canvas.store'
 import RepaintDrawingStore from '../store/repaintDrawing.store'
@@ -49,14 +49,14 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
     })
   }
 
-  const handleCanvasMouseUp = () => {
+  const handleCanvasMouseUp = useCallback(() => {
     if (!startPos.current) return
     setIsDrawing(false)
     startPos.current = null
     canvasSnapshot.current = null
     activatePerfectShape(false)
     setRepaint('all')
-  }
+  }, [setRepaint])
 
   const handleDrawing = async (x: number, y: number) => {
     if (!startPos.current) return
@@ -73,7 +73,7 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
     return () => {
       document.removeEventListener('mouseup', handleCanvasMouseUp)
     }
-  }, [])
+  }, [handleCanvasMouseUp])
 
   useEffect(() => {
     if (!($canvasRef.current instanceof HTMLCanvasElement)) return

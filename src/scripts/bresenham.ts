@@ -202,15 +202,15 @@ export function drawPentagonBresenham({ ctx, startX, startY, endX, endY, pixelSi
   if (snapshot) ctx.putImageData(snapshot, 0, 0)
   const sideLength = Math.min(Math.abs(endX - startX), Math.abs(endY - startY))
 
-  let centerX = (endX + startX) / 2
-  let centerY = (endY + startY) / 2
-  let radius = sideLength / (2 * Math.sin(Math.PI / 5))
+  const centerX = (endX + startX) / 2
+  const centerY = (endY + startY) / 2
+  const radius = sideLength / (2 * Math.sin(Math.PI / 5))
 
   const vertices = []
   for (let i = 0; i < 5; i++) {
     const angle = ((Math.PI * 2) / 5) * i - Math.PI / 2
-    let x = centerX + radius * Math.cos(angle)
-    let y = centerY + radius * Math.sin(angle)
+    const x = centerX + radius * Math.cos(angle)
+    const y = centerY + radius * Math.sin(angle)
     vertices.push({ x: alignCord(x, pixelSize), y: alignCord(y, pixelSize) })
   }
 
@@ -322,13 +322,13 @@ export function drawHexagonBresenham({ ctx, startX, startY, endX, endY, pixelSiz
 
   const centerX = (startX + endX) / 2
   const centerY = (startY + endY) / 2
-  let radius = sideLength / (2 * Math.sin(Math.PI / 6))
+  const radius = sideLength / (2 * Math.sin(Math.PI / 6))
 
   const vertices = []
   for (let i = 0; i < 6; i++) {
     const angle = ((Math.PI * 2) / 6) * i - Math.PI / 2
-    let x = centerX + radius * Math.cos(angle)
-    let y = centerY + radius * Math.sin(angle)
+    const x = centerX + radius * Math.cos(angle)
+    const y = centerY + radius * Math.sin(angle)
     vertices.push({ x: alignCord(x, pixelSize), y: alignCord(y, pixelSize) })
   }
 
@@ -450,6 +450,7 @@ export function drawHeartBresenham({
   perfectShape = false,
   snapshot
 }: IShapeBresenham) {
+  console.log('drawHeartBresenham', perfectShape)
   ctx.clearRect(startX, startY, endX - startX, endY - startY)
   if (snapshot) ctx.putImageData(snapshot, 0, 0)
 
@@ -582,11 +583,13 @@ export function drawPoints({ ctx, pixelColor, points, pixelSize }: IDrawPoint) {
 }
 
 export function bresenham(props: IPointsBresenham) {
-  let { x0, y0, x1, y1, pixelSize } = { ...props }
+  const { x1, y1, pixelSize } = { ...props }
+  let x0 = props.x0
+  let y0 = props.y0
   const dx = Math.abs(x1 - x0)
   const dy = Math.abs(y1 - y0)
-  let sx = x1 > x0 ? pixelSize : -pixelSize
-  let sy = y1 > y0 ? pixelSize : -pixelSize
+  const sx = x1 > x0 ? pixelSize : -pixelSize
+  const sy = y1 > y0 ? pixelSize : -pixelSize
   let err = dx - dy
   const points = []
 

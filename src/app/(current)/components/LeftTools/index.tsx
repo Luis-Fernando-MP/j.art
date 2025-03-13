@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic'
 import type { JSX } from 'react'
 
 import ToolsStore from '../../store/tools.store'
-import { colorTools, deleteTools, drawTools, selectTools } from '../../store/tools.types'
+import { Tools, colorTools, deleteTools, drawTools, selectTools } from '../../store/tools.types'
 import './style.scss'
 
 interface ILeftTools {
@@ -35,7 +35,7 @@ const LeftTools = ({ className = '' }: ILeftTools): JSX.Element => {
           return (
             <button
               key={key}
-              onClick={() => setSelectedTool(key)}
+              onClick={() => setSelectedTool(key as Tools)}
               className={`leftTools-tool ${acl(selectedTool === key, 'selected')}`}
             >
               <Icon />
@@ -49,7 +49,7 @@ const LeftTools = ({ className = '' }: ILeftTools): JSX.Element => {
           return (
             <button
               key={key}
-              onClick={() => setSelectedTool(key)}
+              onClick={() => setSelectedTool(key as Tools)}
               className={`leftTools-tool ${acl(selectedTool === key, 'selected')}`}
             >
               <Icon />
@@ -63,7 +63,7 @@ const LeftTools = ({ className = '' }: ILeftTools): JSX.Element => {
           return (
             <button
               key={key}
-              onClick={() => setSelectedTool(key)}
+              onClick={() => setSelectedTool(key as Tools)}
               className={`leftTools-tool ${acl(selectedTool === key, 'selected')}`}
             >
               <Icon />

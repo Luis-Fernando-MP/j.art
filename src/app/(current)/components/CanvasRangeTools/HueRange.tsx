@@ -19,7 +19,9 @@ const HueRange = (): JSX.Element => {
     const currentLayer = parent.find(l => l.id === actLayerId)
     if (!currentLayer) return
     setHue(currentLayer.hue)
-  }, [actLayerId, listOfLayers, setHue])
+  }, [actLayerId, listOfLayers, setHue, actParentId])
+
+  console.log('hue', hue)
 
   const handleChangeHue = (angle: number): void => {
     const canvas = document.getElementById(actLayerId)

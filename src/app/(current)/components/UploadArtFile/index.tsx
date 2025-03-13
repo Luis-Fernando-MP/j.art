@@ -23,25 +23,7 @@ const UploadArtFile = ({ closePopup }: IUploadArtFile): JSX.Element => {
   const { setRepaint } = RepaintDrawingStore()
   const { moveToChild, setScale } = boardStore()
 
-  const handleFileUpload = useCallback(
-    async (e: ChangeEvent<HTMLInputElement>) => {
-      if (!e.target) return
-      const file = e.target.files?.[0]
-      e.target.value = ''
-      if (!file) return toast.error('El archivo no es valido')
-      if (!file.name.endsWith('.art')) return toast.error('Asegúrese de subir un archivo.art')
-      const reader = new FileReader()
-      reader.onload = async e => {
-        const content = e.target?.result as string
-        await handleLoadFile(content)
-      }
-      reader.onerror = () => toast.error('No se pudimos leer tu archivo')
-      reader.readAsText(file)
-    },
-    [setActLayerId, setActParentId, setActParentIndex, setDimensions, setListOfLayers, setRepaint, setTitle]
-  )
-
-  const setDefaultFrames = () => {
+  const setDefaultFrames = useCallback(() => {
     setListOfLayers(DEFAULT_LIST)
     setActParentId(DEFAULT_PARENT_ID)
     setActLayerId(DEFAULT_LAYER_ID)
@@ -59,66 +41,99 @@ const UploadArtFile = ({ closePopup }: IUploadArtFile): JSX.Element => {
       }
     }, 50)
     return toast.success('El archivo no cuenta con frames disponibles, se creará un frame por defecto', { icon: '🔍' })
-  }
+  }, [closePopup, moveToChild, setActLayerId, setActParentId, setActParentIndex, setListOfLayers, setRepaint, setScale])
 
-  const handleLoadFile = async (content: string) => {
-    try {
-      const artData: ArtData = JSON.parse(content)
-      const validMainData = validateCopyrightData(artData)
-      if (!validMainData) return
+  const handleLoadFile = useCallback(
+    async (content: string) => {
+      try {
+        const artData: ArtData = JSON.parse(content)
+        const validMainData = validateCopyrightData(artData)
+        if (!validMainData) return
 
-      const { frames, width, height, title } = artData
+        const { frames, width, height, title } = artData
 
-      if (!Array.isArray(frames) || typeof width !== 'number' || typeof height !== 'number' || typeof title !== 'string') {
-        return toast.error('El archivo es inválido')
-      }
-
-      setDimensions({ width: width * 15, height: height * 15 })
-      setTitle(title)
-      if (frames.length < 1) return setDefaultFrames()
-
-      const newList: { [key: string]: Layer[] } = {}
-      for (const frame of frames) {
-        let processedLayers = await Promise.all(frame.layers.map(processLayer))
-        if (processedLayers.length < 1) processedLayers = [setLayer({ parentId: frame.id }) as any]
-        newList[frame.id] = processedLayers
-      }
-
-      let { actFrameId, actLayerId, actFrameIndex } = artData
-      const actFrameInList = frames.findIndex(f => f.id === actFrameId)
-      if (actFrameInList < 0 || actFrameInList !== actFrameIndex) {
-        actFrameIndex = 0
-        actFrameId = frames[0]?.id
-      }
-
-      const layersList = newList[actFrameId]
-      const actLayerInList = layersList.findIndex(l => l.id === actLayerId)
-      if (actLayerInList < 0 && layersList.length > 0) {
-        actLayerId = layersList[0].id
-      }
-
-      setListOfLayers(newList)
-      setActParentId(actFrameId)
-      setActLayerId(actLayerId)
-      setActParentIndex(actFrameIndex)
-      setScale(1)
-      closePopup()
-
-      setTimeout(() => {
-        for (const frame of frames) {
-          frame.layers.forEach(drawLayerOnCanvas)
+        if (!Array.isArray(frames) || typeof width !== 'number' || typeof height !== 'number' || typeof title !== 'string') {
+          return toast.error('El archivo es inválido')
         }
-        moveToChild(actFrameIndex)
-      }, 100)
-      setTimeout(() => {
-        console.log('repaint')
-        setRepaint('all')
-      }, 1000)
-    } catch (error) {
-      toast.error('Verifica el contenido de tu archivo .art')
-      console.log(error)
-    }
-  }
+
+        setDimensions({ width: width * 15, height: height * 15 })
+        setTitle(title)
+        if (frames.length < 1) return setDefaultFrames()
+
+        const newList: { [key: string]: Layer[] } = {}
+        for (const frame of frames) {
+          let processedLayers = await Promise.all(frame.layers.map(processLayer))
+          if (processedLayers.length < 1) processedLayers = [setLayer({ parentId: frame.id }) as any]
+          newList[frame.id] = processedLayers
+        }
+
+        let { actFrameId, actLayerId, actFrameIndex } = artData
+        const actFrameInList = frames.findIndex(f => f.id === actFrameId)
+        if (actFrameInList < 0 || actFrameInList !== actFrameIndex) {
+          actFrameIndex = 0
+          actFrameId = frames[0]?.id
+        }
+
+        const layersList = newList[actFrameId]
+        const actLayerInList = layersList.findIndex(l => l.id === actLayerId)
+        if (actLayerInList < 0 && layersList.length > 0) {
+          actLayerId = layersList[0].id
+        }
+
+        setListOfLayers(newList)
+        setActParentId(actFrameId)
+        setActLayerId(actLayerId)
+        setActParentIndex(actFrameIndex)
+        setScale(1)
+        closePopup()
+
+        setTimeout(() => {
+          for (const frame of frames) {
+            frame.layers.forEach(drawLayerOnCanvas)
+          }
+          moveToChild(actFrameIndex)
+        }, 100)
+        setTimeout(() => {
+          console.log('repaint')
+          setRepaint('all')
+        }, 1000)
+      } catch (error) {
+        toast.error('Verifica el contenido de tu archivo .art')
+        console.log(error)
+      }
+    },
+    [
+      moveToChild,
+      setRepaint,
+      setDimensions,
+      setTitle,
+      setListOfLayers,
+      setActParentId,
+      setActLayerId,
+      setActParentIndex,
+      setScale,
+      closePopup,
+      setDefaultFrames
+    ]
+  )
+
+  const handleFileUpload = useCallback(
+    async (e: ChangeEvent<HTMLInputElement>) => {
+      if (!e.target) return
+      const file = e.target.files?.[0]
+      e.target.value = ''
+      if (!file) return toast.error('El archivo no es valido')
+      if (!file.name.endsWith('.art')) return toast.error('Asegúrese de subir un archivo.art')
+      const reader = new FileReader()
+      reader.onload = async e => {
+        const content = e.target?.result as string
+        await handleLoadFile(content)
+      }
+      reader.onerror = () => toast.error('No se pudimos leer tu archivo')
+      reader.readAsText(file)
+    },
+    [handleLoadFile]
+  )
 
   const fileInputId = useMemo(() => 'fileUpload', [])
 

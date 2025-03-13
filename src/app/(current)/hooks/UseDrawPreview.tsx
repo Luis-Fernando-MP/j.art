@@ -29,7 +29,7 @@ const useDrawPreview = ({ $canvasRef }: IUseDrawPreviewHook) => {
       if (!parentLayers) return
       const currentIndexLayer = parentLayers.findIndex(l => l.id === actLayerId)
       if (currentIndexLayer < 0) return toast.error('🙂 No encontramos el lienzo seleccionado')
-      let currentLayer = updatedLayers[actParentId][currentIndexLayer]
+      const currentLayer = updatedLayers[actParentId][currentIndexLayer]
       updatedLayers[actParentId][currentIndexLayer] = { ...currentLayer, imageUrl: image }
       setListOfLayers({ ...updatedLayers, [actParentId]: parentLayers })
     },
@@ -64,7 +64,7 @@ const useDrawPreview = ({ $canvasRef }: IUseDrawPreviewHook) => {
     } catch (error) {
       console.log('Failed to create ImageBitmap for frame view:', error)
     }
-  }, [actParentId, drawImageInFrameView, listOfLayers])
+  }, [actParentId, drawImageInFrameView])
 
   const generateLayerViewBitmap = useCallback(async () => {
     if (!layerWorker.current) return
@@ -89,12 +89,12 @@ const useDrawPreview = ({ $canvasRef }: IUseDrawPreviewHook) => {
       setRepaint(null)
     }
     handleRepaint()
-  }, [repaint, generateFrameViewBitmap, generateLayerViewBitmap, setRepaint])
+  }, [repaint, generateFrameViewBitmap, generateLayerViewBitmap, setRepaint, $canvasRef])
 
   useEffect(() => {
     if (!$canvasRef.current) return
-    frameWorker.current = new Worker('/workers/layer-view.js', { type: 'module' })
-    layerWorker.current = new Worker('/workers/layer-view.js', { type: 'module' })
+    frameWorker.current = new Worker(/* turbopackIgnore: true */ '/workers/layer-view.js', { type: 'module' })
+    layerWorker.current = new Worker(/* turbopackIgnore: true */ '/workers/layer-view.js', { type: 'module' })
 
     return () => {
       frameWorker.current?.terminate()

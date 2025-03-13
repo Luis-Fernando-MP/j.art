@@ -1,6 +1,7 @@
 import { Frame, LayerFile } from '@/app/(current)/components/CanvasFile/artFile.type'
 import { Layer } from '@/app/(current)/store/layer.store'
 import { EDowImageWk } from '@workers/downloadImage'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import GIF from 'gif.js.optimized'
 import toast from 'react-hot-toast'
@@ -123,14 +124,14 @@ export const toFileArt = (props: IFileArtObject) => {
 
   const parentEntries = Object.entries(listOfLayers)
 
-  let frames: Frame[] = []
+  const frames: Frame[] = []
 
   parentEntries.forEach(item => {
     const [frameKey, layers] = item
     const $frameElement = document.getElementById(frameKey)
     if (!$frameElement) return
 
-    let layersObj: LayerFile[] = []
+    const layersObj: LayerFile[] = []
 
     for (const layer of layers) {
       const $layerElement = document.getElementById(layer.id)

@@ -91,7 +91,7 @@ const useBoard = ({ isCenter }: IUseBoardHook) => {
     const scale = setDynamicScale()
     if (!scale) return
     moveToChild(0, scale)
-  }, [moveToChild])
+  }, [moveToChild, setDynamicScale])
 
   const handleBoardDown = (e: React.MouseEvent) => {
     e.preventDefault()

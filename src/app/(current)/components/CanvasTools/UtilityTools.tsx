@@ -17,7 +17,7 @@ const UtilityTools = (): JSX.Element | null => {
   const transformWorkerRef = useRef<Worker | null>(null)
 
   useEffect(() => {
-    transformWorkerRef.current = new Worker('/workers/transform.js', { type: 'module' })
+    transformWorkerRef.current = new Worker(/* turbopackIgnore: true */ '/workers/transform.js', { type: 'module' })
     return () => {
       transformWorkerRef.current?.terminate()
     }

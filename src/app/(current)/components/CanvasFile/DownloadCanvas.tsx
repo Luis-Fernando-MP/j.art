@@ -24,7 +24,7 @@ const DownloadCanvas = (): JSX.Element => {
   const limitScale = useMemo(() => Math.floor(MAX_SCALE / average), [average])
 
   useEffect(() => {
-    imageWorker.current = new Worker('/workers/downloadImage.js', { type: 'module' })
+    imageWorker.current = new Worker(/* turbopackIgnore: true */ '/workers/downloadImage.js', { type: 'module' })
     return () => {
       imageWorker.current?.terminate()
     }
@@ -58,7 +58,7 @@ const DownloadCanvas = (): JSX.Element => {
       actFrameIndex: actParentIndex,
       actLayerId
     })
-  }, [actParentId, width, height, title, listOfLayers, actParentIndex, actLayerId, factorScale])
+  }, [actParentId, width, height, title, listOfLayers, actParentIndex, actLayerId])
 
   const handleDownloadGif = useCallback((): void => {
     drawToGif({

@@ -2,17 +2,26 @@ import { type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 
 import './style.scss'
-import usePopup from './usePopup'
+import usePopup, { PopupPositions } from './usePopup'
 
 interface IPopup extends React.HTMLAttributes<HTMLElement> {
   children?: Readonly<ReactNode[]> | null | Readonly<ReactNode>
   isOpen: boolean
   title?: string
+  clickPosition?: PopupPositions
   onClose: () => void
 }
 
-const PopupComponent = ({ children, className = '', isOpen, onClose, title, ...props }: IPopup) => {
-  const { $popupRef, handleMouseDown, isDragging, position } = usePopup({ isOpen })
+const PopupComponent = ({
+  children,
+  className = '',
+  isOpen,
+  onClose,
+  title,
+  clickPosition = { x: 0, y: 0 },
+  ...props
+}: IPopup) => {
+  const { $popupRef, handleMouseDown, isDragging, position } = usePopup({ isOpen, clickPosition })
 
   if (!isOpen) return null
 
@@ -23,7 +32,7 @@ const PopupComponent = ({ children, className = '', isOpen, onClose, title, ...p
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,
-        opacity: $popupRef.current ? 1 : 0
+        opacity: isOpen ? 1 : 0
       }}
     >
       <div className={`popup-container ${className}`} {...props}>

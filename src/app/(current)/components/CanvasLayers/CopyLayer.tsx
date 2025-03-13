@@ -5,12 +5,10 @@ import toast from 'react-hot-toast'
 
 import ActiveDrawsStore from '../../store/ActiveDraws.store'
 import LayerStore from '../../store/layer.store'
-import RepaintDrawingStore from '../../store/repaintDrawing.store'
 
 const CopyLayer = (): JSX.Element => {
   const { listOfLayers, setListOfLayers } = LayerStore()
   const { actLayerId, actParentId } = ActiveDrawsStore()
-  const { setRepaint } = RepaintDrawingStore()
 
   const handleClick = () => {
     if (!actLayerId) return toast.error('❗️No hay capa activa seleccionada')

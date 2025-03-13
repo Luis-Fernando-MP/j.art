@@ -25,10 +25,10 @@ const useMergeTool = () => {
     let updatedMergeLayers = [...selectedLayers]
     if (updatedMergeLayers.length < 1) updatedMergeLayers = [currentLayers[0].id, currentLayers[0].id]
     setSelectedLayers(updatedMergeLayers)
-  }, [])
+  }, [currentLayers]) // Agregado currentLayers como dependencia
 
   useLayoutEffect(() => {
-    mergeWorker.current = new Worker('/workers/layer-view.js', { type: 'module' })
+    mergeWorker.current = new Worker(/* turbopackIgnore: true */ '/workers/layer-view.js', { type: 'module' })
     return () => mergeWorker.current?.terminate()
   }, [])
 
@@ -43,7 +43,7 @@ const useMergeTool = () => {
   const handleMergeLayers = async () => {
     if (!mergeWorker.current || selectedLayers.length < 2) return
     const [firstLayer, secondLayer] = selectedLayers
-    const validate = currentLayers.some(layer => layer.id === firstLayer) || currentLayers.some(layer => layer.id === secondLayer)
+    const validate = currentLayers.some(layer => layer.id === firstLayer) && currentLayers.some(layer => layer.id === secondLayer)
     if (!validate || firstLayer === secondLayer) return toast.error('❗️Asegúrate de elegir bien las capas')
 
     const $firstCanvas = document.getElementById(firstLayer) as HTMLCanvasElement
@@ -63,7 +63,7 @@ const useMergeTool = () => {
 
       mergeWorker.current.onmessage = event => {
         const { base64, mergedBitmap } = event.data
-        if (!base64 || !mergedBitmap) return
+        if (!base64 || !mergedBitmap) return toast.error('❗️Error en los datos de fusión')
         const updatedLayers = currentLayers.filter(layer => layer.id !== secondLayer)
         canvasCtx.clearRect(0, 0, $firstCanvas.width, $firstCanvas.height)
         canvasCtx.drawImage(mergedBitmap, 0, 0, $firstCanvas.width, $firstCanvas.height)
@@ -79,7 +79,8 @@ const useMergeTool = () => {
 
       mergeWorker.current.onerror = () => toast.error('❗️Error al procesar la fusión')
     } catch (error) {
-      console.error(error)
+      console.error('Error en el proceso de fusión:', error)
+      toast.error('❗️Ocurrió un error inesperado durante la fusión')
     }
   }
 

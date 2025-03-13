@@ -12,7 +12,7 @@ export const getBitmapFromCanvas = async (canvasId: string) => {
 
   const computedStyle = window.getComputedStyle(canvas)
   const { opacity, filter } = computedStyle
-  let canvasOpacity = Number(opacity) || 1
+  const canvasOpacity = Number(opacity) || 1
 
   tmpCanvas.width = canvas.width
   tmpCanvas.height = canvas.height
