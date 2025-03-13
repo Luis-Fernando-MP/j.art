@@ -3,15 +3,19 @@
 import useAppTheme from '@/app/hooks/useAppTheme'
 import { acl } from '@/shared/acl'
 import Popup from '@/shared/components/Popup'
-import { type JSX, useState } from 'react'
+import { PopupPositions } from '@/shared/components/Popup/usePopup'
+import { type JSX, MouseEvent, useState } from 'react'
 
 import './style.scss'
 
 const ThemeController = (): JSX.Element => {
   const [openThemes, setOpenThemes] = useState(false)
   const { appTheme, THEMES, handleSetTheme } = useAppTheme()
-  const togglePopup = (): void => {
+  const [positions, setPositions] = useState<PopupPositions>()
+
+  const togglePopup = (e: MouseEvent): void => {
     setOpenThemes(!openThemes)
+    setPositions({ x: e.clientX, y: e.clientY })
   }
 
   return (
@@ -19,7 +23,13 @@ const ThemeController = (): JSX.Element => {
       <button className='theme-controller' onClick={togglePopup}>
         <h5 className='footer-text'>Tema: {appTheme}</h5>
       </button>
-      <Popup isOpen={openThemes} onClose={togglePopup} title='Temas' className='theme-popup'>
+      <Popup
+        isOpen={openThemes}
+        onClose={() => setOpenThemes(false)}
+        title='Temas'
+        className='theme-popup'
+        clickPosition={positions}
+      >
         {Object.entries(THEMES).map(current => {
           const [key, colors] = current
           return (

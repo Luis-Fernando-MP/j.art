@@ -1,9 +1,10 @@
 import Dropdown from '@/shared/components/Dropdown'
 import Popup from '@/shared/components/Popup'
+import { PopupPositions } from '@/shared/components/Popup/usePopup'
 import { BLANK_IMAGE } from '@/shared/constants'
 import { Image } from '@unpic/react'
 import { MergeIcon } from 'lucide-react'
-import { type JSX, useState } from 'react'
+import { type JSX, MouseEvent, useState } from 'react'
 
 import useMergeTool from '../../hooks/useMergeTool'
 import './style.scss'
@@ -11,13 +12,26 @@ import './style.scss'
 const MergeTool = (): JSX.Element | null => {
   const [openPopup, setOpenPopup] = useState(false)
   const { currentLayers, updateSelectedLayer, handleMergeLayers } = useMergeTool()
+  const [positions, setPositions] = useState<PopupPositions>()
+
+  const handleClick = (e: MouseEvent): void => {
+    setOpenPopup(!openPopup)
+    setPositions({ x: e.clientX, y: e.clientY })
+  }
+
   if (!currentLayers) return null
   return (
     <>
-      <button onClick={() => setOpenPopup(!openPopup)}>
+      <button onClick={handleClick}>
         <MergeIcon />
       </button>
-      <Popup isOpen={openPopup} onClose={() => setOpenPopup(false)} title='Merge' className='mergeTool-popup'>
+      <Popup
+        isOpen={openPopup}
+        onClose={() => setOpenPopup(false)}
+        title='Merge'
+        className='mergeTool-popup'
+        clickPosition={positions}
+      >
         <Dropdown
           list={currentLayers}
           className='mergeTool-dropdown'

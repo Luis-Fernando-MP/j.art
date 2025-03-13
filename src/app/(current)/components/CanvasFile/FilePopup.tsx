@@ -1,4 +1,5 @@
 import Popup from '@/shared/components/Popup'
+import { PopupPositions } from '@/shared/components/Popup/usePopup'
 import { ImagePlusIcon, PencilRulerIcon } from 'lucide-react'
 import { JSX } from 'react'
 
@@ -10,13 +11,14 @@ import DownloadCanvas from './DownloadCanvas'
 interface IFilePopup {
   isOpen: boolean
   setOpen: (isOpen?: boolean) => void
+  positions?: PopupPositions
 }
 
-const FilePopup = ({ isOpen, setOpen }: IFilePopup): JSX.Element => {
+const FilePopup = ({ isOpen, setOpen, positions }: IFilePopup): JSX.Element => {
   const { title, handleSubmit, $formRef, tmpDimensions, setTmpDimensions, handleResetForm, handleNewDraw } = useFileOptions()
 
   return (
-    <Popup isOpen={isOpen} onClose={() => setOpen(false)} className='cnFile-popup' title='Archivo'>
+    <Popup isOpen={isOpen} onClose={() => setOpen(false)} className='cnFile-popup' title='Archivo' clickPosition={positions}>
       <div className='cnFile-title'>
         <h3>Mi</h3>
         <h2>{title}</h2>
