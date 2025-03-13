@@ -16,22 +16,24 @@ const usePopup = ({ isOpen, clickPosition }: IUsePopupHook) => {
 
   const handleMouseMove = useCallback(
     (e: globalThis.MouseEvent) => {
-      if (!isDragging || !$dragPosition.current || !$popupRef.current) return
-      e.preventDefault()
-      const rect = $popupRef.current.getBoundingClientRect()
-      const deltaX = e.clientX - $dragPosition.current.x
-      const deltaY = e.clientY - $dragPosition.current.y
-      const minX = 0
-      const minY = 0
-      const maxX = bodyRect.width - rect.width
-      const maxY = bodyRect.height - rect.height
-      $dragPosition.current = { x: e.clientX, y: e.clientY }
-      setPosition(prev => {
-        let newX = prev.x + deltaX
-        let newY = prev.y + deltaY
-        newX = Math.max(minX, Math.min(newX, maxX))
-        newY = Math.max(minY, Math.min(newY, maxY))
-        return { x: newX, y: newY }
+      requestAnimationFrame(() => {
+        if (!isDragging || !$dragPosition.current || !$popupRef.current) return
+        e.preventDefault()
+        const rect = $popupRef.current.getBoundingClientRect()
+        const deltaX = e.clientX - $dragPosition.current.x
+        const deltaY = e.clientY - $dragPosition.current.y
+        const minX = 0
+        const minY = 0
+        const maxX = bodyRect.width - rect.width
+        const maxY = bodyRect.height - rect.height
+        $dragPosition.current = { x: e.clientX, y: e.clientY }
+        setPosition(prev => {
+          let newX = prev.x + deltaX
+          let newY = prev.y + deltaY
+          newX = Math.max(minX, Math.min(newX, maxX))
+          newY = Math.max(minY, Math.min(newY, maxY))
+          return { x: newX, y: newY }
+        })
       })
     },
     [bodyRect, isDragging]

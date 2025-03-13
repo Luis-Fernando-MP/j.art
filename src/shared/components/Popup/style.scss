@@ -21,9 +21,17 @@
   background-color: rgb(v.$bg1);
 
   &.animate {
-    transition:
-      top 0.3s ease-in-out,
-      left 0.3s ease-in-out;
+    visibility: hidden;
+    opacity: 0;
+    animation: delay-opacity 0.2s forwards;
+    animation-delay: 0.5s;
+
+    @keyframes delay-opacity {
+      100% {
+        visibility: visible;
+        opacity: 1;
+      }
+    }
   }
 
   &-header {

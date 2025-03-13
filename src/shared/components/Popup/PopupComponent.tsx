@@ -12,13 +12,16 @@ interface IPopup extends React.HTMLAttributes<HTMLElement> {
   onClose: () => void
 }
 
+const middleH = document.body.getBoundingClientRect().height / 2 - 100
+const middleW = document.body.getBoundingClientRect().width / 2 - 100
+
 const PopupComponent = ({
   children,
   className = '',
   isOpen,
   onClose,
   title,
-  clickPosition = { x: 0, y: 0 },
+  clickPosition = { x: middleW, y: middleH },
   ...props
 }: IPopup) => {
   const { $popupRef, handleMouseDown, isDragging, position } = usePopup({ isOpen, clickPosition })
@@ -31,8 +34,7 @@ const PopupComponent = ({
       className='popup'
       style={{
         left: `${position.x}px`,
-        top: `${position.y}px`,
-        opacity: isOpen ? 1 : 0
+        top: `${position.y}px`
       }}
     >
       <div className={`popup-container ${className}`} {...props}>
