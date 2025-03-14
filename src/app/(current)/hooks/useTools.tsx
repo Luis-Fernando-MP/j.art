@@ -4,18 +4,18 @@ import {
   handleDither,
   handleDrawPixel,
   handleInvertDrawPixel,
-  interpolateDrawing,
   moveDraw,
   moveFrameDraw
 } from '@/scripts/toolsCanvas'
 import { handleWorkerMessage } from '@/shared/handleWorkerMessage'
 import { EToolsWorker, ToolsWorkerMessage } from '@workers/speedTools/speedTools.types'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 
 import ActiveDrawsStore from '../store/ActiveDraws.store'
 import { TPositions } from '../store/canvas.store'
 import PixelStore from '../store/pixel.store'
 import RepaintDrawingStore from '../store/repaintDrawing.store'
+import SelectionStore from '../store/selection.store'
 import ToolsStore from '../store/tools.store'
 
 type THandleExecuteTools = {
@@ -26,196 +26,144 @@ type THandleExecuteTools = {
   endY: number
 }
 
-type THandleDown = {
+type HandleSelectProps = {
   ctx: CanvasRenderingContext2D
   x: number
   y: number
 }
 
-let ctx: CanvasRenderingContext2D
-let startX: number
-let startY: number
-let endX: number
-let endY: number
-let width: number
-let height: number
-
 const useTools = () => {
   const { selectedTool, xMirror, yMirror, setSelectedTool } = ToolsStore()
   const { pixelColor, pixelOpacity, pixelSize, setPixelColor } = PixelStore()
-  const { setRepaint } = RepaintDrawingStore()
   const { actParentId } = ActiveDrawsStore()
-
+  const { setSelection, selection } = SelectionStore()
   const mvSelection = useRef<TPositions | null>(null)
   const isDrawingSelectSquare = useRef(false)
-
   const toolWorker = useRef<Worker | null>(null)
+  const $selection = useRef<HTMLElement | null>(null)
+  const { setRepaint } = RepaintDrawingStore()
+  const isMovingSelection = useRef(false)
 
-  useEffect(() => {
-    toolWorker.current = new Worker(/* turbopackIgnore: true */ '/workers/speedTools/index.js', { type: 'module' })
-    return () => toolWorker.current?.terminate()
+  const isWithinSelection = (x: number, y: number) => {
+    if (!$selection.current || !selection) return false
+    const { startX, startY, endX, endY } = selection
+    const parseX = alignCord(x, pixelSize)
+    const parseY = alignCord(y, pixelSize)
+    return parseX >= startX && parseX <= endX && parseY >= startY && parseY <= endY
+  }
+
+  const handleDown = useCallback(
+    (props: HandleSelectProps) => {
+      if (selectedTool !== 'SelectSquare') return
+      if (!$selection.current) $selection.current = document.getElementById('selection') as HTMLElement
+
+      const { x, y } = props
+
+      $selection.current.classList.remove('show')
+
+      const startX = alignCord(x, pixelSize)
+      const startY = alignCord(y, pixelSize)
+
+      setSelection({ startX, startY })
+      mvSelection.current = { x: startX, y: startY }
+      isDrawingSelectSquare.current = true
+
+      $selection.current.style.left = `${startX}px`
+      $selection.current.style.top = `${startY}px`
+    },
+    [selectedTool, pixelSize, setSelection, selection]
+  )
+
+  const moveSelection = useCallback((x: number, y: number) => {
+    if (isWithinSelection(x, y)) {
+      console.log('isWithinSelection')
+      isMovingSelection.current = true
+      moveSelection(x, y)
+      return
+    }
+
+    if (!mvSelection.current || !$selection.current) return
+    const deltaX = x - mvSelection.current.x
+    const deltaY = y - mvSelection.current.y
+
+    mvSelection.current.x = x
+    mvSelection.current.y = y
+
+    $selection.current.style.left = `${mvSelection.current.x}px`
+    $selection.current.style.top = `${mvSelection.current.y}px`
+
+    console.log('moveSelection', deltaX, deltaY)
   }, [])
 
-  // Eraser: (ctx: CanvasRenderingContext2D, x: number, y: number) =>
-  // HandleDeletePixel({ ctx, x, y, pixelSize, xMirror, yMirror }),
-  const handleDown = (props: THandleDown) => {
+  const handleSelectSquare = useCallback(
+    (props: HandleSelectProps) => {
+      if (!$selection.current || !isDrawingSelectSquare.current || !mvSelection.current) return
+      if (isMovingSelection.current) return
+
+      const { x, y } = props
+      const width = Math.abs(x - mvSelection.current.x) + pixelSize
+      const height = Math.abs(y - mvSelection.current.y) + pixelSize
+      const left = Math.min(mvSelection.current.x, x)
+      const top = Math.min(mvSelection.current.y, y)
+
+      setSelection({ endX: x, endY: y, width, height })
+
+      $selection.current.style.left = `${left}px`
+      $selection.current.style.top = `${top}px`
+      $selection.current.style.width = `${width}px`
+      $selection.current.style.height = `${height}px`
+    },
+    [pixelSize, setSelection]
+  )
+
+  const handleToolUp = useCallback(() => {
     if (selectedTool !== 'SelectSquare') return
-    const currentFrame = document.getElementById(actParentId)
-    if (!currentFrame) return
+    $selection.current?.classList.add('show')
+    if (!isDrawingSelectSquare.current || !mvSelection.current) return
 
-    const { x, y } = props
-    const startX = alignCord(x, pixelSize)
-    const startY = alignCord(y, pixelSize)
-
-    let $selectSquare = document.getElementById('select-square')
-    if (!$selectSquare) return
-
-    $selectSquare.style.minWidth = `${pixelSize}px`
-    $selectSquare.style.minHeight = `${pixelSize}px`
-    $selectSquare.style.width = `${pixelSize}px`
-    $selectSquare.style.height = `${pixelSize}px`
-
-    $selectSquare.style.left = `${startX}px`
-    $selectSquare.style.top = `${startY}px`
-
-    mvSelection.current = { x: startX, y: startY }
-    isDrawingSelectSquare.current = true
-  }
-
-  const handleSelectSquare = (props: THandleExecuteTools) => {
-    const $selectSquare = document.getElementById('selection')
-    if (!$selectSquare || !isDrawingSelectSquare.current || !mvSelection.current) return
-
-    const { endX, endY } = props
-
-    const width = Math.abs(endX - mvSelection.current.x) + pixelSize
-    const height = Math.abs(endY - mvSelection.current.y) + pixelSize
-    const left = Math.min(mvSelection.current.x, endX)
-    const top = Math.min(mvSelection.current.y, endY)
-
-    $selectSquare.style.left = `${left}px`
-    $selectSquare.style.top = `${top}px`
-    $selectSquare.style.width = `${width}px`
-    $selectSquare.style.height = `${height}px`
-  }
-
-  const handleToolUp = () => {
     isDrawingSelectSquare.current = false
+    isMovingSelection.current = false
     mvSelection.current = null
-  }
+  }, [selectedTool])
 
   const executeTools = async (props: THandleExecuteTools) => {
     if (selectedTool === 'Cursor') return
-    ctx = props.ctx
-    startX = alignCord(props.startX, pixelSize)
-    startY = alignCord(props.startY, pixelSize)
-    endX = alignCord(props.endX, pixelSize)
-    endY = alignCord(props.endY, pixelSize)
-    width = ctx.canvas.width
-    height = ctx.canvas.height
+    const ctx = props.ctx
+    const startX = alignCord(props.startX, pixelSize)
+    const startY = alignCord(props.startY, pixelSize)
+    const endX = alignCord(props.endX, pixelSize)
+    const endY = alignCord(props.endY, pixelSize)
 
-    if (selectedTool in utilTools) {
-      return await handleUtilityTools()
+    const toolHandlers = {
+      Move: () => moveDraw(ctx, endX - startX, endY - startY),
+      Hand: () => moveFrameDraw(actParentId, endX - startX, endY - startY),
+      Brush: () => handleDrawPixel({ ctx, x: endX, y: endY, pixelColor, pixelSize, pixelOpacity, xMirror, yMirror }),
+      PerfectPixel: () => handleDrawPixel({ ctx, x: endX, y: endY, pixelColor, pixelSize, pixelOpacity, xMirror, yMirror }),
+      InvertBrush: () => handleInvertDrawPixel({ ctx, x: endX, y: endY, pixelColor, pixelSize, pixelOpacity, xMirror, yMirror }),
+      Dithering: () => handleDither({ ctx, x: endX, y: endY, pixelColor, pixelSize, pixelOpacity, xMirror, yMirror }),
+      Eraser: () => HandleDeletePixel({ ctx, pixelSize, x: endX, y: endY, xMirror, yMirror }),
+      SelectSquare: () => handleSelectSquare({ ctx, x: endX, y: endY }),
+      Bucket: async () => {
+        const bitmap = await createImageBitmap(ctx.canvas)
+        if (!bitmap) return
+        const message: ToolsWorkerMessage = { action: EToolsWorker.BUCKET, bitmap, startX, startY, fillColor: pixelColor }
+        toolWorker.current?.postMessage(message, [bitmap])
+        paintRenderCanvas(ctx, ctx.canvas.width, ctx.canvas.height)
+      },
+      Pipette: async () => {
+        const bitmap = await createImageBitmap(ctx.canvas)
+        if (!bitmap) return
+        const message: ToolsWorkerMessage = { action: EToolsWorker.PIPETTE, bitmap, startX, startY }
+        toolWorker.current?.postMessage(message, [bitmap])
+        paintRenderCanvas(ctx, ctx.canvas.width, ctx.canvas.height)
+      }
     }
-
-    if (selectedTool in selectTools) {
-      return handleSelectTools()
-    }
-
-    if (selectedTool in drawTools) {
-      return await handleUDrawTools()
-    }
-
-    if (selectedTool === 'SelectSquare') {
-      return handleSelectSquare({ ctx, startX, startY, endX, endY })
+    if (selectedTool in toolHandlers) {
+      await toolHandlers[selectedTool as keyof typeof toolHandlers]()
     }
   }
 
-  const handleSelectTools = () => {
-    const tool = selectedTool as keyof typeof selectTools
-
-    if (tool === 'Move') {
-      moveDraw(ctx, endX - startX, endY - startY)
-    }
-
-    if (tool === 'Hand') {
-      moveFrameDraw(actParentId, endX - startX, endY - startY)
-    }
-  }
-
-  const handleUDrawTools = async () => {
-    if (!toolWorker.current) return
-    const tool = selectedTool as keyof typeof drawTools
-
-    const points = interpolateDrawing({ startX, startY, endX, endY, pixelSize })
-
-    for (const point of points) {
-      if (tool === 'Dithering') {
-        handleDither({
-          ctx,
-          x: point.x,
-          y: point.y,
-          pixelColor,
-          pixelSize: pixelSize,
-          pixelOpacity,
-          xMirror,
-          yMirror
-        })
-      }
-
-      if (tool === 'Brush') {
-        handleDrawPixel({
-          ctx,
-          x: point.x,
-          y: point.y,
-          pixelColor,
-          pixelSize: pixelSize,
-          pixelOpacity,
-          xMirror,
-          yMirror
-        })
-      }
-
-      if (tool === 'InvertBrush') {
-        handleInvertDrawPixel({
-          ctx,
-          x: point.x,
-          y: point.y,
-          pixelColor,
-          pixelSize: pixelSize,
-          pixelOpacity,
-          xMirror,
-          yMirror
-        })
-      }
-
-      if (tool === 'Eraser') {
-        HandleDeletePixel({
-          ctx,
-          pixelSize,
-          x: point.x,
-          y: point.y,
-          xMirror,
-          yMirror
-        })
-      }
-    }
-  }
-
-  const handleUtilityTools = async () => {
-    if (!toolWorker.current) return
-    const tool = selectedTool as keyof typeof utilTools
-    const handleTool = utilTools[tool]
-
-    try {
-      const bitmap = await createImageBitmap(ctx.canvas)
-      if (!bitmap) return
-      const message: ToolsWorkerMessage = handleTool(bitmap)
-      toolWorker.current.postMessage(message, [bitmap])
-    } catch (error) {
-      console.error('Failed to create ImageBitmap for layer view:', error)
-    }
-
+  const paintRenderCanvas = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
     handleWorkerMessage(toolWorker.current, data => {
       const { bitmap, rgba } = data
       if (rgba && selectedTool === 'Pipette') {
@@ -230,23 +178,10 @@ const useTools = () => {
     })
   }
 
-  const selectTools = {
-    Move: () => {},
-    Hand: () => {}
-  }
-
-  const utilTools = {
-    Bucket: (bitmap: ImageBitmap) => ({ action: EToolsWorker.BUCKET, bitmap, startX, startY, fillColor: pixelColor }),
-    Pipette: (bitmap: ImageBitmap) => ({ action: EToolsWorker.PIPETTE, bitmap, startX, startY })
-  }
-
-  const drawTools = {
-    Brush: (bitmap: ImageBitmap) => ({ action: EToolsWorker.BUCKET, bitmap, startX, startY, fillColor: pixelColor }),
-    PerfectPixel: (bitmap: ImageBitmap) => ({ action: EToolsWorker.PIPETTE, bitmap, startX, startY }),
-    InvertBrush: (bitmap: ImageBitmap) => ({ action: EToolsWorker.PIPETTE, bitmap, startX, startY }),
-    Dithering: (bitmap: ImageBitmap) => ({ action: EToolsWorker.PIPETTE, bitmap, startX, startY }),
-    Eraser: (bitmap: ImageBitmap) => ({ action: EToolsWorker.PIPETTE, bitmap, startX, startY })
-  }
+  useEffect(() => {
+    toolWorker.current = new Worker(/* turbopackIgnore: true */ '/workers/speedTools/index.js', { type: 'module' })
+    return () => toolWorker.current?.terminate()
+  }, [])
 
   return { executeTools, handleDown, handleToolUp }
 }

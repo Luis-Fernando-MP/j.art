@@ -23,7 +23,6 @@ const Page = (): JSX.Element => {
       <Footer className='app-footer' />
       <ConfirmExit />
       <SelectionLayout />
-      <div id='select-square' />
     </div>
   )
 }

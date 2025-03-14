@@ -4,26 +4,59 @@
 
 .selection {
   pointer-events: none;
-
   position: absolute;
   z-index: 10;
 
-  border: 1px dashed rgb(v.$tn1);
-  border-radius: v.$radius * 0.5;
+  &-container {
+    width: 100%;
+    height: 100%;
+    border: 1px dashed rgb(v.$tn1);
+    border-radius: v.$radius * 0.5;
 
-  background-color: rgb(v.$tn1, 0.3);
+    background-color: rgb(v.$tn1, 0.3);
 
-  animation: pulsate 1s infinite;
+    animation: pulsate 1.5s infinite;
+  }
+
+  &-actions {
+    pointer-events: auto;
+    pointer-events: none;
+
+    position: absolute;
+    top: 5px;
+    left: 5px;
+
+    border: 1.5px solid rgb(v.$tn1);
+    border-radius: v.$radius * 0.5;
+
+    visibility: hidden;
+    opacity: 0;
+    background-color: rgb(v.$bg1, 0.5);
+
+    @include d.flex($ali: center);
+  }
+
+  &.show .selection-actions {
+    pointer-events: auto;
+    visibility: visible;
+    opacity: 1;
+  }
 
   &-action {
-    position: absolute;
-    top: 0;
-    left: -50px;
+    width: 100%;
+    height: 100%;
+    padding: v.$padding;
+    border-radius: v.$radius * 0.5;
 
-    width: 50px;
-    height: 100px;
+    transition: background-color 0.2s ease-in-out;
 
-    background-color: red;
+    .lucide {
+      stroke: rgb(v.$fn1);
+    }
+
+    &:hover {
+      background-color: rgb(v.$bg1, 0.5);
+    }
   }
 
   @keyframes pulsate {

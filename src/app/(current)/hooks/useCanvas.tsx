@@ -29,8 +29,10 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
 
   const handleCanvasMouseDown = async (e: MouseEvent) => {
     if (e.ctrlKey) return
+
     const coordinates = getCanvasCoordinates(e, canvasId)
     if (!coordinates) return
+
     setIsDrawing(true)
     startPos.current = coordinates
     handleDown({ ctx: coordinates.ctx, x: coordinates.x, y: coordinates.y })
@@ -42,9 +44,9 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
 
   const handleCanvasMouseMove = (e: MouseEvent) => {
     if (!isDrawing) return
+    const coordinates = getCanvasCoordinates(e, canvasId)
+    if (!coordinates) return
     requestAnimationFrame(async () => {
-      const coordinates = getCanvasCoordinates(e, canvasId)
-      if (!coordinates) return
       activatePerfectShape(e.shiftKey)
       await handleDrawing(coordinates.x, coordinates.y)
     })
@@ -52,13 +54,13 @@ const useCanvas = ({ canvasId }: TUseCanvas) => {
 
   const handleCanvasMouseUp = useCallback(() => {
     if (!startPos.current) return
+    handleToolUp()
     setIsDrawing(false)
     startPos.current = null
     canvasSnapshot.current = null
     activatePerfectShape(false)
     setRepaint('all')
-    handleToolUp()
-  }, [setRepaint])
+  }, [setRepaint, handleToolUp])
 
   const handleDrawing = async (x: number, y: number) => {
     if (!startPos.current) return
